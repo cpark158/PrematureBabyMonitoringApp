@@ -5,14 +5,85 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
-    <TextView
+        tools:context=".MainActivity" android:background="#E0F2F4">
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" tools:srcCompat="@tools:sample/avatars" android:id="@+id/imageView"
+            tools:layout_editor_absoluteY="138dp" tools:layout_editor_absoluteX="141dp"/>
+    <com.google.android.material.tabs.TabLayout
+            android:layout_width="409dp"
+            android:layout_height="wrap_content" tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="50dp" android:id="@+id/Tab"
+            app:tabTextAppearance="@style/TextAppearance.AppCompat.Body1" android:background="#3F51B5"
+            app:tabIndicatorColor="#FDFDFD" app:tabTextColor="#FFFFFF" app:tabInlineLabel="true"
+    >
+
+        <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/basic_information"/>
+
+        <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Health"/>
+
+        <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Others"/>
+    </com.google.android.material.tabs.TabLayout>
+    <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hello World!"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
+            android:inputType="textPersonName"
+            android:text="Gender"
+            android:ems="10"
+            android:id="@+id/editTextTextPersonName"
+            tools:layout_editor_absoluteX="99dp" app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2"
+            app:layout_constraintBottom_toTopOf="@+id/editTextDate"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:ems="10"
+            android:id="@+id/editTextDate" tools:layout_editor_absoluteX="99dp"
+            android:text="Date of Birth" app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName"
+            app:layout_constraintBottom_toTopOf="@+id/editTextTime"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="time"
+            android:ems="10"
+            android:id="@+id/editTextTime" tools:layout_editor_absoluteX="99dp"
+            android:text="Time of Birth" app:layout_constraintTop_toBottomOf="@+id/editTextDate"
+            app:layout_constraintBottom_toTopOf="@+id/editTextPhone"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:ems="10"
+            android:id="@+id/editTextPhone" tools:layout_editor_absoluteX="99dp"
+            android:text="Emergency Contact" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextTime"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="Name"
+            android:ems="10"
+            android:id="@+id/editTextTextPersonName2"
+            tools:layout_editor_absoluteX="99dp" app:layout_constraintTop_toBottomOf="@+id/imageView"
+            app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName"
+            app:layout_constraintVertical_chainStyle="packed"/>
+    <Spinner
+            android:layout_width="409dp"
+            android:layout_height="wrap_content" tools:layout_editor_absoluteX="1dp" android:id="@+id/spinner3"
+            tools:layout_editor_absoluteY="16dp"/>
+    <TextView
+            android:text="Patient List"
+            android:layout_width="99dp"
+            android:layout_height="17dp" android:id="@+id/textView" tools:layout_editor_absoluteY="16dp"
+            android:background="#74E7F3F4" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp" android:autoText="true"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
