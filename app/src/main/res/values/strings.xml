@@ -9,4 +9,7 @@
     <string name="dateOfBirth">Date of Birth</string>
     <string name="timeOfBirth">Time Of Birth</string>
     <string name="type">Enter Text</string>
+    <string name="basicInfo">Basic Information</string>
+    <string name="healthInfo">Health</string>
+    <string name="others">Others</string>
 </resources>

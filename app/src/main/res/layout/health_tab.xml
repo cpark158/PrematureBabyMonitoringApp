@@ -55,12 +55,12 @@
     </com.google.android.material.tabs.TabLayout>
     <Spinner
             android:layout_width="409dp"
-            android:layout_height="wrap_content" tools:layout_editor_absoluteX="1dp" android:id="@+id/spinner3"
+            android:layout_height="wrap_content" tools:layout_editor_absoluteX="1dp" android:id="@+id/patientDropdown"
             tools:layout_editor_absoluteY="16dp"/>
     <TextView
             android:text="Patient List"
             android:layout_width="99dp"
-            android:layout_height="17dp" android:id="@+id/textView" tools:layout_editor_absoluteY="16dp"
+            android:layout_height="17dp" android:id="@+id/patientList" tools:layout_editor_absoluteY="16dp"
             android:background="#74E7F3F4" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp" android:autoText="true"/>
     <ProgressBar
