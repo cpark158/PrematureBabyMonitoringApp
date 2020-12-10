@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity" android:background="#F2F3D9">
+        tools:context=".MainActivity" android:background="#D2E5ED">
     <ImageView
             android:layout_width="199dp"
             android:layout_height="209dp" tools:srcCompat="@tools:sample/avatars" android:id="@+id/imageView"
@@ -65,7 +65,8 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView"
             app:layout_constraintBottom_toTopOf="@+id/editGender"
             app:layout_constraintVertical_chainStyle="packed" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent" android:textColorLink="#AC92A6" android:textColor="#000000"
+            android:textColorHint="#AC92A6"/>
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -83,8 +84,8 @@
             android:layout_height="58dp"
             app:layout_constraintBottom_toTopOf="@+id/imageView"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:tabRippleColor="#DC9382" app:tabIndicatorColor="#F2F3D9" android:background="#030027"
-            app:tabTextColor="#F2F3D9" app:tabSelectedTextColor="#F2F3D9"
+            app:tabRippleColor="#DC9382" app:tabIndicatorColor="#FFFFFF" android:background="#3F51B5"
+            app:tabTextColor="#FFFFFF" app:tabSelectedTextColor="#FFFFFF"
             app:tabTextAppearance="@style/TextAppearance.AppCompat.Body2" android:id="@+id/patientSelectTabs"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -104,21 +105,21 @@
                 android:text="@string/others" android:id="@+id/othersTab"/>
     </com.google.android.material.tabs.TabLayout>
     <Spinner
-            android:layout_width="61dp"
-            android:layout_height="34dp" android:id="@+id/spinner"
+            android:layout_width="416dp"
+            android:layout_height="45dp" android:id="@+id/spinner"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginBottom="3dp"
             app:layout_constraintBottom_toTopOf="@+id/patientSelectTabs" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintHorizontal_bias="0.914" app:layout_constraintVertical_bias="0.484"/>
     <TextView
             android:text="@string/patientList"
-            android:layout_width="113dp"
-            android:layout_height="29dp" android:id="@+id/patientList"
+            android:layout_width="147dp"
+            android:layout_height="40dp" android:id="@+id/patientList"
             android:background="#00E7F3F4"
             android:textColorHint="#FFFFFF"
-            android:textColorLink="#FFFFFF" android:textColor="#030027" android:textColorHighlight="#00DC9E"
+            android:textColorLink="#FFFFFF" android:textColor="#000000" android:textColorHighlight="#00DC9E"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/patientSelectTabs" app:layout_constraintHorizontal_bias="0.899"
-            app:layout_constraintVertical_bias="0.512"/>
+            app:layout_constraintBottom_toTopOf="@+id/patientSelectTabs" app:layout_constraintHorizontal_bias="0.993"
+            app:layout_constraintVertical_bias="1.0" android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
