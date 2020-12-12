@@ -12,4 +12,6 @@
     <string name="basicInfo">Basic Information</string>
     <string name="healthInfo">Health</string>
     <string name="others">Others</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

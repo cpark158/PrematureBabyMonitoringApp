@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical"
+             tools:context=".basicInfoFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Basic Information"
+            android:layout_centerInParent="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+
+    <!--<ImageView
+            android:layout_width="199dp"
+            android:layout_height="209dp" tools:srcCompat="@tools:sample/avatars" android:id="@+id/imageView"
+            android:contentDescription="@string/babyPic"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="time"
+            android:ems="10"
+            android:id="@+id/editTextTime"
+            android:importantForAutofill="no"
+            tools:targetApi="o"
+            android:hint="@string/type"
+            android:text="@string/timeOfBirth"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="@string/gender"
+            android:ems="10"
+            android:id="@+id/editGender"
+            android:importantForAutofill="no"
+            tools:targetApi="o"
+            android:hint="@string/type"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:ems="10"
+            android:id="@+id/editTextPhone"
+            android:importantForAutofill="no"
+            tools:targetApi="o"
+            android:hint="@string/type"
+            android:text="@string/emergencyContact"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="@string/Name"
+            android:ems="10"
+            android:id="@+id/editName"
+            android:importantForAutofill="no"
+            tools:targetApi="o"
+            android:hint="@string/type"
+            android:textColorLink="#AC92A6" android:textColor="#000000"
+            android:textColorHint="#AC92A6"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:ems="10"
+            android:id="@+id/editTextDate"
+            android:importantForAutofill="no"
+            tools:targetApi="o"
+            android:hint="@string/type"
+            android:text="@string/dateOfBirth"/>-->
+
+</RelativeLayout>

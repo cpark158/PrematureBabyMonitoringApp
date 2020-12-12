@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity" android:background="#D2E5ED">
-    <ImageView
+    <!--<ImageView
             android:layout_width="199dp"
             android:layout_height="209dp" tools:srcCompat="@tools:sample/avatars" android:id="@+id/imageView"
             android:contentDescription="@string/babyPic"
@@ -78,18 +78,17 @@
             android:hint="@string/type"
             android:text="@string/dateOfBirth" app:layout_constraintTop_toBottomOf="@+id/editGender"
             app:layout_constraintBottom_toTopOf="@+id/editTextTime" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"/>-->
     <com.google.android.material.tabs.TabLayout
             android:layout_width="407dp"
             android:layout_height="58dp"
-            app:layout_constraintBottom_toTopOf="@+id/imageView"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:tabRippleColor="#DC9382" app:tabIndicatorColor="#FFFFFF" android:background="#3F51B5"
             app:tabTextColor="#FFFFFF" app:tabSelectedTextColor="#FFFFFF"
             app:tabTextAppearance="@style/TextAppearance.AppCompat.Body2" android:id="@+id/patientSelectTabs"
             app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.tabs.TabItem
+        <!--<com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/basicInfo" android:id="@+id/basicInfoTab"/>
@@ -102,7 +101,7 @@
         <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/others" android:id="@+id/othersTab"/>
+                android:text="@string/others" android:id="@+id/othersTab"/>-->
     </com.google.android.material.tabs.TabLayout>
     <Spinner
             android:layout_width="416dp"
@@ -122,4 +121,12 @@
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/patientSelectTabs" app:layout_constraintHorizontal_bias="0.993"
             app:layout_constraintVertical_bias="1.0" android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+
+    <!-- View pager to swipe views -->
+    <androidx.viewpager.widget.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
