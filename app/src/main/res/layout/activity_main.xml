@@ -122,4 +122,12 @@
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/patientSelectTabs" app:layout_constraintHorizontal_bias="0.993"
             app:layout_constraintVertical_bias="1.0" android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+
+    <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/line_chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+ 
+
