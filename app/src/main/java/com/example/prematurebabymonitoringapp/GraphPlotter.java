@@ -7,6 +7,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
 
+//graph plotter class
 public class GraphPlotter {
     LineDataSet lineDataSet;
     ArrayList<Integer> xDataValues = new ArrayList<Integer>();
