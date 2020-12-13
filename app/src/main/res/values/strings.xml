@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">PrematureBabyMonitoringApp</string>
-    <string name="test_text">Welcome</string>
+    <string name="babyPic">Baby Picture</string>
+    <string name="Name">Name</string>
+    <string name="typeName">Type Name</string>
+    <string name="patientList">Patient List</string>
+    <string name="emergencyContact">Emergency Contact</string>
+    <string name="gender">Gender</string>
+    <string name="dateOfBirth">Date of Birth</string>
+    <string name="timeOfBirth">Time Of Birth</string>
+    <string name="type">Enter Text</string>
+    <string name="basicInfo">Basic Information</string>
+    <string name="healthInfo">Health</string>
+    <string name="others">Others</string>
 </resources>
