@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        txtFileProcessor.parseFile();
+       txtFileProcessor.parseFile();
         graphPlot = new GraphPlotter(txtFileProcessor.getTimeValues(),txtFileProcessor.getVoltageValues());
 
         mpLineChart=findViewById(R.id.line_chart);
