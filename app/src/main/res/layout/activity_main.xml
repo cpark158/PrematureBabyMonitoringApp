@@ -12,10 +12,10 @@
             android:layout_height="35dp"
             android:prompt="@string/spinner_title"
             app:tabTextAppearance="@style/TextAppearance.AppCompat.Body2"
-            app:layout_constraintTop_toTopOf="@+id/tabLayout" app:layout_constraintBottom_toTopOf="@+id/textView"
-            app:layout_constraintVertical_bias="1.0"
-            android:visibility="invisible" android:layout_marginBottom="8dp" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.506"/>
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toTopOf="@+id/tabLayout"
+            app:layout_constraintVertical_bias="0.727"
+            android:visibility="invisible" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="1.0"/>
     <com.google.android.material.tabs.TabLayout
             android:layout_width="407dp"
             android:layout_height="58dp"
@@ -24,9 +24,9 @@
             app:tabTextColor="#FFFFFF" app:tabSelectedTextColor="#FFFFFF"
             app:tabTextAppearance="@style/TextAppearance.AppCompat.Body2" android:id="@+id/tabLayout"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toTopOf="@+id/textView"
-            app:layout_constraintHorizontal_bias="1.0" app:layout_constraintVertical_bias="0.3"
+            app:layout_constraintVertical_bias="0.712"
             android:visibility="invisible"
-    >
+            app:layout_constraintHorizontal_bias="1.0">
         <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

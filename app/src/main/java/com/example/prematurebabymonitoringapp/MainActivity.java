@@ -10,6 +10,9 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     TabLayout tabLayout;
@@ -23,9 +26,12 @@ public class MainActivity extends AppCompatActivity {
     Button saveButton;
     Spinner spinnerPatientList;
 
-    String patientNameStr;
+    String patientNameStr = "Name";
     String patientGenderStr;
     String patientDOBStr;
+
+    //To populate spinner
+    List<String> spinnerArray = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         addPatientButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
-                msg.setText(String.format("Add patient details below:"));
+                msg.setText(String.format("Enter patient details below:"));
                 patientName.setVisibility(View.VISIBLE);
                 patientGender.setVisibility(View.VISIBLE);
                 patientDOB.setVisibility(View.VISIBLE);
@@ -70,16 +76,48 @@ public class MainActivity extends AppCompatActivity {
                 msg.setText(String.format("Name: " +patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
 
                 spinnerPatientList.setVisibility(View.VISIBLE);
+                spinnerArray.add("Patient 1 " + patientNameStr);
+                spinnerPatientList.setSelection(1);
+                saveButton.setVisibility(View.GONE);
             }
         });
 
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.patients_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
+        spinnerArray.add("None");
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, spinnerArray);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spinnerPatientList.setAdapter(adapter);
+        Spinner spinner = (Spinner) findViewById(R.id.spinnerPatient);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view,
+                                       int position, long id) {
+                Object item = adapterView.getItemAtPosition(position);
+                if (item != null) {
+                    Toast.makeText(MainActivity.this, item.toString(),
+                            Toast.LENGTH_SHORT).show();
+                }
+                Toast.makeText(MainActivity.this, "Selected",
+                        Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // TODO Auto-generated method stub
+            }
+        });
+    }
+
+//        // Create an ArrayAdapter using the string array and a default spinner layout
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+//                R.array.patients_array, android.R.layout.simple_spinner_item);
+//        // Specify the layout to use when the list of choices appears
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        // Apply the adapter to the spinner
+//        spinnerPatientList.setAdapter(adapter);
 
 //        int currentPage = R.layout.activity_main;
 //        int tempInt = 0;
@@ -186,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
 
-    }
+//    }
 
 //    public void clickHealthTab(){
 //        String b = "You've clicked to view more health info!";
