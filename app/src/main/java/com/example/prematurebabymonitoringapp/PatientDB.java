@@ -63,4 +63,9 @@ public class PatientDB {
         }
      }
 
+     // method to return number of patients
+    public int getDBSize() {
+        return patients.size();
+    }
+
 }
