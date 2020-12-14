@@ -1,7 +1,9 @@
+package com.example.prematurebabymonitoringapp;
+
 import java.util.ArrayList;
 //import java.util.Optional;
 
-//PatientDB will have a list of all the patients in the unit
+// PatientDB will have a list of all the patients in the unit
 
 public class PatientDB {
     ArrayList<Patient> patients = new ArrayList<Patient>();
@@ -10,7 +12,7 @@ public class PatientDB {
     public PatientDB() {
     }
 
-    // Method to add create a new Patient object and add it to the database, with
+    // Method to add create a new com.example.prematurebabymonitoringapp.Patient object and add it to the database, with
     public void addPatient(String name, String DOB, String gender) {
         Patient baby = new Patient(name);
         baby.setDOB(DOB);

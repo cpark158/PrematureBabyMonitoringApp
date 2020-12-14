@@ -1,3 +1,4 @@
+package com.example.prematurebabymonitoringapp;
 // Glucose is a class for the concentrations (values) recorded from the device, may need to add calibration method
 
 public class Glucose {

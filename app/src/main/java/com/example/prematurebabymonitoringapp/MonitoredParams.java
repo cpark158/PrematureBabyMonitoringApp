@@ -1,3 +1,5 @@
+package com.example.prematurebabymonitoringapp;
+
 import java.util.ArrayList;
 
 /** MonitoredParams is a class which contains the data to be plotted for each patient. It has two arraylists for

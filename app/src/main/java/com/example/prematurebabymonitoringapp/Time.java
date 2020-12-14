@@ -1,3 +1,5 @@
+package com.example.prematurebabymonitoringapp;
+
 public class Time {
     // The time axis will be displayed in time of day (days, hours, mins and secs) instead of an increasing time value
     private int day;
