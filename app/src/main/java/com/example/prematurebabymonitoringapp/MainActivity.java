@@ -20,6 +20,7 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
+
     LineChart mpLineChart;
     TextFileProcessor txtFileProcessor = new TextFileProcessor();
     GraphPlotter graphPlot;
@@ -48,16 +49,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-       txtFileProcessor.parseFile();
-        graphPlot = new GraphPlotter(txtFileProcessor.getTimeValues(),txtFileProcessor.getVoltageValues());
-
-        mpLineChart=findViewById(R.id.line_chart);
-        mpLineChart.setData(graphPlot.getData());
-        mpLineChart.invalidate();
-
-    }
-
         //Welcome page
         msg = findViewById(R.id.textView);
         msg.setText(String.format("Welcome to Premature Baby Monitoring App. Click button below to add patient."));
@@ -70,6 +61,11 @@ public class MainActivity extends AppCompatActivity {
         spinnerPatientList = findViewById(R.id.spinnerPatient);
         tabLayout = findViewById(R.id.tabLayout);
         patientIcon = findViewById(R.id.icon);
+
+        txtFileProcessor.parseFile();
+        graphPlot = new GraphPlotter(txtFileProcessor.getTimeValues(), txtFileProcessor.getVoltageValues());
+
+        mpLineChart = findViewById(R.id.line_chart);
 
         saveButton = findViewById(R.id.saveButton);
         addPatientButton = findViewById(R.id.button);
@@ -95,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 patientGender.setVisibility(View.GONE);
                 patientDOBStr = patientDOB.getText().toString();
                 patientDOB.setVisibility(View.GONE);
-                msg.setText(String.format("Name: " +patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
+                msg.setText(String.format("Name: " + patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
                 msg.setTextSize(14);
 
                 spinnerPatientList.setVisibility(View.VISIBLE);
@@ -121,21 +117,21 @@ public class MainActivity extends AppCompatActivity {
                 if (item != null) {
                     Toast.makeText(MainActivity.this, item.toString(),
                             Toast.LENGTH_SHORT).show();
-                    if (spinnerPatientList.getVisibility() == View.VISIBLE)
-                    {
-                        if (item.toString() == "None"){
+                    if (spinnerPatientList.getVisibility() == View.VISIBLE) {
+                        if (item.toString() == "None") {
                             msg.setText("No patient selected.");
                             msg.setGravity(Gravity.CENTER);
                             msg.setTextSize(28);
                             tabLayout.setVisibility(View.INVISIBLE);
                             patientIcon.setVisibility(View.INVISIBLE);
-                        }
-                        else {
+                            mpLineChart.setVisibility(View.INVISIBLE);
+                        } else {
                             tabLayout.setVisibility(View.VISIBLE);
                             patientIcon.setVisibility(View.VISIBLE);
+                            mpLineChart.setVisibility(View.INVISIBLE);
                             msg.setTextSize(14);
                             msg.setGravity(Gravity.FILL_HORIZONTAL);
-                            msg.setText(String.format("%n Name: " +patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
+                            msg.setText(String.format("%n Name: " + patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
                         }
                     }
                 }
@@ -153,28 +149,31 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                switch(tab.getPosition()){
-                    case 0:{
+                switch (tab.getPosition()) {
+                    case 0: {
                         tabLayout.setVisibility(View.VISIBLE);
                         patientIcon.setVisibility(View.VISIBLE);
                         msg.setTextSize(14);
                         msg.setGravity(Gravity.FILL_HORIZONTAL);
                         //msg.setText(String.format("%d", tab.getPosition()));
-                        msg.setText(String.format("%n Name: " +patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
+                        msg.setText(String.format("%n Name: " + patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
                     }
-                    case 1:{
+                    case 1: {
                         patientIcon.setVisibility(View.INVISIBLE);
                         msg.setTextSize(14);
                         msg.setGravity(Gravity.FILL_HORIZONTAL);
                         //msg.setText(String.format("%d", tab.getPosition()));
 
-                        if(tab.getPosition() == 0){
+                        if (tab.getPosition() == 0) {
+                            mpLineChart.setVisibility(View.INVISIBLE);
                             patientIcon.setVisibility(View.VISIBLE);
-                            msg.setText(String.format("%n Name: " +patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
-                        }
-                        else if(tab.getPosition() == 1){
+                            msg.setText(String.format("%n Name: " + patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
+                        } else if (tab.getPosition() == 1) {
                             patientIcon.setVisibility(View.INVISIBLE);
                             msg.setText(String.format("Current glucose level: "));
+                            mpLineChart.setVisibility(View.VISIBLE);
+                            mpLineChart.setData(graphPlot.getData());
+                            mpLineChart.invalidate();
                         }
 
                     }
@@ -189,7 +188,9 @@ public class MainActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+
     }
+
 
 //        int currentPage = R.layout.activity_main;
 //        int tempInt = 0;
@@ -225,15 +226,15 @@ public class MainActivity extends AppCompatActivity {
 //        // Apply the adapter to the spinner
 //        spinnerPatientList.setAdapter(adapter);
 
-        //tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+    //tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 //        tabLayout.addTab(tabLayout.newTab().setText("Basic Information"));
 //        tabLayout.addTab(tabLayout.newTab().setText("Health"));
 //        tabLayout.addTab(tabLayout.newTab().setText("Others"));
 //        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        //msg = findViewById(R.id.textView);
-        //patientName = findViewById(R.id.typeName);
-        //saveButton = findViewById(R.id.button);
+    //msg = findViewById(R.id.textView);
+    //patientName = findViewById(R.id.typeName);
+    //saveButton = findViewById(R.id.button);
 
 //        saveButton.setOnClickListener(new View.OnClickListener() {
 //            public void onClick(View v) {
@@ -388,37 +389,33 @@ public class MainActivity extends AppCompatActivity {
 
     //-----------------------------------------------------------------------------
     // Here's what the app should do to add a view to the ViewPager.
-    public void addView (View newPage)
-    {
-        int pageIndex = adapter.addView (newPage);
+    public void addView(View newPage) {
+        int pageIndex = adapter.addView(newPage);
         // You might want to make "newPage" the currently displayed page:
-        viewPager.setCurrentItem (pageIndex, true);
+        viewPager.setCurrentItem(pageIndex, true);
     }
 
     //-----------------------------------------------------------------------------
     // Here's what the app should do to remove a view from the ViewPager.
-    public void removeView (View defunctPage)
-    {
-        int pageIndex = adapter.removeView (viewPager, defunctPage);
+    public void removeView(View defunctPage) {
+        int pageIndex = adapter.removeView(viewPager, defunctPage);
         // You might want to choose what page to display, if the current page was "defunctPage".
         if (pageIndex == adapter.getCount())
             pageIndex--;
-        viewPager.setCurrentItem (pageIndex);
+        viewPager.setCurrentItem(pageIndex);
     }
 
     //-----------------------------------------------------------------------------
     // Here's what the app should do to get the currently displayed page.
-    public View getCurrentPage ()
-    {
-        return adapter.getView (viewPager.getCurrentItem());
+    public View getCurrentPage() {
+        return adapter.getView(viewPager.getCurrentItem());
     }
 
     //-----------------------------------------------------------------------------
     // Here's what the app should do to set the currently displayed page.  "pageToShow" must
     // currently be in the adapter, or this will crash.
-    public void setCurrentPage (View pageToShow)
-    {
-        viewPager.setCurrentItem (adapter.getItemPosition (pageToShow), true);
+    public void setCurrentPage(View pageToShow) {
+        viewPager.setCurrentItem(adapter.getItemPosition(pageToShow), true);
     }
 
     @Override
@@ -430,8 +427,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings){
+        if (id == R.id.action_settings) {
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+}
