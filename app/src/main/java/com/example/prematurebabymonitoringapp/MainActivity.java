@@ -20,6 +20,7 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
+
     LineChart mpLineChart;
     TextFileProcessor txtFileProcessor = new TextFileProcessor();
     GraphPlotter graphPlot;
@@ -65,8 +66,6 @@ public class MainActivity extends AppCompatActivity {
         graphPlot = new GraphPlotter(txtFileProcessor.getTimeValues(), txtFileProcessor.getVoltageValues());
 
         mpLineChart = findViewById(R.id.line_chart);
-        mpLineChart.setData(graphPlot.getData());
-        mpLineChart.invalidate();
 
         saveButton = findViewById(R.id.saveButton);
         addPatientButton = findViewById(R.id.button);
@@ -125,9 +124,11 @@ public class MainActivity extends AppCompatActivity {
                             msg.setTextSize(28);
                             tabLayout.setVisibility(View.INVISIBLE);
                             patientIcon.setVisibility(View.INVISIBLE);
+                            mpLineChart.setVisibility(View.INVISIBLE);
                         } else {
                             tabLayout.setVisibility(View.VISIBLE);
                             patientIcon.setVisibility(View.VISIBLE);
+                            mpLineChart.setVisibility(View.INVISIBLE);
                             msg.setTextSize(14);
                             msg.setGravity(Gravity.FILL_HORIZONTAL);
                             msg.setText(String.format("%n Name: " + patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
@@ -164,11 +165,15 @@ public class MainActivity extends AppCompatActivity {
                         //msg.setText(String.format("%d", tab.getPosition()));
 
                         if (tab.getPosition() == 0) {
+                            mpLineChart.setVisibility(View.INVISIBLE);
                             patientIcon.setVisibility(View.VISIBLE);
                             msg.setText(String.format("%n Name: " + patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
                         } else if (tab.getPosition() == 1) {
                             patientIcon.setVisibility(View.INVISIBLE);
                             msg.setText(String.format("Current glucose level: "));
+                            mpLineChart.setVisibility(View.VISIBLE);
+                            mpLineChart.setData(graphPlot.getData());
+                            mpLineChart.invalidate();
                         }
 
                     }
@@ -183,7 +188,9 @@ public class MainActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+
     }
+
 
 //        int currentPage = R.layout.activity_main;
 //        int tempInt = 0;
