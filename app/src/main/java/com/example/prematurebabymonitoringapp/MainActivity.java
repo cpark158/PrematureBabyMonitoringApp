@@ -7,6 +7,7 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
+import com.google.android.material.resources.TextAppearance;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     Button addPatientButton;
     Button saveButton;
     Spinner spinnerPatientList;
+    ImageView patientIcon;
 
     String patientNameStr = "Name";
     String patientGenderStr;
@@ -48,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
         patientDOB = findViewById(R.id.editTextDate);
 
         spinnerPatientList = findViewById(R.id.spinnerPatient);
+        tabLayout = findViewById(R.id.tabLayout);
+        patientIcon = findViewById(R.id.icon);
 
         saveButton = findViewById(R.id.saveButton);
         addPatientButton = findViewById(R.id.button);
@@ -74,11 +78,14 @@ public class MainActivity extends AppCompatActivity {
                 patientDOBStr = patientDOB.getText().toString();
                 patientDOB.setVisibility(View.GONE);
                 msg.setText(String.format("Name: " +patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
+                msg.setTextSize(14);
 
                 spinnerPatientList.setVisibility(View.VISIBLE);
                 spinnerArray.add("Patient 1 " + patientNameStr);
                 spinnerPatientList.setSelection(1);
                 saveButton.setVisibility(View.GONE);
+                tabLayout.setVisibility(View.VISIBLE);
+                patientIcon.setVisibility(View.VISIBLE);
             }
         });
 
@@ -100,9 +107,18 @@ public class MainActivity extends AppCompatActivity {
                     {
                         if (item.toString() == "None"){
                             msg.setText("No patient selected.");
+                            msg.setGravity(Gravity.CENTER);
+                            msg.setTextSize(28);
+                            tabLayout.setVisibility(View.INVISIBLE);
+                            patientIcon.setVisibility(View.INVISIBLE);
                         }
-                        else
-                            msg.setText(String.format("Name: " +patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
+                        else {
+                            tabLayout.setVisibility(View.VISIBLE);
+                            patientIcon.setVisibility(View.VISIBLE);
+                            msg.setTextSize(14);
+                            msg.setGravity(Gravity.FILL_HORIZONTAL);
+                            msg.setText(String.format("%n Name: " +patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
+                        }
                     }
                 }
                 Toast.makeText(MainActivity.this, "Selected",
@@ -115,15 +131,47 @@ public class MainActivity extends AppCompatActivity {
                 // TODO Auto-generated method stub
             }
         });
-    }
 
-//        // Create an ArrayAdapter using the string array and a default spinner layout
-//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-//                R.array.patients_array, android.R.layout.simple_spinner_item);
-//        // Specify the layout to use when the list of choices appears
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        // Apply the adapter to the spinner
-//        spinnerPatientList.setAdapter(adapter);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch(tab.getPosition()){
+                    case 0:{
+                        tabLayout.setVisibility(View.VISIBLE);
+                        patientIcon.setVisibility(View.VISIBLE);
+                        msg.setTextSize(14);
+                        msg.setGravity(Gravity.FILL_HORIZONTAL);
+                        //msg.setText(String.format("%d", tab.getPosition()));
+                        msg.setText(String.format("%n Name: " +patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
+                    }
+                    case 1:{
+                        patientIcon.setVisibility(View.INVISIBLE);
+                        msg.setTextSize(14);
+                        msg.setGravity(Gravity.FILL_HORIZONTAL);
+                        //msg.setText(String.format("%d", tab.getPosition()));
+
+                        if(tab.getPosition() == 0){
+                            patientIcon.setVisibility(View.VISIBLE);
+                            msg.setText(String.format("%n Name: " +patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
+                        }
+                        else if(tab.getPosition() == 1){
+                            patientIcon.setVisibility(View.INVISIBLE);
+                            msg.setText(String.format("Current glucose level: "));
+                        }
+
+                    }
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+    }
 
 //        int currentPage = R.layout.activity_main;
 //        int tempInt = 0;
@@ -150,6 +198,14 @@ public class MainActivity extends AppCompatActivity {
 //                setUpAdapter(setUpTabLayout(R.layout.fragment_others),setUpViewPager());
 //                tempInt = tabbingFunction(setUpTabLayout(R.layout.fragment_others));
 //        }
+
+//        // Create an ArrayAdapter using the string array and a default spinner layout
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+//                R.array.patients_array, android.R.layout.simple_spinner_item);
+//        // Specify the layout to use when the list of choices appears
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        // Apply the adapter to the spinner
+//        spinnerPatientList.setAdapter(adapter);
 
         //tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 //        tabLayout.addTab(tabLayout.newTab().setText("Basic Information"));
