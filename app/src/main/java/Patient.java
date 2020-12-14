@@ -14,15 +14,13 @@ public class Patient {
     private String motherName;
     private String fatherName;
     private String contactNum;
+    private String condition;   // stores additional details on pre-existing conditions/diseases
     private double healthIndex;
     private MonitoredParams param;
 
     // constructor
-    public Patient(String name,String hospID, String DOB, String gender) {
+    public Patient(String name) {
         this.name = name;
-        this.hospID = hospID;
-        this.DOB = DOB;
-        this.gender = gender;
         param = new MonitoredParams();
     }
 
@@ -31,14 +29,30 @@ public class Patient {
         return name;
     }
 
+    public String getDOB() {
+        return DOB;
+    }
+    public void setDOB(String DOB) {
+        this.DOB = DOB;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     public String getHospID() {
         return hospID;
+    }
+    public void setHospID(String hospID) {
+        this.hospID = hospID;
     }
 
     public double getWeight() {
         return weight;
     }
-
     public void setWeight(double weight) {
         this.weight = weight;
     }
@@ -46,7 +60,6 @@ public class Patient {
     public String getMotherName() {
         return motherName;
     }
-
     public void setMotherName(String motherName) {
         this.motherName = motherName;
     }
@@ -54,7 +67,6 @@ public class Patient {
     public String getFatherName() {
         return fatherName;
     }
-
     public void setFatherName(String fatherName) {
         this.fatherName = fatherName;
     }
@@ -62,7 +74,6 @@ public class Patient {
     public String getContactNum() {
         return contactNum;
     }
-
     public void setContactNum(String contactNum) {
         this.contactNum = contactNum;
     }
@@ -70,7 +81,6 @@ public class Patient {
     public String getTimeOfBirth() {
         return timeOfBirth;
     }
-
     public void setTimeOfBirth(String timeOfBirth) {
         this.timeOfBirth = timeOfBirth;
     }
@@ -79,11 +89,18 @@ public class Patient {
         // code to calculate and store health index
         healthIndex = perc;
     }
-
     public double getHealthIndex() {
         return healthIndex;
     }
 
+    public String getCondition() {
+        return condition;
+    }
+    public void setCondition(String condition) {
+        this.condition = condition;
+    }
+
     // Main functions
+    // set monitoredParams from data in text files
     // public void graphPlotter()
 }

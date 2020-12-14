@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 /** MonitoredParams is a class which contains the data to be plotted for each patient. It has two arraylists for
- * tiem and glucose concentration, which will be the x and y values for the graph.
+ * time and glucose concentration, which will be the x and y values for the graph.
  */
 public class MonitoredParams {
     ArrayList<Glucose> gConc = new ArrayList<Glucose>();

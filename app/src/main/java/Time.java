@@ -17,16 +17,20 @@ public class Time {
     public void setDay(int day) {
         this.day = day;
     }
+    public int getDay() {return day;}
 
     public void setH(int h) {
         this.h = h;
     }
+    public int getHour() {return h;}
 
     public void setM(int m) {
         this.m = m;
     }
+    public int getMin() {return m;}
 
     public void setS(double s) {
         this.s = s;
     }
+    public double getSec() {return s;}
 }
