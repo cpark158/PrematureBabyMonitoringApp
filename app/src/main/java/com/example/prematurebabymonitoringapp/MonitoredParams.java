@@ -10,17 +10,18 @@ public class MonitoredParams {
     ArrayList<Time> time = new ArrayList<Time>();
 
     // Constructor
-    public MonitoredParams() {}
+    public MonitoredParams() {
+    }
 
-    // Method to add glucose concentration values from parsed text file
-    public void addConc(double c1,double c2) {
+    // Method to add glucose concentration values
+    public void addConc(int c1,int c2) {
         Glucose gluc = new Glucose();
         gluc.setChannel1(c1);
         gluc.setChannel2(c2);
         gConc.add(gluc);
     }
 
-    // Method to add time values from parsed text file
+    // Method to add time values
     public void addTime(int day,int h,int m,double s) {
         Time t = new Time();
         t.setDay(day);
@@ -28,5 +29,13 @@ public class MonitoredParams {
         t.setM(m);
         t.setS(s);
         time.add(t);
+    }
+
+    // Method to add data from parsed text files
+    public void addParsedData(TextFileProcessor data) {
+        for (int i=0; i<data.getSize();i++) {
+            this.addConc(data.getVolt1().get(i),data.getVolt2().get(i));
+            //this.addTime(data.getTimeValues().get(i));
+        }
     }
 }

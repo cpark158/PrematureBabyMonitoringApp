@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Parse the text file to get data
         txtFileProcessor.parseFile();
-        graphPlot = new GraphPlotter(txtFileProcessor.getTimeValues(), txtFileProcessor.getVoltageValues());
+        graphPlot = new GraphPlotter(txtFileProcessor.getTimeValues(), txtFileProcessor.getVolt1());
 
         mpLineChart = findViewById(R.id.line_chart);
 

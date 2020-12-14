@@ -17,6 +17,8 @@ public class Patient {
     private String condition;   // stores additional details on pre-existing conditions/diseases
     private double healthIndex;
     private MonitoredParams param;
+    private GraphPlotter graph1;    // graph of conc1 against time
+    private GraphPlotter graph2;    // graph of conc2 against time
 
     // constructor
     public Patient(String name) {
@@ -101,6 +103,15 @@ public class Patient {
     }
 
     // Main functions
-    // set monitoredParams from data in text files
-    // public void graphPlotter()
+
+    /* Set monitoredParams manually
+    public void manualInput(ArrayList<Integers> conc1,ArrayList<Integers> conc2,ArrayList<Time> time) {
+        for (int i=0; i<conc1.getSize();i++) {
+            this.addConc(conc1.get(i),conc2.get(i));
+            //this.addTime(time.get(i));
+        }
+     */
+
+    // public void plot() {
+    //graph1.GraphPlotter()
 }

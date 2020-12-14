@@ -12,6 +12,7 @@ public class TextFileProcessor{
     ArrayList<Integer> voltage1 = new ArrayList<Integer>();
     ArrayList<Integer> voltage2 = new ArrayList<Integer>();
 
+    // ideally we want to parse data such that we get time values in day,h,min,sec and we get two separate voltages
     public void parseFile(){
         for (int i=0;i<10;i++){
             voltage1.add(i);
@@ -19,12 +20,18 @@ public class TextFileProcessor{
         }
     }
 
-    public ArrayList<Integer> getVoltageValues(){
+    public ArrayList<Integer> getVolt1(){
         return voltage1;
     }
 
+    public ArrayList<Integer> getVolt2() {return voltage2;}
+
     public ArrayList<Integer> getTimeValues(){
         return time;
+    }
+
+    public int getSize() {
+        return time.size();
     }
 }
 
