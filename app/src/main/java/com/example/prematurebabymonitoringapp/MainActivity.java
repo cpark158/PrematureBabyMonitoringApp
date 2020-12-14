@@ -57,6 +57,30 @@ public class MainActivity extends AppCompatActivity {
         graphPlot = new GraphPlotter(txtFileProcessor.getTimeValues(), txtFileProcessor.getVoltageValues());
 
         // Retrieve XML components
+        retrieveXMLComponents();
+
+        // Set up spinner files and adapter
+        spinnerArray.add("None");
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, spinnerArray);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerPatientList.setAdapter(adapter);
+
+        // Welcome page
+        callWelcomePage();
+
+        // Add Patient Details Page
+        callNewPatientPage();
+
+        // View Individual Pages
+        callSpinner();
+
+        // View different tabs - Basic Information and Health
+        callDiffTabs();
+
+    }
+
+    public void retrieveXMLComponents(){
         msg = findViewById(R.id.textView); // Welcome page, all pages
         addPatientButton = findViewById(R.id.button); // Welcome page
 
@@ -69,15 +93,23 @@ public class MainActivity extends AppCompatActivity {
         patientIcon = findViewById(R.id.icon); // View individual pages - basic info tab
         mpLineChart = findViewById(R.id.line_chart); // View individual pages - health tab
         saveButton = findViewById(R.id.saveButton); // View individual pages - health tab
+    }
 
-        // Set up spinner files and adapter
-        spinnerArray.add("None");
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, spinnerArray);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerPatientList.setAdapter(adapter);
+    public void callWelcomePage(){
+        // Ensure other components aren't on the page
+        patientName.setVisibility(View.GONE);
+        patientGender.setVisibility(View.GONE);
+        patientDOB.setVisibility(View.GONE);
 
-        // Welcome page
+        spinnerPatientList.setVisibility(View.GONE);
+        tabLayout.setVisibility(View.GONE);
+        patientIcon.setVisibility(View.GONE);
+        mpLineChart.setVisibility(View.GONE);
+        saveButton.setVisibility(View.GONE);
+
+        msg.setVisibility(View.VISIBLE);
+        addPatientButton.setVisibility(View.VISIBLE);
+
         msg.setText(String.format("Welcome to Premature Baby Monitoring App. Click button below to add patient."));
         msg.setGravity(Gravity.CENTER_HORIZONTAL);
 
@@ -94,8 +126,9 @@ public class MainActivity extends AppCompatActivity {
                 addPatientButton.setVisibility(View.GONE);
             }
         });
+    }
 
-        // Add Patient Details Page
+    public void callNewPatientPage(){
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Upon clicking, save inputted information
@@ -124,8 +157,9 @@ public class MainActivity extends AppCompatActivity {
                 msg.setTextSize(14);
             }
         });
+    }
 
-        // View Individual Pages
+    public void callSpinner(){
         spinnerPatientList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view,
@@ -136,25 +170,11 @@ public class MainActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                     if (spinnerPatientList.getVisibility() == View.VISIBLE) {
                         // Redirect to 'No Patient Selected Page'
-                        if (item.toString() == "None") {
-                            tabLayout.setVisibility(View.INVISIBLE);
-                            patientIcon.setVisibility(View.INVISIBLE);
-                            mpLineChart.setVisibility(View.INVISIBLE);
-
-                            msg.setText("No patient selected.");
-                            msg.setGravity(Gravity.CENTER);
-                            msg.setTextSize(28); }
+                        if (item.toString() == "None") { callNoPatientsTab();
+                             }
                         // Redirect to Individual Patient Page
                         else {
-                            tabLayout.setVisibility(View.VISIBLE);
-                            patientIcon.setVisibility(View.VISIBLE);
-                            mpLineChart.setVisibility(View.INVISIBLE);
-                            msg.setTextSize(14);
-                            msg.setGravity(Gravity.FILL_HORIZONTAL);
-
-                            int index = prematureBabies.getDBSize();
-                            Patient currentPatient = prematureBabies.findPatient(patientNameStr);
-                            msg.setText(String.format("%n Name: " + currentPatient.getName() + "%n Gender: " + currentPatient.getGender() + "%n Date of Birth: " + currentPatient.getDOB()));
+                            callPatientTab(prematureBabies.findPatient(patientNameStr));
                         }
                     }
                 }
@@ -168,20 +188,16 @@ public class MainActivity extends AppCompatActivity {
                 // TODO Auto-generated method stub
             }
         });
+    }
 
-        // View different tabs - Basic Information and Health
+    public void callDiffTabs(){
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0: {
                         // Open Basic Information Tab
-                        tabLayout.setVisibility(View.VISIBLE);
-                        patientIcon.setVisibility(View.VISIBLE);
-
-                        msg.setTextSize(14);
-                        msg.setGravity(Gravity.FILL_HORIZONTAL);
-                        msg.setText(String.format("%n Name: " + patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
+                        callPatientTab(prematureBabies.findPatient(patientNameStr));
                         //msg.setText(String.format("%d", tab.getPosition()));
                     }
                     case 1: {
@@ -192,17 +208,11 @@ public class MainActivity extends AppCompatActivity {
 
                         if (tab.getPosition() == 0) {
                             // Open Basic Information Tab
-                            mpLineChart.setVisibility(View.INVISIBLE);
-                            patientIcon.setVisibility(View.VISIBLE);
-                            msg.setText(String.format("%n Name: " + patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
+                            callPatientTab(prematureBabies.findPatient(patientNameStr));
 
                         } else if (tab.getPosition() == 1) {
                             // Open Health Tab
-                            patientIcon.setVisibility(View.INVISIBLE);
-                            msg.setText(String.format("Current glucose level: "));
-                            mpLineChart.setVisibility(View.VISIBLE);
-                            mpLineChart.setData(graphPlot.getData());
-                            mpLineChart.invalidate();
+                            callHealthTab();
                         }
 
                     }
@@ -217,7 +227,35 @@ public class MainActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+    }
 
+    public void callNoPatientsTab(){
+        tabLayout.setVisibility(View.INVISIBLE);
+        patientIcon.setVisibility(View.INVISIBLE);
+        mpLineChart.setVisibility(View.INVISIBLE);
+
+        msg.setText("No patient selected.");
+        msg.setGravity(Gravity.CENTER);
+        msg.setTextSize(28);
+    }
+
+    public void callPatientTab(Patient inputPatient){
+        tabLayout.setVisibility(View.VISIBLE);
+        patientIcon.setVisibility(View.VISIBLE);
+        mpLineChart.setVisibility(View.INVISIBLE);
+        msg.setTextSize(14);
+        msg.setGravity(Gravity.FILL_HORIZONTAL);
+
+        int index = prematureBabies.getDBSize();
+        msg.setText(String.format("%n Name: " + inputPatient.getName() + "%n Gender: " + inputPatient.getGender() + "%n Date of Birth: " + inputPatient.getDOB()));
+    }
+
+    public void callHealthTab(){
+        patientIcon.setVisibility(View.INVISIBLE);
+        msg.setText(String.format("Current glucose level: "));
+        mpLineChart.setVisibility(View.VISIBLE);
+        mpLineChart.setData(graphPlot.getData());
+        mpLineChart.invalidate();
     }
 
 //        int currentPage = R.layout.activity_main;
