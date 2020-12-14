@@ -1,5 +1,8 @@
 package com.example.prematurebabymonitoringapp;
 
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 //import java.util.Optional;
 
@@ -56,11 +59,13 @@ public class PatientDB {
         return patients.get(patientNo-1);   // exception if patientNo = 0, need to find a way around this
     }
 
-    // method to display all patients in the database
+    /* method to display all patients in the database to android app
      public void patientMenu() {
+        // Reference: https://stackoverflow.com/questions/6525916/dynamically-display-string-text-on-android-screen
+        TextView myText = new TextView();
         for (Patient p:patients) {
-            System.out.println("Name: "+p.getName()+" Hospital ID: "+p.getHospID());
+            myText.setText("Name: "+p.getName()+" Hospital ID: "+p.getHospID());
         }
-     }
+     } */
 
 }

@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     LineChart mpLineChart;
     TextFileProcessor txtFileProcessor = new TextFileProcessor();
     GraphPlotter graphPlot;
+    PatientDB patientDB;
 
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
         patientIcon = findViewById(R.id.icon);
 
+        patientDB = new PatientDB();
         txtFileProcessor.parseFile();
         graphPlot = new GraphPlotter(txtFileProcessor.getTimeValues(), txtFileProcessor.getVoltageValues());
 
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 patientGender.setVisibility(View.GONE);
                 patientDOBStr = patientDOB.getText().toString();
                 patientDOB.setVisibility(View.GONE);
+                //patientDB.addPatient(patientNameStr,patientDOBStr,patientGenderStr);
                 msg.setText(String.format("Name: " + patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
                 msg.setTextSize(14);
 
@@ -102,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 patientIcon.setVisibility(View.VISIBLE);
             }
         });
+
 
         spinnerArray.add("None");
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
