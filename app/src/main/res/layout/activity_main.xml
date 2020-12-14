@@ -125,9 +125,9 @@
             app:layout_constraintHorizontal_bias="0.49" app:layout_constraintVertical_bias="0.233"/>
     <TextView
             android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/patientList" tools:layout_editor_absoluteY="544dp"
-            tools:layout_editor_absoluteX="57dp"/>
+            android:layout_width="327dp"
+            android:layout_height="78dp" android:id="@+id/patientList" tools:layout_editor_absoluteY="548dp"
+            tools:layout_editor_absoluteX="42dp"/>
     <!--<ImageView
             android:layout_width="199dp"
             android:layout_height="209dp" tools:srcCompat="@tools:sample/avatars" android:id="@+id/imageView"

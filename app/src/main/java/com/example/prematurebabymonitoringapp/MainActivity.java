@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
         msg.setGravity(Gravity.CENTER_HORIZONTAL);
 
         list = findViewById(R.id.patientList);
-        list.setGravity(Gravity.CENTER_HORIZONTAL);
         list.setVisibility(View.GONE);
 
         patientName = findViewById(R.id.typeName);
@@ -69,7 +68,12 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
         patientIcon = findViewById(R.id.icon);
 
+        // Instantiating the patient database and adding patients
         patientDB = new PatientDB();
+        patientDB.addPatient("Martin Holloway","19/11/2020","Male");
+        patientDB.addPatient("James Choi","25/10/2020","Male");
+
+        // Parse the text file to get data
         txtFileProcessor.parseFile();
         graphPlot = new GraphPlotter(txtFileProcessor.getTimeValues(), txtFileProcessor.getVoltageValues());
 
@@ -108,11 +112,14 @@ public class MainActivity extends AppCompatActivity {
                 saveButton.setVisibility(View.GONE);
 
                 list.setVisibility(View.VISIBLE);
-                list.setText(patientDB.patients.get(0).getName());
+                list.setText("Patients in database:\n");
+                for (int i=0; i<patientDB.getDBSize(); i++) {
+                    list.append("Name: "+patientDB.patients.get(i).getName()+"\n");
+                }
 
                 // Redirect to next page
                 spinnerPatientList.setVisibility(View.VISIBLE);
-                spinnerArray.add("Patient 1 " + patientNameStr);
+                spinnerArray.add("Patient 3 " + patientNameStr);
                 spinnerPatientList.setSelection(1);
                 saveButton.setVisibility(View.GONE);
                 tabLayout.setVisibility(View.VISIBLE);
