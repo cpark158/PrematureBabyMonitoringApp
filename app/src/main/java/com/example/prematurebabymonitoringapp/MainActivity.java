@@ -86,11 +86,9 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, spinnerArray);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner spinner = (Spinner) findViewById(R.id.spinnerPatient);
-        spinner.setAdapter(adapter);
+        spinnerPatientList.setAdapter(adapter);
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
+        spinnerPatientList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view,
                                        int position, long id) {
@@ -98,6 +96,14 @@ public class MainActivity extends AppCompatActivity {
                 if (item != null) {
                     Toast.makeText(MainActivity.this, item.toString(),
                             Toast.LENGTH_SHORT).show();
+                    if (spinnerPatientList.getVisibility() == View.VISIBLE)
+                    {
+                        if (item.toString() == "None"){
+                            msg.setText("No patient selected.");
+                        }
+                        else
+                            msg.setText(String.format("Name: " +patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
+                    }
                 }
                 Toast.makeText(MainActivity.this, "Selected",
                         Toast.LENGTH_SHORT).show();
