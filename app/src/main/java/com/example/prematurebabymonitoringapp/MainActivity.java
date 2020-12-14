@@ -60,14 +60,14 @@ public class MainActivity extends AppCompatActivity {
         retrieveXMLComponents();
 
         // Set up spinner files and adapter
-        spinnerArray.add("None");
+        spinnerArray.add("Add Patient");
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, spinnerArray);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPatientList.setAdapter(adapter);
 
         // Welcome page
-        callWelcomePage();
+        callWelcomePage("Welcome to Premature Baby Monitoring App. Click button below to add patient.");
 
         // Add Patient Details Page
         callNewPatientPage();
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.saveButton); // View individual pages - health tab
     }
 
-    public void callWelcomePage(){
+    public void callWelcomePage(String printText){
         // Ensure other components aren't on the page
         patientName.setVisibility(View.GONE);
         patientGender.setVisibility(View.GONE);
@@ -110,13 +110,25 @@ public class MainActivity extends AppCompatActivity {
         msg.setVisibility(View.VISIBLE);
         addPatientButton.setVisibility(View.VISIBLE);
 
-        msg.setText(String.format("Welcome to Premature Baby Monitoring App. Click button below to add patient."));
+        msg.setText(String.format(printText));
         msg.setGravity(Gravity.CENTER_HORIZONTAL);
+
+        if (printText == "Welcome to Premature Baby Monitoring App. Click button below to add patient.")
+        {
+            spinnerPatientList.setVisibility(View.GONE);
+        }
+        else
+        {
+            spinnerPatientList.setVisibility(View.VISIBLE);
+        }
 
         addPatientButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Redirect to Add Patient Details Page
                 msg.setText(String.format("Enter patient details below:"));
+                patientName.setText("Name");
+                patientDOB.setText("Date of Birth");
+                patientGender.setText("Gender");
                 patientName.setVisibility(View.VISIBLE);
                 patientGender.setVisibility(View.VISIBLE);
                 patientDOB.setVisibility(View.VISIBLE);
@@ -129,6 +141,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void callNewPatientPage(){
+
+        patientName.setText("Name");
+        patientDOB.setText("Date of Birth");
+        patientGender.setText("Gender");
+
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Upon clicking, save inputted information
@@ -148,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
                 // Redirect to next page
                 spinnerPatientList.setVisibility(View.VISIBLE);
                 tabLayout.setVisibility(View.VISIBLE);
+                tabLayout.getTabAt(0).select();
                 patientIcon.setVisibility(View.VISIBLE);
 
                 // Update spinner with patient database
@@ -170,10 +188,16 @@ public class MainActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                     if (spinnerPatientList.getVisibility() == View.VISIBLE) {
                         // Redirect to 'No Patient Selected Page'
-                        if (item.toString() == "None") { callNoPatientsTab();
+                        if (item.toString() == "Add Patient") { callNoPatientsTab();
                              }
                         // Redirect to Individual Patient Page
                         else {
+                            // Remove current page
+                            addPatientButton.setVisibility(View.GONE);
+                            patientName.setVisibility(View.GONE);
+                            patientGender.setVisibility(View.GONE);
+                            patientDOB.setVisibility(View.GONE);
+                            saveButton.setVisibility(View.GONE);
                             callPatientTab(prematureBabies.findPatient(patientNameStr));
                         }
                     }
@@ -234,13 +258,16 @@ public class MainActivity extends AppCompatActivity {
         patientIcon.setVisibility(View.INVISIBLE);
         mpLineChart.setVisibility(View.INVISIBLE);
 
-        msg.setText("No patient selected.");
-        msg.setGravity(Gravity.CENTER);
-        msg.setTextSize(28);
+        callWelcomePage("You've clicked to add another patient.");
+
+//        msg.setText("No patient selected.");
+//        msg.setGravity(Gravity.CENTER);
+//        msg.setTextSize(28);
     }
 
     public void callPatientTab(Patient inputPatient){
         tabLayout.setVisibility(View.VISIBLE);
+        tabLayout.getTabAt(0).select();
         patientIcon.setVisibility(View.VISIBLE);
         mpLineChart.setVisibility(View.INVISIBLE);
         msg.setTextSize(14);
@@ -452,49 +479,49 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //    }
 
-    //-----------------------------------------------------------------------------
-    // Here's what the app should do to add a view to the ViewPager.
-    public void addView(View newPage) {
-        int pageIndex = adapter.addView(newPage);
-        // You might want to make "newPage" the currently displayed page:
-        viewPager.setCurrentItem(pageIndex, true);
-    }
-
-    //-----------------------------------------------------------------------------
-    // Here's what the app should do to remove a view from the ViewPager.
-    public void removeView(View defunctPage) {
-        int pageIndex = adapter.removeView(viewPager, defunctPage);
-        // You might want to choose what page to display, if the current page was "defunctPage".
-        if (pageIndex == adapter.getCount())
-            pageIndex--;
-        viewPager.setCurrentItem(pageIndex);
-    }
-
-    //-----------------------------------------------------------------------------
-    // Here's what the app should do to get the currently displayed page.
-    public View getCurrentPage() {
-        return adapter.getView(viewPager.getCurrentItem());
-    }
-
-    //-----------------------------------------------------------------------------
-    // Here's what the app should do to set the currently displayed page.  "pageToShow" must
-    // currently be in the adapter, or this will crash.
-    public void setCurrentPage(View pageToShow) {
-        viewPager.setCurrentItem(adapter.getItemPosition(pageToShow), true);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    //-----------------------------------------------------------------------------
+//    // Here's what the app should do to add a view to the ViewPager.
+//    public void addView(View newPage) {
+//        int pageIndex = adapter.addView(newPage);
+//        // You might want to make "newPage" the currently displayed page:
+//        viewPager.setCurrentItem(pageIndex, true);
+//    }
+//
+//    //-----------------------------------------------------------------------------
+//    // Here's what the app should do to remove a view from the ViewPager.
+//    public void removeView(View defunctPage) {
+//        int pageIndex = adapter.removeView(viewPager, defunctPage);
+//        // You might want to choose what page to display, if the current page was "defunctPage".
+//        if (pageIndex == adapter.getCount())
+//            pageIndex--;
+//        viewPager.setCurrentItem(pageIndex);
+//    }
+//
+//    //-----------------------------------------------------------------------------
+//    // Here's what the app should do to get the currently displayed page.
+//    public View getCurrentPage() {
+//        return adapter.getView(viewPager.getCurrentItem());
+//    }
+//
+//    //-----------------------------------------------------------------------------
+//    // Here's what the app should do to set the currently displayed page.  "pageToShow" must
+//    // currently be in the adapter, or this will crash.
+//    public void setCurrentPage(View pageToShow) {
+//        viewPager.setCurrentItem(adapter.getItemPosition(pageToShow), true);
+//    }
+//
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.main_main, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        int id = item.getItemId();
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 }
