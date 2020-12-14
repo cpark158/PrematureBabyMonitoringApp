@@ -1,6 +1,10 @@
 package com.example.prematurebabymonitoringapp;
 
 import android.os.Bundle;
+
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.github.mikephil.charting.charts.LineChart;
 import android.text.Editable;
 import android.view.*;
 import android.widget.*;
@@ -14,7 +18,11 @@ import androidx.viewpager.widget.ViewPager;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class MainActivity extends AppCompatActivity {
+    LineChart mpLineChart;
+    TextFileProcessor txtFileProcessor = new TextFileProcessor();
+    GraphPlotter graphPlot;
 
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -39,6 +47,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+       txtFileProcessor.parseFile();
+        graphPlot = new GraphPlotter(txtFileProcessor.getTimeValues(),txtFileProcessor.getVoltageValues());
+
+        mpLineChart=findViewById(R.id.line_chart);
+        mpLineChart.setData(graphPlot.getData());
+        mpLineChart.invalidate();
+
+    }
 
         //Welcome page
         msg = findViewById(R.id.textView);
@@ -417,4 +435,3 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-}

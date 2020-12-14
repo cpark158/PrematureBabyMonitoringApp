@@ -115,6 +115,15 @@
             android:layout_marginRight="40dp" app:layout_constraintTop_toTopOf="@+id/textView"
             app:layout_constraintBottom_toTopOf="@+id/typeName" app:layout_constraintVertical_bias="0.485"
             android:visibility="gone"/>
+  <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/line_chart"
+            android:layout_width="675dp"
+            android:layout_height="265dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="113dp"
+            android:layout_marginStart="113dp" app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="594dp" android:layout_marginEnd="112dp" android:layout_marginRight="112dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="421dp"/>
     <!--<ImageView
             android:layout_width="199dp"
             android:layout_height="209dp" tools:srcCompat="@tools:sample/avatars" android:id="@+id/imageView"
@@ -179,4 +188,43 @@
 
     <!-- View pager to swipe views -->
 
+<!-- <<<<<<< CianneDev
+        <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/healthInfo" android:id="@+id/healthTab"/>
+
+        <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/others" android:id="@+id/othersTab"/>
+    </com.google.android.material.tabs.TabLayout>
+    <Spinner
+            android:layout_width="416dp"
+            android:layout_height="45dp" android:id="@+id/spinner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginBottom="3dp"
+            app:layout_constraintBottom_toTopOf="@+id/patientSelectTabs" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_bias="0.914" app:layout_constraintVertical_bias="0.484"/>
+    <TextView
+            android:text="@string/patientList"
+            android:layout_width="147dp"
+            android:layout_height="40dp" android:id="@+id/patientList"
+            android:background="#00E7F3F4"
+            android:textColorHint="#FFFFFF"
+            android:textColorLink="#FFFFFF" android:textColor="#000000" android:textColorHighlight="#00DC9E"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/patientSelectTabs" app:layout_constraintHorizontal_bias="0.993"
+            app:layout_constraintVertical_bias="1.0" android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+
+    <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/line_chart"
+            android:layout_width="675dp"
+            android:layout_height="265dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="113dp"
+            android:layout_marginStart="113dp" app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="594dp" android:layout_marginEnd="112dp" android:layout_marginRight="112dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="421dp"/> -->
 </androidx.constraintlayout.widget.ConstraintLayout>
