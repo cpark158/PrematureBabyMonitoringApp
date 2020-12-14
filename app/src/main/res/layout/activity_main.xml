@@ -6,6 +6,108 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity" android:background="#D2E5ED">
+    <Spinner
+            android:id="@+id/spinnerPatient"
+            android:layout_width="182dp"
+            android:layout_height="35dp"
+            android:prompt="@string/spinner_title"
+            app:tabTextAppearance="@style/TextAppearance.AppCompat.Body2"
+            app:layout_constraintTop_toTopOf="@+id/tabLayout" app:layout_constraintBottom_toTopOf="@+id/textView"
+            app:layout_constraintVertical_bias="1.0"
+            android:visibility="invisible" android:layout_marginBottom="8dp" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.506"/>
+    <com.google.android.material.tabs.TabLayout
+            android:layout_width="407dp"
+            android:layout_height="58dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:tabRippleColor="#DC9382" app:tabIndicatorColor="#FFFFFF" android:background="#3F51B5"
+            app:tabTextColor="#FFFFFF" app:tabSelectedTextColor="#FFFFFF"
+            app:tabTextAppearance="@style/TextAppearance.AppCompat.Body2" android:id="@+id/tabLayout"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toTopOf="@+id/textView"
+            app:layout_constraintHorizontal_bias="1.0" app:layout_constraintVertical_bias="0.3"
+            android:visibility="invisible"
+    >
+        <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/basicInfo" android:id="@+id/basicInfoTab"/>
+
+        <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/healthInfo" android:id="@+id/healthTab"/>
+
+        <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/others" android:id="@+id/othersTab"/>
+    </com.google.android.material.tabs.TabLayout>
+    <TextView
+            android:id="@+id/textView"
+            android:layout_width="308dp"
+            android:layout_height="114dp"
+            android:text="Main Page"
+            android:layout_gravity="center"
+            android:layout_centerInParent="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.223"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="@string/Name"
+            android:ems="10"
+            android:id="@+id/typeName"
+            android:importantForAutofill="no"
+            tools:targetApi="o"
+            android:hint="@string/type"
+            app:layout_constraintTop_toBottomOf="@+id/textView" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" android:visibility="invisible"
+            android:layout_marginTop="0dp"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="@string/gender"
+            android:ems="10"
+            android:id="@+id/editGender"
+            android:importantForAutofill="no"
+            tools:targetApi="o"
+            android:hint="@string/type"
+            app:layout_constraintTop_toBottomOf="@+id/typeName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="invisible"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:ems="10"
+            android:id="@+id/editTextDate"
+            android:importantForAutofill="no"
+            tools:targetApi="o"
+            android:hint="@string/type"
+            android:text="@string/dateOfBirth" app:layout_constraintTop_toBottomOf="@+id/editGender"
+            app:layout_constraintBottom_toTopOf="@+id/saveButton" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="invisible"/>
+    <Button
+            android:text="+ Add Patient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/button"
+            app:layout_constraintTop_toBottomOf="@+id/textView" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="116dp"
+            app:layout_constraintHorizontal_bias="0.498"/>
+    <Button
+            android:text="Save Patient Details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/saveButton"
+            app:layout_constraintTop_toBottomOf="@+id/textView" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="116dp"
+            app:layout_constraintHorizontal_bias="0.498"
+            android:visibility="invisible"/>
     <!--<ImageView
             android:layout_width="199dp"
             android:layout_height="209dp" tools:srcCompat="@tools:sample/avatars" android:id="@+id/imageView"
@@ -27,19 +129,7 @@
             android:text="@string/timeOfBirth" app:layout_constraintTop_toBottomOf="@+id/editTextDate"
             app:layout_constraintBottom_toTopOf="@+id/editTextPhone" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
-    <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text="@string/gender"
-            android:ems="10"
-            android:id="@+id/editGender"
-            android:importantForAutofill="no"
-            tools:targetApi="o"
-            android:hint="@string/type"
-            app:layout_constraintTop_toBottomOf="@+id/editName"
-            app:layout_constraintBottom_toTopOf="@+id/editTextDate" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -67,66 +157,19 @@
             app:layout_constraintVertical_chainStyle="packed" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" android:textColorLink="#AC92A6" android:textColor="#000000"
             android:textColorHint="#AC92A6"/>
-    <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="date"
-            android:ems="10"
-            android:id="@+id/editTextDate"
-            android:importantForAutofill="no"
-            tools:targetApi="o"
-            android:hint="@string/type"
-            android:text="@string/dateOfBirth" app:layout_constraintTop_toBottomOf="@+id/editGender"
-            app:layout_constraintBottom_toTopOf="@+id/editTextTime" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>-->
-    <com.google.android.material.tabs.TabLayout
-            android:layout_width="407dp"
-            android:layout_height="58dp"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:tabRippleColor="#DC9382" app:tabIndicatorColor="#FFFFFF" android:background="#3F51B5"
-            app:tabTextColor="#FFFFFF" app:tabSelectedTextColor="#FFFFFF"
-            app:tabTextAppearance="@style/TextAppearance.AppCompat.Body2" android:id="@+id/patientSelectTabs"
-            app:layout_constraintTop_toTopOf="parent">
-
-        <!--<com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/basicInfo" android:id="@+id/basicInfoTab"/>
-
-        <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/healthInfo" android:id="@+id/healthTab"/>
-
-        <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/others" android:id="@+id/othersTab"/>-->
-    </com.google.android.material.tabs.TabLayout>
-    <Spinner
-            android:layout_width="416dp"
-            android:layout_height="45dp" android:id="@+id/spinner"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginBottom="3dp"
-            app:layout_constraintBottom_toTopOf="@+id/patientSelectTabs" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHorizontal_bias="0.914" app:layout_constraintVertical_bias="0.484"/>
-    <TextView
-            android:text="@string/patientList"
-            android:layout_width="147dp"
-            android:layout_height="40dp" android:id="@+id/patientList"
-            android:background="#00E7F3F4"
-            android:textColorHint="#FFFFFF"
-            android:textColorLink="#FFFFFF" android:textColor="#000000" android:textColorHighlight="#00DC9E"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/patientSelectTabs" app:layout_constraintHorizontal_bias="0.993"
-            app:layout_constraintVertical_bias="1.0" android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+    -->
+<!--    <TextView-->
+<!--            android:text="@string/patientList"-->
+<!--            android:layout_width="147dp"-->
+<!--            android:layout_height="40dp" android:id="@+id/patientList"-->
+<!--            android:background="#00E7F3F4"-->
+<!--            android:textColorHint="#FFFFFF"-->
+<!--            android:textColorLink="#FFFFFF" android:textColor="#000000" android:textColorHighlight="#00DC9E"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintBottom_toTopOf="@+id/tabLayout" app:layout_constraintHorizontal_bias="0.993"-->
+<!--            app:layout_constraintVertical_bias="1.0" android:textAppearance="@style/TextAppearance.AppCompat.Large"/>-->
 
     <!-- View pager to swipe views -->
-    <androidx.viewpager.widget.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
