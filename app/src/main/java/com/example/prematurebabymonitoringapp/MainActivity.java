@@ -1,7 +1,6 @@
 package com.example.prematurebabymonitoringapp;
 
 import android.os.Bundle;
-
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.github.mikephil.charting.charts.LineChart;
@@ -14,19 +13,19 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.google.android.material.resources.TextAppearance;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
-
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class MainActivity extends AppCompatActivity {
 
+    // Initialise graph plotting parameters
     LineChart mpLineChart;
     TextFileProcessor txtFileProcessor = new TextFileProcessor();
     GraphPlotter graphPlot;
     PatientDB patientDB;
     Patient currentPatient;
 
+    // Initialise UI components from activity_main.xml
     TabLayout tabLayout;
     ViewPager viewPager;
     pagerAdapter adapter;
@@ -40,9 +39,10 @@ public class MainActivity extends AppCompatActivity {
     Spinner spinnerPatientList;
     ImageView patientIcon;
 
+    // Initialise temporary Strings to retrieve and store inputted patient info
     String patientNameStr = "Name";
-    String patientGenderStr;
-    String patientDOBStr;
+    String patientGenderStr = "Male";
+    String patientDOBStr = "01/01/1990";
 
     //To populate spinner
     List<String> spinnerArray = new ArrayList<String>();
@@ -85,14 +85,17 @@ public class MainActivity extends AppCompatActivity {
                 patientName.setVisibility(View.VISIBLE);
                 patientGender.setVisibility(View.VISIBLE);
                 patientDOB.setVisibility(View.VISIBLE);
-                addPatientButton.setVisibility(View.GONE);
                 saveButton.setVisibility(View.VISIBLE);
+
+                // Remove Add Patient button
+                addPatientButton.setVisibility(View.GONE);
             }
         });
 
+        // Add Patient Details Page
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Code here executes on main thread after user presses button
+                // Upon clicking, save inputted information
                 patientNameStr = patientName.getText().toString();
                 patientName.setVisibility(View.GONE);
                 patientGenderStr = patientGender.getText().toString();
@@ -102,10 +105,12 @@ public class MainActivity extends AppCompatActivity {
                 patientDB.addPatient(patientNameStr,patientDOBStr,patientGenderStr);
                 msg.setText(String.format("Name: " + patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
                 msg.setTextSize(14);
+                saveButton.setVisibility(View.GONE);
 
                 list.setVisibility(View.VISIBLE);
                 list.setText(patientDB.patients.get(0).getName());
 
+                // Redirect to next page
                 spinnerPatientList.setVisibility(View.VISIBLE);
                 spinnerArray.add("Patient 1 " + patientNameStr);
                 spinnerPatientList.setSelection(1);
@@ -129,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPatientList.setAdapter(adapter);
 
+        // View Individual Pages
         spinnerPatientList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view,
@@ -138,20 +144,26 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, item.toString(),
                             Toast.LENGTH_SHORT).show();
                     if (spinnerPatientList.getVisibility() == View.VISIBLE) {
+                        // Redirect to 'No Patient Selected Page'
                         if (item.toString() == "None") {
-                            msg.setText("No patient selected.");
-                            msg.setGravity(Gravity.CENTER);
-                            msg.setTextSize(28);
                             tabLayout.setVisibility(View.INVISIBLE);
                             patientIcon.setVisibility(View.INVISIBLE);
                             mpLineChart.setVisibility(View.INVISIBLE);
-                        } else {
+
+                            msg.setText("No patient selected.");
+                            msg.setGravity(Gravity.CENTER);
+                            msg.setTextSize(28); }
+                        // Redirect to Individual Patient Page
+                        else {
                             tabLayout.setVisibility(View.VISIBLE);
                             patientIcon.setVisibility(View.VISIBLE);
                             mpLineChart.setVisibility(View.INVISIBLE);
                             msg.setTextSize(14);
                             msg.setGravity(Gravity.FILL_HORIZONTAL);
-                            msg.setText(String.format("%n Name: " + patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
+
+                            int index = patientDB.getDBSize();
+                            Patient currentPatient = patientDB.findPatient(patientNameStr);
+                            msg.setText(String.format("%n Name: " + currentPatient.getName() + "%n Gender: " + currentPatient.getGender() + "%n Date of Birth: " + currentPatient.getDOB()));
                         }
                     }
                 }
@@ -166,17 +178,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // View different tabs - Basic Information and Health
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0: {
+                        // Open Basic Information Tab
                         tabLayout.setVisibility(View.VISIBLE);
                         patientIcon.setVisibility(View.VISIBLE);
+
                         msg.setTextSize(14);
                         msg.setGravity(Gravity.FILL_HORIZONTAL);
-                        //msg.setText(String.format("%d", tab.getPosition()));
                         msg.setText(String.format("%n Name: " + patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
+                        //msg.setText(String.format("%d", tab.getPosition()));
                     }
                     case 1: {
                         patientIcon.setVisibility(View.INVISIBLE);
@@ -185,10 +200,13 @@ public class MainActivity extends AppCompatActivity {
                         //msg.setText(String.format("%d", tab.getPosition()));
 
                         if (tab.getPosition() == 0) {
+                            // Open Basic Information Tab
                             mpLineChart.setVisibility(View.INVISIBLE);
                             patientIcon.setVisibility(View.VISIBLE);
                             msg.setText(String.format("%n Name: " + patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
+
                         } else if (tab.getPosition() == 1) {
+                            // Open Health Tab
                             patientIcon.setVisibility(View.INVISIBLE);
                             msg.setText(String.format("Current glucose level: "));
                             mpLineChart.setVisibility(View.VISIBLE);
@@ -210,7 +228,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
 
 //        int currentPage = R.layout.activity_main;
 //        int tempInt = 0;
@@ -405,7 +422,6 @@ public class MainActivity extends AppCompatActivity {
 //                return(R.layout.activity_main);
 //        }
 //    }
-
 
     //-----------------------------------------------------------------------------
     // Here's what the app should do to add a view to the ViewPager.
