@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 public class PatientDB {
     ArrayList<Patient> patients = new ArrayList<Patient>();
+    private Patient newPat;     // stores last added patient's details
 
     // Constructor
     public PatientDB() {
@@ -17,10 +18,10 @@ public class PatientDB {
 
     // Method to add create a new com.example.prematurebabymonitoringapp.Patient object and add it to the database, with
     public void addPatient(String name, String DOB, String gender) {
-        Patient baby = new Patient(name);
-        baby.setDOB(DOB);
-        baby.setGender(gender);
-        patients.add(baby);
+        newPat = new Patient(name);
+        newPat.setDOB(DOB);
+        newPat.setGender(gender);
+        patients.add(newPat);
     }
 
     // method to add more patient details (overloading because not all parameters are required)
@@ -49,6 +50,10 @@ public class PatientDB {
         patient.setCondition(condition);
     }
 
+    public Patient lastPatient() {
+        return newPat;
+    }
+
     // This method searches for a patient in the database using patient's name
     public Patient findPatient(String name) {
         int patientNo = 0;
@@ -57,6 +62,11 @@ public class PatientDB {
         }
         if (patientNo == 0) System.out.println("Not a registered patient");
         return patients.get(patientNo-1);   // exception if patientNo = 0, need to find a way around this
+    }
+
+    // This method returns the patient using index number
+    public Patient findPatIdx(int index) {
+        return patients.get(index-1);
     }
 
     /* method to display all patients in the database to android app

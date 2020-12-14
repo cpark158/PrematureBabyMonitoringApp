@@ -68,10 +68,18 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
         patientIcon = findViewById(R.id.icon);
 
+        spinnerArray.add("None");
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, spinnerArray);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerPatientList.setAdapter(adapter);
+
         // Instantiating the patient database and adding patients
         patientDB = new PatientDB();
         patientDB.addPatient("Martin Holloway","19/11/2020","Male");
+        spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientDB.lastPatient().getName());
         patientDB.addPatient("James Choi","25/10/2020","Male");
+        spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientDB.lastPatient().getName());
 
         // Parse the text file to get data
         txtFileProcessor.parseFile();
@@ -111,35 +119,22 @@ public class MainActivity extends AppCompatActivity {
                 msg.setTextSize(14);
                 saveButton.setVisibility(View.GONE);
 
+                /* To display all patients in the database
                 list.setVisibility(View.VISIBLE);
                 list.setText("Patients in database:\n");
                 for (int i=0; i<patientDB.getDBSize(); i++) {
-                    list.append("Name: "+patientDB.patients.get(i).getName()+"\n");
-                }
+                    list.append("Name: "+patientDB.findPatIdx.getName()+"\n");
+                } */
 
                 // Redirect to next page
                 spinnerPatientList.setVisibility(View.VISIBLE);
-                spinnerArray.add("Patient 3 " + patientNameStr);
-                spinnerPatientList.setSelection(1);
+                spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientNameStr);
+                spinnerPatientList.setSelection(patientDB.getDBSize());
                 saveButton.setVisibility(View.GONE);
                 tabLayout.setVisibility(View.VISIBLE);
                 patientIcon.setVisibility(View.VISIBLE);
             }
         });
-
-        /* Display all patients in Database on screen
-        TextView myText = new TextView(this);
-        LinearLayout lView = new LinearLayout(this);
-        for (Patient p:patientDB.patients) {
-            myText.setText("Name: "+p.getName());
-            lView.addView(myText);
-        } */
-
-        spinnerArray.add("None");
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, spinnerArray);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerPatientList.setAdapter(adapter);
 
         // View Individual Pages
         spinnerPatientList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -160,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                             msg.setText("No patient selected.");
                             msg.setGravity(Gravity.CENTER);
                             msg.setTextSize(28); }
-                        // Redirect to Individual Patient Page
+                        // Redirect to Individual Patient Page depending on patient selected from drop-down list
                         else {
                             tabLayout.setVisibility(View.VISIBLE);
                             patientIcon.setVisibility(View.VISIBLE);
@@ -168,8 +163,7 @@ public class MainActivity extends AppCompatActivity {
                             msg.setTextSize(14);
                             msg.setGravity(Gravity.FILL_HORIZONTAL);
 
-                            int index = patientDB.getDBSize();
-                            Patient currentPatient = patientDB.findPatient(patientNameStr);
+                            currentPatient = patientDB.findPatIdx(position);
                             msg.setText(String.format("%n Name: " + currentPatient.getName() + "%n Gender: " + currentPatient.getGender() + "%n Date of Birth: " + currentPatient.getDOB()));
                         }
                     }
