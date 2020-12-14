@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     TextFileProcessor txtFileProcessor = new TextFileProcessor();
     GraphPlotter graphPlot;
     PatientDB patientDB;
+    Patient currentPatient;
 
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 patientGender.setVisibility(View.GONE);
                 patientDOBStr = patientDOB.getText().toString();
                 patientDOB.setVisibility(View.GONE);
-                //patientDB.addPatient(patientNameStr,patientDOBStr,patientGenderStr);
+                patientDB.addPatient(patientNameStr,patientDOBStr,patientGenderStr);
                 msg.setText(String.format("Name: " + patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
                 msg.setTextSize(14);
 
@@ -106,6 +107,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /* Display all patients in Database on screen
+        TextView myText = new TextView(this);
+        LinearLayout lView = new LinearLayout(this);
+        for (Patient p:patientDB.patients) {
+            myText.setText("Name: "+p.getName());
+            lView.addView(myText);
+        } */
 
         spinnerArray.add("None");
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
