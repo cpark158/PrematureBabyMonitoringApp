@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
     pagerAdapter adapter;
     TextView msg;
+    TextView list;
     EditText patientName;
     EditText patientGender;
     EditText patientDOB;
@@ -55,6 +56,10 @@ public class MainActivity extends AppCompatActivity {
         msg = findViewById(R.id.textView);
         msg.setText(String.format("Welcome to Premature Baby Monitoring App. Click button below to add patient."));
         msg.setGravity(Gravity.CENTER_HORIZONTAL);
+
+        list = findViewById(R.id.patientList);
+        list.setGravity(Gravity.CENTER_HORIZONTAL);
+        list.setVisibility(View.GONE);
 
         patientName = findViewById(R.id.typeName);
         patientGender = findViewById(R.id.editGender);
@@ -97,6 +102,9 @@ public class MainActivity extends AppCompatActivity {
                 patientDB.addPatient(patientNameStr,patientDOBStr,patientGenderStr);
                 msg.setText(String.format("Name: " + patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
                 msg.setTextSize(14);
+
+                list.setVisibility(View.VISIBLE);
+                list.setText(patientDB.patients.get(0).getName());
 
                 spinnerPatientList.setVisibility(View.VISIBLE);
                 spinnerArray.add("Patient 1 " + patientNameStr);
