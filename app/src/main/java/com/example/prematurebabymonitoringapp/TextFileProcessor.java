@@ -26,5 +26,6 @@ public class TextFileProcessor{
     public ArrayList<Integer> getTimeValues(){
         return time;
     }
+
 }
 

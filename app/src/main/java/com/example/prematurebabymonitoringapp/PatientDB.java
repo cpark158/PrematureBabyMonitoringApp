@@ -7,23 +7,22 @@ import java.util.ArrayList;
 
 public class PatientDB {
     ArrayList<Patient> patients = new ArrayList<Patient>();
+    private Patient newPat;     // stores last added patient's details
 
     // Constructor
     public PatientDB() {
     }
 
     // Method to add create a new com.example.prematurebabymonitoringapp.Patient object and add it to the database, with
-    public void addPatient(String name, String DOB, String gender) {
-        Patient baby = new Patient(name);
-        baby.setDOB(DOB);
-        baby.setGender(gender);
-        patients.add(baby);
+    public void addPatient(String name, String hospID, String DOB, String gender) {
+        newPat = new Patient(name);
+        newPat.setHospID(hospID);
+        newPat.setDOB(DOB);
+        newPat.setGender(gender);
+        patients.add(newPat);
     }
 
     // method to add more patient details (overloading because not all parameters are required)
-    public void addHospID(Patient patient,String hospID) {
-        patient.setHospID(hospID);
-    }
     public void addTimeOfBirth(Patient patient,String time) {
         patient.setTimeOfBirth(time);
     }
@@ -46,14 +45,28 @@ public class PatientDB {
         patient.setCondition(condition);
     }
 
+    public Patient lastPatient() {
+        return newPat;
+    }
+
     // This method searches for a patient in the database using patient's name
     public Patient findPatient(String name) {
         int patientNo = 0;
         for(int i=0; i < patients.size(); i++) {
-            if (patients.get(i).getName() == name) patientNo = i+1;
+            if (patients.get(i).getName() == name)
+                patientNo = i+1;
         }
-        if (patientNo == 0) System.out.println("Not a registered patient");
-        return patients.get(patientNo-1);   // exception if patientNo = 0, need to find a way around this
+
+        if (patientNo == 0) {
+            System.out.println("Not a registered patient");
+            return patients.get(0);
+        }
+        else {
+        return patients.get(patientNo-1); }  // exception if patientNo = 0, need to find a way around this
+    }
+
+    public Patient findPatientByIndex(int i){
+        return patients.get(i);
     }
 
     // method to display all patients in the database

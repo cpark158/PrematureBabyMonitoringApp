@@ -100,6 +100,8 @@ public class Patient {
         this.condition = condition;
     }
 
+
+
     // Main functions
     // set monitoredParams from data in text files
     // public void graphPlotter()
