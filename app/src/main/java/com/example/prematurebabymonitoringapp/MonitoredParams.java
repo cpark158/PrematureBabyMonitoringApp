@@ -6,7 +6,8 @@ import java.util.ArrayList;
  * time and glucose concentration, which will be the x and y values for the graph.
  */
 public class MonitoredParams {
-    ArrayList<Glucose> gConc = new ArrayList<Glucose>();
+    ArrayList<Integer> glucose = new ArrayList<Integer>();
+    ArrayList<Integer> lactate = new ArrayList<Integer>();
     ArrayList<Time> time = new ArrayList<Time>();
 
     // Constructor
@@ -14,11 +15,13 @@ public class MonitoredParams {
     }
 
     // Method to add glucose concentration values
-    public void addConc(int c1,int c2) {
-        Glucose gluc = new Glucose();
-        gluc.setChannel1(c1);
-        gluc.setChannel2(c2);
-        gConc.add(gluc);
+    public void addGlucose(int conc) {
+        glucose.add(conc);
+    }
+
+    // Method to add lactate concentration values
+    public void addLactate(int conc) {
+        lactate.add(conc);
     }
 
     // Method to add time values
@@ -34,7 +37,8 @@ public class MonitoredParams {
     // Method to add data from parsed text files
     public void addParsedData(TextFileProcessor data) {
         for (int i=0; i<data.getSize();i++) {
-            this.addConc(data.getVolt1().get(i),data.getVolt2().get(i));
+            this.addGlucose(data.getVolt1().get(i));
+            this.addGlucose(data.getVolt2().get(i));
             //this.addTime(data.getTimeValues().get(i));
         }
     }
