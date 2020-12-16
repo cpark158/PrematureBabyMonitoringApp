@@ -68,9 +68,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Instantiating the patient database and adding existing patients
         patientDB = new PatientDB();
-        patientDB.addPatient("Martin Holloway","19/11/2020","Male");
+        patientDB.addPatient("Martin Holloway","27682","19/11/2020","Male");
         spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientDB.lastPatient().getName());
-        patientDB.addPatient("James Choi","25/10/2020","Male");
+        patientDB.addPatient("James Choi","52839","25/10/2020","Male");
         spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientDB.lastPatient().getName());
 
         mpLineChart = findViewById(R.id.line_chart);
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                 patientGender.setVisibility(View.GONE);
                 patientDOBStr = patientDOB.getText().toString();
                 patientDOB.setVisibility(View.GONE);
-                patientDB.addPatient(patientNameStr,patientDOBStr,patientGenderStr);
+                patientDB.addPatient(patientNameStr,patientIDstr,patientDOBStr,patientGenderStr);
                 msg.setText(String.format("Name: " + patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
                 msg.setTextSize(14);
                 saveButton.setVisibility(View.GONE);
