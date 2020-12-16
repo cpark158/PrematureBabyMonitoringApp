@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Parse .txt file and plot graph, to be displayed later
         txtFileProcessor.parseFile();
-        graphPlot = new GraphPlotter(txtFileProcessor.getTimeValues(), txtFileProcessor.getVoltageValues());
+        graphPlot = new GraphPlotter(txtFileProcessor.getTimeValues(), txtFileProcessor.getVolt1());
 
         // Retrieve XML components
         retrieveXMLComponents();
@@ -66,8 +66,20 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPatientList.setAdapter(adapter);
 
+        // Instantiating the patient database and adding existing patients
+        patientDB = new PatientDB();
+        patientDB.addPatient("Martin Holloway","19/11/2020","Male");
+        spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientDB.lastPatient().getName());
+        patientDB.addPatient("James Choi","25/10/2020","Male");
+        spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientDB.lastPatient().getName());
+
+        mpLineChart = findViewById(R.id.line_chart);
+
+        saveButton = findViewById(R.id.saveButton);
+        addPatientButton = findViewById(R.id.button);
+
         // Welcome page
-        callWelcomePage("Welcome to Premature Baby Monitoring App. Click button below to add patient.");
+        callWelcomePage("Welcome to the Premature Baby Monitoring App./n Click button below to add patient.");
 
         // Add Patient Details Page
         callNewPatientPage();
@@ -118,22 +130,6 @@ public class MainActivity extends AppCompatActivity {
         msg.setText(String.format(printText));
         msg.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        // Instantiating the patient database and adding patients
-        patientDB = new PatientDB();
-        patientDB.addPatient("Martin Holloway","19/11/2020","Male");
-        spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientDB.lastPatient().getName());
-        patientDB.addPatient("James Choi","25/10/2020","Male");
-        spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientDB.lastPatient().getName());
-
-        // Parse the text file to get data
-        txtFileProcessor.parseFile();
-        graphPlot = new GraphPlotter(txtFileProcessor.getTimeValues(), txtFileProcessor.getVolt1());
-
-        mpLineChart = findViewById(R.id.line_chart);
-
-        saveButton = findViewById(R.id.saveButton);
-        addPatientButton = findViewById(R.id.button);
-
         if (printText == "Welcome to Premature Baby Monitoring App. Click button below to add patient.")
         {
             spinnerPatientList.setVisibility(View.GONE);
@@ -181,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
                 msg.setTextSize(14);
                 saveButton.setVisibility(View.GONE);
 
-                // Redirect to next page
+                // Redirect to next page, which is the new Patient's page
                 spinnerPatientList.setVisibility(View.VISIBLE);
                 spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientNameStr);
                 spinnerPatientList.setSelection(patientDB.getDBSize());
@@ -203,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, item.toString(),
                             Toast.LENGTH_SHORT).show();
                     if (spinnerPatientList.getVisibility() == View.VISIBLE) {
-                        // Redirect to 'No Patient Selected Page'
+                        // Redirect to 'Add Patient Selected Page'
                         if (item.toString() == "Add Patient") { callNoPatientsTab();
                              }
                         // Redirect to Individual Patient Page
@@ -214,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
                             patientGender.setVisibility(View.GONE);
                             patientDOB.setVisibility(View.GONE);
                             saveButton.setVisibility(View.GONE);
-                            callPatientTab(patientDB.findPatient(patientNameStr));
+                            callPatientTab(patientDB.findPatIdx(position));
                         }
                     }
                 }
@@ -237,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (tab.getPosition()) {
                     case 0: {
                         // Open Basic Information Tab
-                        callPatientTab(prematureBabies.findPatient(patientNameStr));
+                        callPatientTab(patientDB.findPatient(patientNameStr));
                         //msg.setText(String.format("%d", tab.getPosition()));
                     }
                     case 1: {
@@ -248,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
 
                         if (tab.getPosition() == 0) {
                             // Open Basic Information Tab
-                            callPatientTab(prematureBabies.findPatient(patientNameStr));
+                            callPatientTab(patientDB.findPatient(patientNameStr));
 
                         } else if (tab.getPosition() == 1) {
                             // Open Health Tab
@@ -289,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
         msg.setTextSize(14);
         msg.setGravity(Gravity.FILL_HORIZONTAL);
 
-        int index = prematureBabies.getDBSize();
+        int index = patientDB.getDBSize();
         msg.setText(String.format("%n Name: " + inputPatient.getName() + "%n Gender: " + inputPatient.getGender() + "%n Date of Birth: " + inputPatient.getDOB()));
     }
 
