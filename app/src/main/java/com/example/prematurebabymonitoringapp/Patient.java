@@ -112,6 +112,14 @@ public class Patient {
         }
      */
 
-    // public void plot() {
-    //graph1.GraphPlotter()
+    // Method to plot glucose concentration against time (ideally against time of day)
+    public void plotGlucose() {
+        graph1 = new GraphPlotter(param.getTime(), param.getGlucose());
+    }
+
+    // Method to plot lactate concentration against time (ideally against time of day)
+    public void plotLactate() {
+        graph2 = new GraphPlotter(param.getTime(), param.getLactate());
+    }
+
 }
