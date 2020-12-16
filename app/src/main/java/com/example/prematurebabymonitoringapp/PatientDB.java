@@ -56,10 +56,20 @@ public class PatientDB {
     public Patient findPatient(String name) {
         int patientNo = 0;
         for(int i=0; i < patients.size(); i++) {
-            if (patients.get(i).getName() == name) patientNo = i+1;
+            if (patients.get(i).getName() == name)
+                patientNo = i+1;
         }
-        if (patientNo == 0) System.out.println("Not a registered patient");
-        return patients.get(patientNo-1);   // exception if patientNo = 0, need to find a way around this
+
+        if (patientNo == 0) {
+            System.out.println("Not a registered patient");
+            return patients.get(0);
+        }
+        else {
+        return patients.get(patientNo-1); }  // exception if patientNo = 0, need to find a way around this
+    }
+
+    public Patient findPatientByIndex(int i){
+        return patients.get(i);
     }
 
     // This method returns the patient using index number

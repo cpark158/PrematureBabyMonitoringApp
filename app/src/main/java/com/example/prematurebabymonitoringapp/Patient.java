@@ -102,6 +102,8 @@ public class Patient {
         this.condition = condition;
     }
 
+
+
     // Main functions
 
     /* Set monitoredParams manually
