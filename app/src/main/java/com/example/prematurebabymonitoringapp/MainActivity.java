@@ -90,9 +90,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Instantiating the patient database and adding existing patients
-        prematureBabies.addPatient("Martin Holloway",27863,"19/11/2020","Male");
+        prematureBabies.addPatient("Martin Holloway",27863,"2020-12-12","Male");
         spinnerArray.add(prematureBabies.lastPatient().getName());
-        prematureBabies.addPatient("James Choi",52839,"25/10/2020","Male");
+        prematureBabies.addPatient("James Choi",52839,"2020-12-27","Male");
         spinnerArray.add(prematureBabies.lastPatient().getName());
 
         mpLineChart = findViewById(R.id.line_chart);
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         addPatientButton = findViewById(R.id.button);
 
         // Add/Import existing patients from here onwards
-        prematureBabies.addPatient("John Smith", 01, "01/01/2020", "Male");
+        prematureBabies.addPatient("John Smith", 01, "2020-11-27", "Male");
         patientNameStr = prematureBabies.lastPatient().getName();
         spinnerArray.add(String.format(prematureBabies.lastPatient().getName()));
 
@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
                 msg.setText(String.format("Enter patient details below:"));
                 patientName.setText("Name");
                 patientHospID.setText("Hospital ID");
-                patientDOB.setText("Date of Birth");
+                patientDOB.setText("yyyy-mm-dd");
                 patientGender.setText("Gender");
                 patientName.setVisibility(View.VISIBLE);
                 patientHospID.setVisibility(View.VISIBLE);
@@ -236,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
 
         patientName.setText("Name");
         patientHospID.setText("Hospital ID");
-        patientDOB.setText("Date of Birth");
+        patientDOB.setText("yyyy-mm-dd");
         patientGender.setText("Gender");
 
         saveButton.setOnClickListener(new View.OnClickListener() {
