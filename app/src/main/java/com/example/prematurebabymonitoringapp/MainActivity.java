@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
     LineChart mpLineChart;
     TextFileProcessor txtFileProcessor = new TextFileProcessor();
     GraphPlotter graphPlot;
-    PatientDB patientDB;
     Patient currentPatient;
 
     // Initialise UI components from activity_main.xml
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     int currentChosenSpinner = 1;
     String currentChosenItem = " ";
 
-    // To store patients
+    // Instantiate database to store patients
     PatientDB prematureBabies = new PatientDB();
 
     //To populate spinner (dropdown patient list)
@@ -84,11 +83,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Instantiating the patient database and adding existing patients
-        patientDB = new PatientDB();
-        patientDB.addPatient("Martin Holloway","27682","19/11/2020","Male");
-        spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientDB.lastPatient().getName());
-        patientDB.addPatient("James Choi","52839","25/10/2020","Male");
-        spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientDB.lastPatient().getName());
+        prematureBabies.addPatient("Martin Holloway","27682","19/11/2020","Male");
+        spinnerArray.add(prematureBabies.lastPatient().getName());
+        prematureBabies.addPatient("James Choi","52839","25/10/2020","Male");
+        spinnerArray.add(prematureBabies.lastPatient().getName());
 
         mpLineChart = findViewById(R.id.line_chart);
 
@@ -214,10 +212,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Upon clicking, save inputted information
                 patientNameStr = patientName.getText().toString();
-
-                patientName.setVisibility(View.GONE);
-                patientGenderStr = patientGender.getText().toString();
-
                 patientHospIDStr = patientHospID.getText().toString();
                 patientGenderStr = patientGender.getText().toString();
                 patientDOBStr = patientDOB.getText().toString();
@@ -228,20 +222,15 @@ public class MainActivity extends AppCompatActivity {
                 // Remove current page
                 patientName.setVisibility(View.GONE);
                 patientHospID.setVisibility(View.GONE);
-
                 patientGender.setVisibility(View.GONE);
-                patientDOBStr = patientDOB.getText().toString();
                 patientDOB.setVisibility(View.GONE);
-                patientDB.addPatient(patientNameStr,patientHospIDStr,patientDOBStr,patientGenderStr);
-                msg.setText(String.format("Name: " + patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
-                msg.setTextSize(14);
                 saveButton.setVisibility(View.GONE);
                 viewCurrentPatientButton.setVisibility(View.GONE);
 
                 // Redirect to next page, which is the new Patient's page
                 spinnerPatientList.setVisibility(View.VISIBLE);
-                spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientNameStr);
-                spinnerPatientList.setSelection(patientDB.getDBSize());
+                spinnerArray.add(patientNameStr);   // add Patient to drop-down list
+                spinnerPatientList.setSelection(prematureBabies.getDBSize());
                 saveButton.setVisibility(View.GONE);
                 tabLayout.setVisibility(View.VISIBLE);
                 tabLayout.getTabAt(0).select();
@@ -249,7 +238,6 @@ public class MainActivity extends AppCompatActivity {
               
                 // Update spinner with patient database
                 // spinnerArray.add(String.format("Patient %d " + patientNameStr, prematureBabies.getDBSize()));
-                spinnerArray.add(String.format(patientNameStr));
                 spinnerPatientList.setSelection(prematureBabies.getDBSize());
                 msg.setText(String.format(" Name: " + patientNameStr + "%n Hospital ID: " + patientHospIDStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
                 msg.setTextSize(14);
