@@ -3,6 +3,7 @@ package com.example.prematurebabymonitoringapp;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.sql.Date;
 import java.util.ArrayList;
 //import java.util.Optional;
 
@@ -25,7 +26,15 @@ public class PatientDB {
         patients.add(newPat);
     }
 
+    public void addPatient(Patient newPat) {
+        this.newPat=newPat;
+        patients.add(this.newPat);
+    }
+
     // method to add more patient details (overloading because not all parameters are required)
+    public void addHospID(Patient patient,int hospID) {
+        patient.setHospID(hospID);
+    }
     public void addTimeOfBirth(Patient patient,String time) {
         patient.setTimeOfBirth(time);
     }

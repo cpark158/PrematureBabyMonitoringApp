@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.example.prematurebabymonitoringapp.network.ClientInstance;
+import com.example.prematurebabymonitoringapp.network.GetDataService;
 import com.github.mikephil.charting.charts.LineChart;
 import android.text.Editable;
 import android.view.*;
@@ -14,6 +16,11 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.google.android.material.resources.TextAppearance;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import java.sql.Date;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -47,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     String patientNameStr = "Name";
     String patientHospIDStr = "0";
     String patientGenderStr = "Male";
-    String patientDOBStr = "01/01/1990";
+    String patientDOBStr = "1990-01-01";
 
     int currentChosenSpinner = 1;
     String currentChosenItem = " ";
@@ -160,6 +167,37 @@ public class MainActivity extends AppCompatActivity {
         patientIcon.setVisibility(View.GONE);
         mpLineChart.setVisibility(View.GONE);
         saveButton.setVisibility(View.GONE);
+        //TODO Add meaningful logs for when the request fails
+
+        // Instantiating the patient database and adding patients
+        patientDB = new PatientDB();
+        patientDB.addPatient("Martin Holloway", Date.valueOf("2020-11-08"),"Male");
+        spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientDB.lastPatient().getName());
+        patientDB.addPatient("James Choi",Date.valueOf("2020-11-11"),"Male");
+        spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientDB.lastPatient().getName());
+
+        //Fetch Patient List from remote Database
+        GetDataService service = ClientInstance.getRetrofitInstance().create(GetDataService.class);
+        Call<List<Patient>> call = service.getPatientsList();
+        call.enqueue(new Callback<List<Patient>>() {
+            @Override
+            public void onResponse(Call<List<Patient>> call, Response<List<Patient>> response) {
+                List<Patient> patientList=response.body();
+                System.out.println("Good");
+                for (Patient newPat:patientList){
+                    patientDB.addPatient(newPat);
+                    spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientDB.lastPatient().getName());
+                    System.out.println(newPat.getName());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Patient>> call, Throwable t) {
+                //Toast.makeText(MainActivity.this, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
+                System.out.println("Bad");
+            }
+        });
+
 
         msg.setVisibility(View.VISIBLE);
         addPatientButton.setVisibility(View.VISIBLE);
@@ -235,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
                 tabLayout.setVisibility(View.VISIBLE);
                 tabLayout.getTabAt(0).select();
                 patientIcon.setVisibility(View.VISIBLE);
-              
+
                 // Update spinner with patient database
                 // spinnerArray.add(String.format("Patient %d " + patientNameStr, prematureBabies.getDBSize()));
                 spinnerPatientList.setSelection(prematureBabies.getDBSize());
@@ -267,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
                             patientGender.setVisibility(View.GONE);
                             patientDOB.setVisibility(View.GONE);
                             saveButton.setVisibility(View.GONE);
-                          
+
                             // callPatientTab(patientDB.findPatIdx(position));
 
                             currentChosenSpinner = adapterView.getSelectedItemPosition();
@@ -339,7 +377,7 @@ public class MainActivity extends AppCompatActivity {
         mpLineChart.setVisibility(View.INVISIBLE);
         msg.setTextSize(14);
         msg.setGravity(Gravity.FILL_HORIZONTAL);
-      
+
         int index = prematureBabies.getDBSize();
         msg.setText(String.format("%n Name: " + inputPatient.getName() + "%n Hospital ID: " + inputPatient.getHospID() + "%n Gender: " + inputPatient.getGender() + "%n Date of Birth: " + inputPatient.getDOB()));
     }
