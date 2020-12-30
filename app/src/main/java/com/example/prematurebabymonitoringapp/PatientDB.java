@@ -17,8 +17,8 @@ public class PatientDB {
     public PatientDB() {
     }
 
-    // Method to add create a new com.example.prematurebabymonitoringapp.Patient object and add it to the database, with
-    public void addPatient(String name, String hospID, String DOB, String gender) {
+    // Method to add create a new com.example.prematurebabymonitoringapp.Patient object and add it to the database
+    public void addPatient(String name, int hospID, Date DOB, String gender) {
         newPat = new Patient(hospID);
         newPat.setName(name);
         newPat.setDOB(DOB);
@@ -32,8 +32,8 @@ public class PatientDB {
     }
 
     // method to add more patient details (overloading because not all parameters are required)
-    public void addHospID(Patient patient,int hospID) {
-        patient.setHospID(hospID);
+    public void addName(Patient patient,String name) {
+        patient.setName(name);
     }
     public void addTimeOfBirth(Patient patient,String time) {
         patient.setTimeOfBirth(time);

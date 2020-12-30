@@ -32,7 +32,6 @@ public class GraphPlotter {
 
     }
 
-
     public void plot(){
 
     }

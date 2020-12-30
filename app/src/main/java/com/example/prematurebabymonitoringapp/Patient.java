@@ -12,7 +12,7 @@ public class Patient {
     @SerializedName("name")
     private String name;
     @SerializedName("hospID")
-    private String hospID;
+    private int hospID;
     @SerializedName("DOB")
     private Date DOB; // String for now, will figure out how to set it as a date
     @SerializedName("timeOfBirth")
@@ -36,7 +36,7 @@ public class Patient {
     private GraphPlotter graph2;    // graph of conc2 against time
 
     // constructor
-    public Patient(String hospID) {
+    public Patient(int hospID) {
         this.hospID = hospID;
         param = new MonitoredParams();
     }
@@ -63,11 +63,8 @@ public class Patient {
         this.gender = gender;
     }
 
-    public String getHospID() {
+    public int getHospID() {
         return hospID;
-    }
-    public void setHospID(String hospID) {
-        this.hospID = hospID;
     }
 
     public double getWeight() {
