@@ -18,10 +18,16 @@ public class PatientDB {
     }
 
     // Method to add create a new com.example.prematurebabymonitoringapp.Patient object and add it to the database
-    public void addPatient(String name, int hospID, Date DOB, String gender) {
+    public void addPatient(String name, int hospID, String DOB, String gender) {
         newPat = new Patient(hospID);
         newPat.setName(name);
-        newPat.setDOB(DOB);
+
+        /* DOB is entered as a string, then converted to a Date variable
+        Reference: https://www.javatpoint.com/java-sql-date
+         */
+        Date date = Date.valueOf(DOB);
+        newPat.setDOB(date);
+
         newPat.setGender(gender);
         patients.add(newPat);
     }

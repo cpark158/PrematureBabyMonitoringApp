@@ -90,9 +90,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Instantiating the patient database and adding existing patients
-        prematureBabies.addPatient("Martin Holloway","27682","19/11/2020","Male");
+        prematureBabies.addPatient("Martin Holloway",27863,"19/11/2020","Male");
         spinnerArray.add(prematureBabies.lastPatient().getName());
-        prematureBabies.addPatient("James Choi","52839","25/10/2020","Male");
+        prematureBabies.addPatient("James Choi",52839,"25/10/2020","Male");
         spinnerArray.add(prematureBabies.lastPatient().getName());
 
         mpLineChart = findViewById(R.id.line_chart);
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         addPatientButton = findViewById(R.id.button);
 
         // Add/Import existing patients from here onwards
-        prematureBabies.addPatient("John Smith", "01", "01/01/2020", "Male");
+        prematureBabies.addPatient("John Smith", 01, "01/01/2020", "Male");
         patientNameStr = prematureBabies.lastPatient().getName();
         spinnerArray.add(String.format(prematureBabies.lastPatient().getName()));
 
@@ -169,13 +169,6 @@ public class MainActivity extends AppCompatActivity {
         saveButton.setVisibility(View.GONE);
         //TODO Add meaningful logs for when the request fails
 
-        // Instantiating the patient database and adding patients
-        patientDB = new PatientDB();
-        patientDB.addPatient("Martin Holloway", Date.valueOf("2020-11-08"),"Male");
-        spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientDB.lastPatient().getName());
-        patientDB.addPatient("James Choi",Date.valueOf("2020-11-11"),"Male");
-        spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientDB.lastPatient().getName());
-
         //Fetch Patient List from remote Database
         GetDataService service = ClientInstance.getRetrofitInstance().create(GetDataService.class);
         Call<List<Patient>> call = service.getPatientsList();
@@ -185,8 +178,8 @@ public class MainActivity extends AppCompatActivity {
                 List<Patient> patientList=response.body();
                 System.out.println("Good");
                 for (Patient newPat:patientList){
-                    patientDB.addPatient(newPat);
-                    spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientDB.lastPatient().getName());
+                    prematureBabies.addPatient(newPat);
+                    spinnerArray.add(prematureBabies.lastPatient().getName());
                     System.out.println(newPat.getName());
                 }
             }
@@ -251,11 +244,12 @@ public class MainActivity extends AppCompatActivity {
                 // Upon clicking, save inputted information
                 patientNameStr = patientName.getText().toString();
                 patientHospIDStr = patientHospID.getText().toString();
+                int hospID = Integer.parseInt(patientHospIDStr); // convert hospID from String input to integer
                 patientGenderStr = patientGender.getText().toString();
                 patientDOBStr = patientDOB.getText().toString();
 
                 // Create an instance of Patient and add to database
-                prematureBabies.addPatient(patientNameStr,patientHospIDStr,patientDOBStr,patientGenderStr);
+                prematureBabies.addPatient(patientNameStr,hospID,patientDOBStr,patientGenderStr);
 
                 // Remove current page
                 patientName.setVisibility(View.GONE);
