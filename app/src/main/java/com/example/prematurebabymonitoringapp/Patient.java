@@ -21,14 +21,17 @@ public class Patient {
     private GraphPlotter graph2;    // graph of conc2 against time
 
     // constructor
-    public Patient(String name) {
-        this.name = name;
+    public Patient(String hospID) {
+        this.hospID = hospID;
         param = new MonitoredParams();
     }
 
     // getters and setters
     public String getName() {
         return name;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDOB() {

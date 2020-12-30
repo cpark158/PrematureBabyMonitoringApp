@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
                 patientGender.setVisibility(View.GONE);
                 patientDOBStr = patientDOB.getText().toString();
                 patientDOB.setVisibility(View.GONE);
-                patientDB.addPatient(patientNameStr,patientIDstr,patientDOBStr,patientGenderStr);
+                patientDB.addPatient(patientNameStr,patientHospIDStr,patientDOBStr,patientGenderStr);
                 msg.setText(String.format("Name: " + patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
                 msg.setTextSize(14);
                 saveButton.setVisibility(View.GONE);

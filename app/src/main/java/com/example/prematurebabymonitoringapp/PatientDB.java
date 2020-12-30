@@ -18,8 +18,8 @@ public class PatientDB {
 
     // Method to add create a new com.example.prematurebabymonitoringapp.Patient object and add it to the database, with
     public void addPatient(String name, String hospID, String DOB, String gender) {
-        newPat = new Patient(name);
-        newPat.setHospID(hospID);
+        newPat = new Patient(hospID);
+        newPat.setName(name);
         newPat.setDOB(DOB);
         newPat.setGender(gender);
         patients.add(newPat);
