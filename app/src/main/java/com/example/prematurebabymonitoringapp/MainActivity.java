@@ -267,6 +267,7 @@ public class MainActivity extends AppCompatActivity {
 
                     // Create an instance of Patient and add to database (if all data is input correctly)
                     prematureBabies.addPatient(patientNameStr, hospID, patientDOBStr, patientGenderStr);
+                    // Code for post request to add patient to server database:
 
                     // Remove current page
                     patientName.setVisibility(View.GONE);
