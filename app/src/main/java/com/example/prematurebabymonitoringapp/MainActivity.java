@@ -24,6 +24,8 @@ import retrofit2.Response;
 import java.sql.Date;
 
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -241,24 +243,27 @@ public class MainActivity extends AppCompatActivity {
                 patientNameStr = patientName.getText().toString();
                 patientHospIDStr = patientHospID.getText().toString();
                 patientGenderStr = patientGender.getText().toString();
-                System.out.println(patientGenderStr);
                 patientDOBStr = patientDOB.getText().toString();
 
                 /* need to check if hospID is an integer, if not need to issue warning to screen
                 Reference: https://stackoverflow.com/questions/51231169/java-how-to-i-ensure-an-exception-is-thrown-if-user-input-is-not-an-integer-a
                 Check if gender is male or female
                 Check if date is in correct format
+                If there are invalid inputs, a warning is printed to console and user needs to input data again
+                If all inputs are valid, a Patient object is created and added to Patient Database
                 */
                 try {
                     int hospID = Integer.parseInt(patientHospIDStr); // convert hospID from String input to integer, which throws exception
 
                     // throws exception if gender is not male or female
                     // Reference: https://stackoverflow.com/questions/11027190/custom-made-exception
-                    if (!"Male".equals(patientGenderStr) && !"Female".equals(patientGenderStr))
-                    {
+                    if (!"Male".equals(patientGenderStr) && !"Female".equals(patientGenderStr)) {
                         throw new invalidGenderException("Invalid gender. Gender can only be Male or Female");
                     }
 
+                    // Check if patientDOBstr is in the right format and convert to Date
+                    final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+                    java.util.Date d = dateFormat.parse(patientDOBStr);
 
                     // Create an instance of Patient and add to database (if all data is input correctly)
                     prematureBabies.addPatient(patientNameStr, hospID, patientDOBStr, patientGenderStr);
@@ -285,19 +290,18 @@ public class MainActivity extends AppCompatActivity {
                     msg.setText(String.format(" Name: " + patientNameStr + "%n Hospital ID: " + patientHospIDStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
                     msg.setTextSize(14);
                 }
-                catch (NumberFormatException ex) // If exception, issue warning and try again.
-                {
+                catch (NumberFormatException ex) {  // catch invalid hospID
                     System.out.println("Invalid input! HospID must be a number.");
                     // error warning (pop-up)
-                    callNewPatientPage();   // retry entering patient details
                 }
-                catch (invalidGenderException e)
-                {
+                catch (invalidGenderException e) {  // catch invalid gender
                     // error warning (pop-up)
                     System.out.println("Invalid input! Gender must be Male or Female.");
-                    callNewPatientPage();   // retry entering patient details
                 }
-
+                catch (ParseException e) {  // catch invalid date
+                    e.printStackTrace();
+                    System.out.println("Invalid date format! Date must be in the form yyyy-mm-dd");
+                }
             }
         });
     }
