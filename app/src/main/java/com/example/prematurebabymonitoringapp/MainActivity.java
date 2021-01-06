@@ -100,11 +100,11 @@ public class MainActivity extends AppCompatActivity {
         addPatientButton = findViewById(R.id.button);
 
         // Add/Import existing patients from here onwards
-        prematureBabies.addPatient("Martin Holloway",27863,"2020-12-12","Male");
+        prematureBabies.addPatient("Martin Holloway",27863,"2020-12-12","male");
         spinnerArray.add(prematureBabies.lastPatient().getName());
-        prematureBabies.addPatient("James Choi",52839,"2020-12-27","Male");
+        prematureBabies.addPatient("James Choi",52839,"2020-12-27","male");
         spinnerArray.add(prematureBabies.lastPatient().getName());
-        prematureBabies.addPatient("John Smith", 01, "2020-11-27", "Male");
+        prematureBabies.addPatient("John Smith", 01, "2020-11-27", "male");
         patientNameStr = prematureBabies.lastPatient().getName();
         spinnerArray.add(String.format(prematureBabies.lastPatient().getName()));
 
@@ -255,6 +255,7 @@ public class MainActivity extends AppCompatActivity {
                 patientNameStr = patientName.getText().toString();
                 patientHospIDStr = patientHospID.getText().toString();
                 patientGenderStr = patientGender.getText().toString();
+                patientGenderStr = patientGenderStr.toLowerCase();  // changes all letters in string to lowercase for uniformity
                 patientDOBStr = patientDOB.getText().toString();
 
                 /* need to check if hospID is an integer, if not need to issue warning to screen
@@ -269,11 +270,12 @@ public class MainActivity extends AppCompatActivity {
 
                     // throws exception if gender is not male or female
                     // Reference: https://stackoverflow.com/questions/11027190/custom-made-exception
-                    if (!"Male".equals(patientGenderStr) && !"Female".equals(patientGenderStr)) {
+                    if (!"male".equals(patientGenderStr) && !"female".equals(patientGenderStr)) {
                         throw new invalidGenderException("Invalid gender. Gender can only be Male or Female");
                     }
 
                     // Check if patientDOBstr is in the right format and convert to Date
+                    // Reference: https://stackoverflow.com/questions/36867756/unparsable-date-exception-string-to-java-sql-date
                     final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
                     java.util.Date d = dateFormat.parse(patientDOBStr);
 

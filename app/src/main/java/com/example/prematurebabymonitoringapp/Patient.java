@@ -61,6 +61,7 @@ public class Patient {
         return gender;
     }
     public void setGender(String gender) {
+        gender = gender.toLowerCase();  // ensures that gender is written in lowercase for uniformity
         this.gender = gender;
     }
 
