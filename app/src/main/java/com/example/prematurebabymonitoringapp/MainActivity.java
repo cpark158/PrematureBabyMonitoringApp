@@ -241,6 +241,7 @@ public class MainActivity extends AppCompatActivity {
                 patientNameStr = patientName.getText().toString();
                 patientHospIDStr = patientHospID.getText().toString();
                 patientGenderStr = patientGender.getText().toString();
+                System.out.println(patientGenderStr);
                 patientDOBStr = patientDOB.getText().toString();
 
                 /* need to check if hospID is an integer, if not need to issue warning to screen
@@ -253,12 +254,12 @@ public class MainActivity extends AppCompatActivity {
 
                     // throws exception if gender is not male or female
                     // Reference: https://stackoverflow.com/questions/11027190/custom-made-exception
-                    if ((patientGenderStr != "Male")||(patientGenderStr != "Female"))
+                    if (!"Male".equals(patientGenderStr) && !"Female".equals(patientGenderStr))
                     {
                         throw new invalidGenderException("Invalid gender. Gender can only be Male or Female");
                     }
                     // Create an instance of Patient and add to database (if all data is input correctly)
-                    prematureBabies.addPatient(patientNameStr,hospID,patientDOBStr,patientGenderStr);
+                    prematureBabies.addPatient(patientNameStr, hospID, patientDOBStr, patientGenderStr);
 
                     // Remove current page
                     patientName.setVisibility(View.GONE);
@@ -267,7 +268,6 @@ public class MainActivity extends AppCompatActivity {
                     patientDOB.setVisibility(View.GONE);
                     saveButton.setVisibility(View.GONE);
                     viewCurrentPatientButton.setVisibility(View.GONE);
-
                     // Redirect to next page, which is the new Patient's page
                     spinnerPatientList.setVisibility(View.VISIBLE);
                     spinnerArray.add(patientNameStr);   // add Patient to drop-down list
@@ -292,6 +292,7 @@ public class MainActivity extends AppCompatActivity {
                 catch (invalidGenderException e)
                 {
                     // error warning (pop-up)
+                    System.out.println("Invalid input! Gender must be Male or Female");
                     callNewPatientPage();   // retry entering patient details
                 }
 
