@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     LineChart mpLineChart;
     TextFileProcessor txtFileProcessor = new TextFileProcessor();
     GraphPlotter graphPlot;
-    Patient currentPatient;
 
     // Initialise UI components from activity_main.xml
     TabLayout tabLayout;
@@ -88,22 +87,41 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPatientList.setAdapter(adapter);
 
-
-        // Instantiating the patient database and adding existing patients
-        prematureBabies.addPatient("Martin Holloway",27863,"2020-12-12","Male");
-        spinnerArray.add(prematureBabies.lastPatient().getName());
-        prematureBabies.addPatient("James Choi",52839,"2020-12-27","Male");
-        spinnerArray.add(prematureBabies.lastPatient().getName());
-
         mpLineChart = findViewById(R.id.line_chart);
-
         saveButton = findViewById(R.id.saveButton);
         addPatientButton = findViewById(R.id.button);
 
         // Add/Import existing patients from here onwards
+        prematureBabies.addPatient("Martin Holloway",27863,"2020-12-12","Male");
+        spinnerArray.add(prematureBabies.lastPatient().getName());
+        prematureBabies.addPatient("James Choi",52839,"2020-12-27","Male");
+        spinnerArray.add(prematureBabies.lastPatient().getName());
         prematureBabies.addPatient("John Smith", 01, "2020-11-27", "Male");
         patientNameStr = prematureBabies.lastPatient().getName();
         spinnerArray.add(String.format(prematureBabies.lastPatient().getName()));
+
+        //Fetch Patient List from remote Database (server)
+        //TODO Add meaningful logs for when the request fails
+        GetDataService service = ClientInstance.getRetrofitInstance().create(GetDataService.class);
+        Call<List<Patient>> call = service.getPatientsList();
+        call.enqueue(new Callback<List<Patient>>() {
+            @Override
+            public void onResponse(Call<List<Patient>> call, Response<List<Patient>> response) {
+                List<Patient> patientList=response.body();
+                System.out.println("Good");
+                for (Patient newPat:patientList){
+                    prematureBabies.addPatient(newPat);
+                    spinnerArray.add(prematureBabies.lastPatient().getName());
+                    System.out.println(newPat.getName());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Patient>> call, Throwable t) {
+                //Toast.makeText(MainActivity.this, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
+                System.out.println("Bad");
+            }
+        });
 
         // Welcome page
         callWelcomePage("Welcome to the Premature Baby Monitoring App./n Click button below to add patient.");
@@ -138,13 +156,17 @@ public class MainActivity extends AppCompatActivity {
 
         viewCurrentPatientButton = findViewById(R.id.button2); // Welcome page
 
-        patientName = findViewById(R.id.typeName); // Add Patient Details Page
-        patientHospID = findViewById(R.id.typeHospID); // Add Patient Details Page
-        patientGender = findViewById(R.id.editGender); // Add Patient Details Page
-        patientDOB = findViewById(R.id.editTextDate); // Add Patient Details Page
+        // Components in 'Add Patient Details' Page
+        patientName = findViewById(R.id.typeName); // Add Patient Name text
+        patientHospID = findViewById(R.id.typeHospID); // Add Patient HospID text
+        patientGender = findViewById(R.id.editGender); // Add Patient Gender text
+        patientDOB = findViewById(R.id.editTextDate); // Add Patient DOB text
+
         spinnerPatientList = findViewById(R.id.spinnerPatient);
         tabLayout = findViewById(R.id.tabLayout);
         patientIcon = findViewById(R.id.icon);
+
+        // View Individual Pages
         spinnerPatientList = findViewById(R.id.spinnerPatient); // View individual pages
         tabLayout = findViewById(R.id.tabLayout); // View individual pages
         patientIcon = findViewById(R.id.icon); // View individual pages - basic info tab
@@ -164,30 +186,6 @@ public class MainActivity extends AppCompatActivity {
         patientIcon.setVisibility(View.GONE);
         mpLineChart.setVisibility(View.GONE);
         saveButton.setVisibility(View.GONE);
-        //TODO Add meaningful logs for when the request fails
-
-        //Fetch Patient List from remote Database (server)
-        GetDataService service = ClientInstance.getRetrofitInstance().create(GetDataService.class);
-        Call<List<Patient>> call = service.getPatientsList();
-        call.enqueue(new Callback<List<Patient>>() {
-            @Override
-            public void onResponse(Call<List<Patient>> call, Response<List<Patient>> response) {
-                List<Patient> patientList=response.body();
-                System.out.println("Good");
-                for (Patient newPat:patientList){
-                    prematureBabies.addPatient(newPat);
-                    spinnerArray.add(prematureBabies.lastPatient().getName());
-                    System.out.println(newPat.getName());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Patient>> call, Throwable t) {
-                //Toast.makeText(MainActivity.this, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
-                System.out.println("Bad");
-            }
-        });
-
 
         msg.setVisibility(View.VISIBLE);
         addPatientButton.setVisibility(View.VISIBLE);
