@@ -238,12 +238,25 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Upon clicking, save inputted information as patient details
                 patientNameStr = patientName.getText().toString();
+
                 patientHospIDStr = patientHospID.getText().toString();
-                int hospID = Integer.parseInt(patientHospIDStr); // convert hospID from String input to integer
+                /* need to check if hospID is an integer, if not need to issue warning to screen
+                Reference: https://stackoverflow.com/questions/51231169/java-how-to-i-ensure-an-exception-is-thrown-if-user-input-is-not-an-integer-a
+                 */
+                try {
+                    int hospID = Integer.parseInt(patientHospIDStr); // convert hospID from String input to integer, which throws exception
+                }
+                catch (NumberFormatException ex) // If exception, issue warning and try again.
+                {
+                    System.out.println("Invalid input! You have to enter a number");
+                    callNewPatientPage();
+                }
+                int hospID = Integer.parseInt(patientHospIDStr);
+
                 patientGenderStr = patientGender.getText().toString();
                 patientDOBStr = patientDOB.getText().toString();
 
-                // Create an instance of Patient and add to database
+                // Create an instance of Patient and add to database (if all data is input correctly)
                 prematureBabies.addPatient(patientNameStr,hospID,patientDOBStr,patientGenderStr);
 
                 // Remove current page
