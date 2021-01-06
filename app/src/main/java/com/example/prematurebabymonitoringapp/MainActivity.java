@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.example.prematurebabymonitoringapp.exceptions.invalidGenderException;
+import com.example.prematurebabymonitoringapp.network.ClientInstance;
+import com.example.prematurebabymonitoringapp.network.GetDataService;
 import com.github.mikephil.charting.charts.LineChart;
 import android.text.Editable;
 import android.view.*;
@@ -14,8 +17,15 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.google.android.material.resources.TextAppearance;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import java.sql.Date;
 
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
     LineChart mpLineChart;
     TextFileProcessor txtFileProcessor = new TextFileProcessor();
     GraphPlotter graphPlot;
-    PatientDB patientDB;
-    Patient currentPatient;
 
     // Initialise UI components from activity_main.xml
     TabLayout tabLayout;
@@ -48,12 +56,12 @@ public class MainActivity extends AppCompatActivity {
     String patientNameStr = "Name";
     String patientHospIDStr = "0";
     String patientGenderStr = "Male";
-    String patientDOBStr = "01/01/1990";
+    String patientDOBStr = "1990-01-01";
 
     int currentChosenSpinner = 1;
     String currentChosenItem = " ";
 
-    // To store patients
+    // Instantiate database to store patients
     PatientDB prematureBabies = new PatientDB();
 
     //To populate spinner (dropdown patient list)
@@ -82,23 +90,41 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPatientList.setAdapter(adapter);
 
-
-        // Instantiating the patient database and adding existing patients
-        patientDB = new PatientDB();
-        patientDB.addPatient("Martin Holloway","27682","19/11/2020","Male");
-        spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientDB.lastPatient().getName());
-        patientDB.addPatient("James Choi","52839","25/10/2020","Male");
-        spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientDB.lastPatient().getName());
-
         mpLineChart = findViewById(R.id.line_chart);
-
         saveButton = findViewById(R.id.saveButton);
         addPatientButton = findViewById(R.id.button);
 
         // Add/Import existing patients from here onwards
-        prematureBabies.addPatient("John Smith", "01", "01/01/2020", "Male");
+        prematureBabies.addPatient("Martin Holloway",27863,"2020-12-12","Male");
+        spinnerArray.add(prematureBabies.lastPatient().getName());
+        prematureBabies.addPatient("James Choi",52839,"2020-12-27","Male");
+        spinnerArray.add(prematureBabies.lastPatient().getName());
+        prematureBabies.addPatient("John Smith", 01, "2020-11-27", "Male");
         patientNameStr = prematureBabies.lastPatient().getName();
         spinnerArray.add(String.format(prematureBabies.lastPatient().getName()));
+
+        //Fetch Patient List from remote Database (server)
+        //TODO Add meaningful logs for when the request fails
+        GetDataService service = ClientInstance.getRetrofitInstance().create(GetDataService.class);
+        Call<List<Patient>> call = service.getPatientsList();
+        call.enqueue(new Callback<List<Patient>>() {
+            @Override
+            public void onResponse(Call<List<Patient>> call, Response<List<Patient>> response) {
+                List<Patient> patientList=response.body();
+                System.out.println("Good");
+                for (Patient newPat:patientList){
+                    prematureBabies.addPatient(newPat);
+                    spinnerArray.add(prematureBabies.lastPatient().getName());
+                    System.out.println(newPat.getName());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Patient>> call, Throwable t) {
+                //Toast.makeText(MainActivity.this, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
+                System.out.println("Bad");
+            }
+        });
 
         // Welcome page
         callWelcomePage("Welcome to the Premature Baby Monitoring App./n Click button below to add patient.");
@@ -131,18 +157,19 @@ public class MainActivity extends AppCompatActivity {
         list = findViewById(R.id.patientList);
         list.setVisibility(View.GONE);
 
-        patientName = findViewById(R.id.typeName);
-        patientGender = findViewById(R.id.editGender);
-        patientDOB = findViewById(R.id.editTextDate);
         viewCurrentPatientButton = findViewById(R.id.button2); // Welcome page
 
-        patientName = findViewById(R.id.typeName); // Add Patient Details Page
-        patientHospID = findViewById(R.id.typeHospID); // Add Patient Details Page
-        patientGender = findViewById(R.id.editGender); // Add Patient Details Page
-        patientDOB = findViewById(R.id.editTextDate); // Add Patient Details Page
+        // Components in 'Add Patient Details' Page
+        patientName = findViewById(R.id.typeName); // Add Patient Name text
+        patientHospID = findViewById(R.id.typeHospID); // Add Patient HospID text
+        patientGender = findViewById(R.id.editGender); // Add Patient Gender text
+        patientDOB = findViewById(R.id.editTextDate); // Add Patient DOB text
+
         spinnerPatientList = findViewById(R.id.spinnerPatient);
         tabLayout = findViewById(R.id.tabLayout);
         patientIcon = findViewById(R.id.icon);
+
+        // View Individual Pages
         spinnerPatientList = findViewById(R.id.spinnerPatient); // View individual pages
         tabLayout = findViewById(R.id.tabLayout); // View individual pages
         patientIcon = findViewById(R.id.icon); // View individual pages - basic info tab
@@ -188,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
                 msg.setText(String.format("Enter patient details below:"));
                 patientName.setText("Name");
                 patientHospID.setText("Hospital ID");
-                patientDOB.setText("Date of Birth");
+                patientDOB.setText("yyyy-mm-dd");
                 patientGender.setText("Gender");
                 patientName.setVisibility(View.VISIBLE);
                 patientHospID.setVisibility(View.VISIBLE);
@@ -207,52 +234,74 @@ public class MainActivity extends AppCompatActivity {
 
         patientName.setText("Name");
         patientHospID.setText("Hospital ID");
-        patientDOB.setText("Date of Birth");
+        patientDOB.setText("yyyy-mm-dd");
         patientGender.setText("Gender");
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Upon clicking, save inputted information
+                // Upon clicking, save inputted information as patient details
                 patientNameStr = patientName.getText().toString();
-
-                patientName.setVisibility(View.GONE);
-                patientGenderStr = patientGender.getText().toString();
-
                 patientHospIDStr = patientHospID.getText().toString();
                 patientGenderStr = patientGender.getText().toString();
                 patientDOBStr = patientDOB.getText().toString();
 
-                // Create an instance of Patient and add to database
-                prematureBabies.addPatient(patientNameStr,patientHospIDStr,patientDOBStr,patientGenderStr);
+                /* need to check if hospID is an integer, if not need to issue warning to screen
+                Reference: https://stackoverflow.com/questions/51231169/java-how-to-i-ensure-an-exception-is-thrown-if-user-input-is-not-an-integer-a
+                Check if gender is male or female
+                Check if date is in correct format
+                If there are invalid inputs, a warning is printed to console and user needs to input data again
+                If all inputs are valid, a Patient object is created and added to Patient Database
+                */
+                try {
+                    int hospID = Integer.parseInt(patientHospIDStr); // convert hospID from String input to integer, which throws exception
 
-                // Remove current page
-                patientName.setVisibility(View.GONE);
-                patientHospID.setVisibility(View.GONE);
+                    // throws exception if gender is not male or female
+                    // Reference: https://stackoverflow.com/questions/11027190/custom-made-exception
+                    if (!"Male".equals(patientGenderStr) && !"Female".equals(patientGenderStr)) {
+                        throw new invalidGenderException("Invalid gender. Gender can only be Male or Female");
+                    }
 
-                patientGender.setVisibility(View.GONE);
-                patientDOBStr = patientDOB.getText().toString();
-                patientDOB.setVisibility(View.GONE);
-                patientDB.addPatient(patientNameStr,patientIDstr,patientDOBStr,patientGenderStr);
-                msg.setText(String.format("Name: " + patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
-                msg.setTextSize(14);
-                saveButton.setVisibility(View.GONE);
-                viewCurrentPatientButton.setVisibility(View.GONE);
+                    // Check if patientDOBstr is in the right format and convert to Date
+                    final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+                    java.util.Date d = dateFormat.parse(patientDOBStr);
 
-                // Redirect to next page, which is the new Patient's page
-                spinnerPatientList.setVisibility(View.VISIBLE);
-                spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientNameStr);
-                spinnerPatientList.setSelection(patientDB.getDBSize());
-                saveButton.setVisibility(View.GONE);
-                tabLayout.setVisibility(View.VISIBLE);
-                tabLayout.getTabAt(0).select();
-                patientIcon.setVisibility(View.VISIBLE);
-              
-                // Update spinner with patient database
-                // spinnerArray.add(String.format("Patient %d " + patientNameStr, prematureBabies.getDBSize()));
-                spinnerArray.add(String.format(patientNameStr));
-                spinnerPatientList.setSelection(prematureBabies.getDBSize());
-                msg.setText(String.format(" Name: " + patientNameStr + "%n Hospital ID: " + patientHospIDStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
-                msg.setTextSize(14);
+                    // Create an instance of Patient and add to database (if all data is input correctly)
+                    prematureBabies.addPatient(patientNameStr, hospID, patientDOBStr, patientGenderStr);
+
+                    // Remove current page
+                    patientName.setVisibility(View.GONE);
+                    patientHospID.setVisibility(View.GONE);
+                    patientGender.setVisibility(View.GONE);
+                    patientDOB.setVisibility(View.GONE);
+                    saveButton.setVisibility(View.GONE);
+                    viewCurrentPatientButton.setVisibility(View.GONE);
+                    // Redirect to next page, which is the new Patient's page
+                    spinnerPatientList.setVisibility(View.VISIBLE);
+                    spinnerArray.add(patientNameStr);   // add Patient to drop-down list
+                    spinnerPatientList.setSelection(prematureBabies.getDBSize());
+                    saveButton.setVisibility(View.GONE);
+                    tabLayout.setVisibility(View.VISIBLE);
+                    tabLayout.getTabAt(0).select();
+                    patientIcon.setVisibility(View.VISIBLE);
+
+                    // Update spinner with patient database
+                    // spinnerArray.add(String.format("Patient %d " + patientNameStr, prematureBabies.getDBSize()));
+                    spinnerPatientList.setSelection(prematureBabies.getDBSize());
+                    msg.setText(String.format(" Name: " + patientNameStr + "%n Hospital ID: " + patientHospIDStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
+                    msg.setTextSize(14);
+                }
+                catch (NumberFormatException ex) {  // catch invalid hospID
+                    System.out.println("Invalid input! HospID must be a number.");
+                    // error warning (pop-up)
+                }
+                catch (invalidGenderException e) {  // catch invalid gender
+                    // error warning (pop-up)
+                    System.out.println("Invalid input! Gender must be Male or Female.");
+                }
+                catch (ParseException e) {  // catch invalid date
+                    e.printStackTrace();
+                    System.out.println("Invalid date format! Date must be in the form yyyy-mm-dd");
+                }
             }
         });
     }
@@ -279,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
                             patientGender.setVisibility(View.GONE);
                             patientDOB.setVisibility(View.GONE);
                             saveButton.setVisibility(View.GONE);
-                          
+
                             // callPatientTab(patientDB.findPatIdx(position));
 
                             currentChosenSpinner = adapterView.getSelectedItemPosition();
@@ -351,7 +400,7 @@ public class MainActivity extends AppCompatActivity {
         mpLineChart.setVisibility(View.INVISIBLE);
         msg.setTextSize(14);
         msg.setGravity(Gravity.FILL_HORIZONTAL);
-      
+
         int index = prematureBabies.getDBSize();
         msg.setText(String.format("%n Name: " + inputPatient.getName() + "%n Hospital ID: " + inputPatient.getHospID() + "%n Gender: " + inputPatient.getGender() + "%n Date of Birth: " + inputPatient.getDOB()));
     }

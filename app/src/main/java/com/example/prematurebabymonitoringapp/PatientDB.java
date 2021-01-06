@@ -3,6 +3,7 @@ package com.example.prematurebabymonitoringapp;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.sql.Date;
 import java.util.ArrayList;
 //import java.util.Optional;
 
@@ -16,16 +17,30 @@ public class PatientDB {
     public PatientDB() {
     }
 
-    // Method to add create a new com.example.prematurebabymonitoringapp.Patient object and add it to the database, with
-    public void addPatient(String name, String hospID, String DOB, String gender) {
-        newPat = new Patient(name);
-        newPat.setHospID(hospID);
-        newPat.setDOB(DOB);
+    // Method to add create a new com.example.prematurebabymonitoringapp.Patient object and add it to the database
+    public void addPatient(String name, int hospID, String DOB, String gender) {
+        newPat = new Patient(hospID);
+        newPat.setName(name);
+
+        /* DOB is entered as a string, then converted to a Date variable
+        Reference: https://www.javatpoint.com/java-sql-date
+         */
+        Date date = Date.valueOf(DOB);
+        newPat.setDOB(date);
+
         newPat.setGender(gender);
         patients.add(newPat);
     }
 
+    public void addPatient(Patient newPat) {
+        this.newPat=newPat;
+        patients.add(this.newPat);
+    }
+
     // method to add more patient details (overloading because not all parameters are required)
+    public void addName(Patient patient,String name) {
+        patient.setName(name);
+    }
     public void addTimeOfBirth(Patient patient,String time) {
         patient.setTimeOfBirth(time);
     }
