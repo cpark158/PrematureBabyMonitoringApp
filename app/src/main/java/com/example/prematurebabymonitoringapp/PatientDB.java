@@ -36,19 +36,6 @@ public class PatientDB {
 
         newPat.setGender(gender);
         patients.add(newPat);
-
-//        PostDataService service = ClientInstance.getRetrofitInstance().create(PostDataService.class);
-//        Call<Patient> postCall = service.sendPatient(newPat);
-//        postCall.enqueue(new Callback<Patient>() {
-//            @Override
-//            public void onResponse(Call<Patient> call, Response<Patient> response) {
-//            System.out.println(response.message());
-//            }
-//            @Override
-//            public void onFailure(Call<Patient> call, Throwable t) {
-//                System.out.println("bad");
-//            }
-//        });
     }
 
     public void addPatient(Patient newPat) {

@@ -8,8 +8,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ClientInstance {
     private static Retrofit retrofit;
-//    private static final String BASE_URL = "https://bhmdb2020.herokuapp.com/";
-    private static final String BASE_URL = "http://localhost:8080/bhmDB2020/";
+    private static final String BASE_URL = "https://bhmdb2020.herokuapp.com/";
+//    private static final String BASE_URL = "http://localhost:8080/bhmDB2020/";
 
     public static Retrofit getRetrofitInstance() {
         if (retrofit == null) {

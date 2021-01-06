@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.prematurebabymonitoringapp.network.ClientInstance;
 import com.example.prematurebabymonitoringapp.network.GetDataService;
+import com.example.prematurebabymonitoringapp.network.PostDataService;
 import com.github.mikephil.charting.charts.LineChart;
 import android.text.Editable;
 import android.view.*;
@@ -16,6 +17,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.google.android.material.resources.TextAppearance;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
+import com.google.gson.JsonObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -255,6 +257,27 @@ public class MainActivity extends AppCompatActivity {
                 if (!prematureBabies.patientExists(hospID)) {
                     prematureBabies.addPatient(patientNameStr, hospID, patientDOBStr, patientGenderStr);
 
+                    //Create Patient and add it to remote Database
+                    Patient newPat=new Patient(hospID);
+                    newPat.setName(patientNameStr);
+                    newPat.setDOB(Date.valueOf(patientDOBStr));
+                    newPat.setGender(patientGenderStr.toLowerCase());
+                    PostDataService service = ClientInstance.getRetrofitInstance().create(PostDataService.class);
+                    Call<JsonObject> postCall = service.sendPatient(newPat);
+                    postCall.enqueue(new Callback<JsonObject>() {
+                        @Override
+                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                            JsonObject jsonObject= response.body();
+                            String serverMsg=jsonObject.get("message").toString();
+                            Toast.makeText(MainActivity.this, serverMsg, Toast.LENGTH_SHORT).show();
+                        }
+                        @Override
+                        public void onFailure(Call<JsonObject> call, Throwable t) {
+                            Toast.makeText(MainActivity.this, "Patient couldn't be added to remote Database", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
                     // Remove current page
                     patientName.setVisibility(View.GONE);
                     patientHospID.setVisibility(View.GONE);
@@ -279,6 +302,7 @@ public class MainActivity extends AppCompatActivity {
                     msg.setTextSize(14);
                 }
                 else{
+                    //TODO stop the line below from constantly appearing
                     //Toast.makeText(MainActivity.this, "Patient with this Hospital id exists!", Toast.LENGTH_SHORT).show();
                 }
             }
