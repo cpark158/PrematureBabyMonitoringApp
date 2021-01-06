@@ -47,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
     Spinner spinnerPatientList;
     ImageView patientIcon;
 
+    Button downloadGlucose;
+    Button downloadLactate;
+
     // Initialise temporary Strings to retrieve and store inputted patient info
     String patientNameStr = "Name";
     String patientHospIDStr = "0";
@@ -125,6 +128,9 @@ public class MainActivity extends AppCompatActivity {
         commentSpace = findViewById(R.id.commentSpace);
         commentsMade = findViewById(R.id.commentsMade);
         saveCommentButton = findViewById(R.id.saveCommentButton);
+
+        downloadGlucose = findViewById(R.id.downloadGlucose);
+        downloadLactate = findViewById(R.id.downloadLactate);
     }
 
     public void callWelcomePage(String printText){
@@ -142,6 +148,8 @@ public class MainActivity extends AppCompatActivity {
         commentSpace.setVisibility(View.GONE);
         commentsMade.setVisibility(View.GONE);
         saveCommentButton.setVisibility(View.GONE);
+        downloadLactate.setVisibility(View.GONE);
+        downloadGlucose.setVisibility(View.GONE);
 
         // Set appropriate components are visible
         msg.setVisibility(View.VISIBLE);
@@ -323,6 +331,8 @@ public class MainActivity extends AppCompatActivity {
         commentSpace.setVisibility(View.INVISIBLE);
         commentsMade.setVisibility(View.INVISIBLE);
         saveCommentButton.setVisibility(View.INVISIBLE);
+        downloadGlucose.setVisibility(View.INVISIBLE);
+        downloadLactate.setVisibility(View.INVISIBLE);
 
         callWelcomePage("Refer to dropdown list above for other patients or add patient below.");
     }
@@ -337,6 +347,8 @@ public class MainActivity extends AppCompatActivity {
         commentSpace.setVisibility(View.GONE);
         commentsMade.setVisibility(View.GONE);
         saveCommentButton.setVisibility(View.GONE);
+        downloadGlucose.setVisibility(View.INVISIBLE);
+        downloadLactate.setVisibility(View.INVISIBLE);
         msg.setTextSize(14);
         msg.setGravity(Gravity.FILL_HORIZONTAL);
       
@@ -352,6 +364,8 @@ public class MainActivity extends AppCompatActivity {
 
         mpLineChart.setVisibility(View.VISIBLE);
         lactate_mpLineChart.setVisibility(View.VISIBLE);
+        downloadGlucose.setVisibility(View.VISIBLE);
+        downloadLactate.setVisibility(View.VISIBLE);
 
         msg.setText(String.format("Current glucose level: "));
         currentLactateLevel.setVisibility(View.VISIBLE);
