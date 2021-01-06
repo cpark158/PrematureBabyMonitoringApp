@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
     LineChart mpLineChart;
     TextFileProcessor txtFileProcessor = new TextFileProcessor();
     GraphPlotter graphPlot;
-    PatientDB patientDB;
     Patient currentPatient;
 
     // Initialise UI components from activity_main.xml
@@ -57,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
     PatientDB prematureBabies = new PatientDB();
 
     //To populate spinner (dropdown patient list)
-
     List<String> spinnerArray = new ArrayList<String>();
 
     public MainActivity() throws IOException {
@@ -84,34 +82,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Instantiating the patient database and adding existing patients
-        patientDB = new PatientDB();
-        patientDB.addPatient("Martin Holloway","27682","19/11/2020","Male");
-        spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientDB.lastPatient().getName());
-        patientDB.addPatient("James Choi","52839","25/10/2020","Male");
-        spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientDB.lastPatient().getName());
-
-        mpLineChart = findViewById(R.id.line_chart);
-
-        saveButton = findViewById(R.id.saveButton);
-        addPatientButton = findViewById(R.id.button);
-
-        // Add/Import existing patients from here onwards
-        prematureBabies.addPatient("John Smith", "01", "01/01/2020", "Male");
-        patientNameStr = prematureBabies.lastPatient().getName();
-        spinnerArray.add(String.format(prematureBabies.lastPatient().getName()));
+        prematureBabies.addPatient("Martin Holloway","27682","19/11/2020","Male");
+        spinnerArray.add("Patient "+prematureBabies.getDBSize()+": "+ prematureBabies.lastPatient().getHospID());
+        prematureBabies.addPatient("James Choi","52839","25/10/2020","Male");
+        spinnerArray.add("Patient "+prematureBabies.getDBSize()+": "+ prematureBabies.lastPatient().getHospID());
 
         // Welcome page
-        callWelcomePage("Welcome to the Premature Baby Monitoring App./n Click button below to add patient.");
-
-        viewCurrentPatientButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Redirect to Add Patient Details Page
-                callWelcomePage("Refer to dropdown list above for other patients or add patient below.");
-
-                // Remove Add Patient button
-                viewCurrentPatientButton.setVisibility(View.GONE);
-            }
-        });
+        callWelcomePage("Welcome to Premature Baby Monitoring App. Click button below to add patient.");
 
         // Add Patient Details Page
         callNewPatientPage();
@@ -127,22 +104,12 @@ public class MainActivity extends AppCompatActivity {
     public void retrieveXMLComponents(){
         msg = findViewById(R.id.textView); // Welcome page, all pages
         addPatientButton = findViewById(R.id.button); // Welcome page
-
-        list = findViewById(R.id.patientList);
-        list.setVisibility(View.GONE);
-
-        patientName = findViewById(R.id.typeName);
-        patientGender = findViewById(R.id.editGender);
-        patientDOB = findViewById(R.id.editTextDate);
         viewCurrentPatientButton = findViewById(R.id.button2); // Welcome page
 
         patientName = findViewById(R.id.typeName); // Add Patient Details Page
         patientHospID = findViewById(R.id.typeHospID); // Add Patient Details Page
         patientGender = findViewById(R.id.editGender); // Add Patient Details Page
         patientDOB = findViewById(R.id.editTextDate); // Add Patient Details Page
-        spinnerPatientList = findViewById(R.id.spinnerPatient);
-        tabLayout = findViewById(R.id.tabLayout);
-        patientIcon = findViewById(R.id.icon);
         spinnerPatientList = findViewById(R.id.spinnerPatient); // View individual pages
         tabLayout = findViewById(R.id.tabLayout); // View individual pages
         patientIcon = findViewById(R.id.icon); // View individual pages - basic info tab
@@ -156,17 +123,18 @@ public class MainActivity extends AppCompatActivity {
         patientHospID.setVisibility(View.GONE);
         patientGender.setVisibility(View.GONE);
         patientDOB.setVisibility(View.GONE);
-
-        //spinnerPatientList.setVisibility(View.VISIBLE);
         tabLayout.setVisibility(View.GONE);
         patientIcon.setVisibility(View.GONE);
         mpLineChart.setVisibility(View.GONE);
         saveButton.setVisibility(View.GONE);
 
+        // Set appropriate components are visible
         msg.setVisibility(View.VISIBLE);
         addPatientButton.setVisibility(View.VISIBLE);
         viewCurrentPatientButton.setVisibility(View.VISIBLE);
+        spinnerPatientList.setVisibility(View.VISIBLE);
 
+        // Set what to print
         msg.setTextSize(20);
         msg.setText(String.format(printText));
         msg.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -201,6 +169,16 @@ public class MainActivity extends AppCompatActivity {
                 viewCurrentPatientButton.setVisibility(View.GONE);
             }
         });
+
+        viewCurrentPatientButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Redirect to Add Patient Details Page
+                callWelcomePage("Refer to dropdown list above for other patients or add patient below.");
+
+                // Remove Add Patient button
+                viewCurrentPatientButton.setVisibility(View.GONE);
+            }
+        });
     }
 
     public void callNewPatientPage(){
@@ -214,10 +192,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Upon clicking, save inputted information
                 patientNameStr = patientName.getText().toString();
-
-                patientName.setVisibility(View.GONE);
-                patientGenderStr = patientGender.getText().toString();
-
                 patientHospIDStr = patientHospID.getText().toString();
                 patientGenderStr = patientGender.getText().toString();
                 patientDOBStr = patientDOB.getText().toString();
@@ -228,29 +202,20 @@ public class MainActivity extends AppCompatActivity {
                 // Remove current page
                 patientName.setVisibility(View.GONE);
                 patientHospID.setVisibility(View.GONE);
-
                 patientGender.setVisibility(View.GONE);
-                patientDOBStr = patientDOB.getText().toString();
                 patientDOB.setVisibility(View.GONE);
-                patientDB.addPatient(patientNameStr,patientIDstr,patientDOBStr,patientGenderStr);
-                msg.setText(String.format("Name: " + patientNameStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
-                msg.setTextSize(14);
                 saveButton.setVisibility(View.GONE);
                 viewCurrentPatientButton.setVisibility(View.GONE);
 
+                // Update spinner with patient database
+                spinnerArray.add("Patient "+prematureBabies.getDBSize()+": "+ patientHospIDStr);
+                spinnerPatientList.setSelection(prematureBabies.getDBSize());
+
                 // Redirect to next page, which is the new Patient's page
                 spinnerPatientList.setVisibility(View.VISIBLE);
-                spinnerArray.add("Patient "+patientDB.getDBSize()+": "+ patientNameStr);
-                spinnerPatientList.setSelection(patientDB.getDBSize());
-                saveButton.setVisibility(View.GONE);
                 tabLayout.setVisibility(View.VISIBLE);
                 tabLayout.getTabAt(0).select();
                 patientIcon.setVisibility(View.VISIBLE);
-              
-                // Update spinner with patient database
-                // spinnerArray.add(String.format("Patient %d " + patientNameStr, prematureBabies.getDBSize()));
-                spinnerArray.add(String.format(patientNameStr));
-                spinnerPatientList.setSelection(prematureBabies.getDBSize());
                 msg.setText(String.format(" Name: " + patientNameStr + "%n Hospital ID: " + patientHospIDStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
                 msg.setTextSize(14);
             }
@@ -279,8 +244,6 @@ public class MainActivity extends AppCompatActivity {
                             patientGender.setVisibility(View.GONE);
                             patientDOB.setVisibility(View.GONE);
                             saveButton.setVisibility(View.GONE);
-                          
-                            // callPatientTab(patientDB.findPatIdx(position));
 
                             currentChosenSpinner = adapterView.getSelectedItemPosition();
                             currentChosenItem = adapterView.getSelectedItem().toString();
