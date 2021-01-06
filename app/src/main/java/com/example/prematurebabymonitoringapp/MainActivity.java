@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.example.prematurebabymonitoringapp.exceptions.invalidGenderException;
 import com.example.prematurebabymonitoringapp.network.ClientInstance;
 import com.example.prematurebabymonitoringapp.network.GetDataService;
 import com.github.mikephil.charting.charts.LineChart;
@@ -238,49 +239,62 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Upon clicking, save inputted information as patient details
                 patientNameStr = patientName.getText().toString();
-
                 patientHospIDStr = patientHospID.getText().toString();
+                patientGenderStr = patientGender.getText().toString();
+                patientDOBStr = patientDOB.getText().toString();
+
                 /* need to check if hospID is an integer, if not need to issue warning to screen
                 Reference: https://stackoverflow.com/questions/51231169/java-how-to-i-ensure-an-exception-is-thrown-if-user-input-is-not-an-integer-a
-                 */
+                Check if gender is male or female
+                Check if date is in correct format
+                */
                 try {
                     int hospID = Integer.parseInt(patientHospIDStr); // convert hospID from String input to integer, which throws exception
+
+                    // throws exception if gender is not male or female
+                    // Reference: https://stackoverflow.com/questions/11027190/custom-made-exception
+                    if ((patientGenderStr != "Male")||(patientGenderStr != "Female"))
+                    {
+                        throw new invalidGenderException("Invalid gender. Gender can only be Male or Female");
+                    }
+                    // Create an instance of Patient and add to database (if all data is input correctly)
+                    prematureBabies.addPatient(patientNameStr,hospID,patientDOBStr,patientGenderStr);
+
+                    // Remove current page
+                    patientName.setVisibility(View.GONE);
+                    patientHospID.setVisibility(View.GONE);
+                    patientGender.setVisibility(View.GONE);
+                    patientDOB.setVisibility(View.GONE);
+                    saveButton.setVisibility(View.GONE);
+                    viewCurrentPatientButton.setVisibility(View.GONE);
+
+                    // Redirect to next page, which is the new Patient's page
+                    spinnerPatientList.setVisibility(View.VISIBLE);
+                    spinnerArray.add(patientNameStr);   // add Patient to drop-down list
+                    spinnerPatientList.setSelection(prematureBabies.getDBSize());
+                    saveButton.setVisibility(View.GONE);
+                    tabLayout.setVisibility(View.VISIBLE);
+                    tabLayout.getTabAt(0).select();
+                    patientIcon.setVisibility(View.VISIBLE);
+
+                    // Update spinner with patient database
+                    // spinnerArray.add(String.format("Patient %d " + patientNameStr, prematureBabies.getDBSize()));
+                    spinnerPatientList.setSelection(prematureBabies.getDBSize());
+                    msg.setText(String.format(" Name: " + patientNameStr + "%n Hospital ID: " + patientHospIDStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
+                    msg.setTextSize(14);
                 }
                 catch (NumberFormatException ex) // If exception, issue warning and try again.
                 {
                     System.out.println("Invalid input! You have to enter a number");
-                    callNewPatientPage();
+                    // error warning (pop-up)
+                    callNewPatientPage();   // retry entering patient details
                 }
-                int hospID = Integer.parseInt(patientHospIDStr);
+                catch (invalidGenderException e)
+                {
+                    // error warning (pop-up)
+                    callNewPatientPage();   // retry entering patient details
+                }
 
-                patientGenderStr = patientGender.getText().toString();
-                patientDOBStr = patientDOB.getText().toString();
-
-                // Create an instance of Patient and add to database (if all data is input correctly)
-                prematureBabies.addPatient(patientNameStr,hospID,patientDOBStr,patientGenderStr);
-
-                // Remove current page
-                patientName.setVisibility(View.GONE);
-                patientHospID.setVisibility(View.GONE);
-                patientGender.setVisibility(View.GONE);
-                patientDOB.setVisibility(View.GONE);
-                saveButton.setVisibility(View.GONE);
-                viewCurrentPatientButton.setVisibility(View.GONE);
-
-                // Redirect to next page, which is the new Patient's page
-                spinnerPatientList.setVisibility(View.VISIBLE);
-                spinnerArray.add(patientNameStr);   // add Patient to drop-down list
-                spinnerPatientList.setSelection(prematureBabies.getDBSize());
-                saveButton.setVisibility(View.GONE);
-                tabLayout.setVisibility(View.VISIBLE);
-                tabLayout.getTabAt(0).select();
-                patientIcon.setVisibility(View.VISIBLE);
-
-                // Update spinner with patient database
-                // spinnerArray.add(String.format("Patient %d " + patientNameStr, prematureBabies.getDBSize()));
-                spinnerPatientList.setSelection(prematureBabies.getDBSize());
-                msg.setText(String.format(" Name: " + patientNameStr + "%n Hospital ID: " + patientHospIDStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
-                msg.setTextSize(14);
             }
         });
     }
