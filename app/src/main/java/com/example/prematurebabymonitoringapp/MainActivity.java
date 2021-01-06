@@ -258,6 +258,8 @@ public class MainActivity extends AppCompatActivity {
                     {
                         throw new invalidGenderException("Invalid gender. Gender can only be Male or Female");
                     }
+
+
                     // Create an instance of Patient and add to database (if all data is input correctly)
                     prematureBabies.addPatient(patientNameStr, hospID, patientDOBStr, patientGenderStr);
 
@@ -285,14 +287,14 @@ public class MainActivity extends AppCompatActivity {
                 }
                 catch (NumberFormatException ex) // If exception, issue warning and try again.
                 {
-                    System.out.println("Invalid input! You have to enter a number");
+                    System.out.println("Invalid input! HospID must be a number.");
                     // error warning (pop-up)
                     callNewPatientPage();   // retry entering patient details
                 }
                 catch (invalidGenderException e)
                 {
                     // error warning (pop-up)
-                    System.out.println("Invalid input! Gender must be Male or Female");
+                    System.out.println("Invalid input! Gender must be Male or Female.");
                     callNewPatientPage();   // retry entering patient details
                 }
 
