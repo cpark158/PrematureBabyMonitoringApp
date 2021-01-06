@@ -136,9 +136,6 @@ public class MainActivity extends AppCompatActivity {
         list = findViewById(R.id.patientList);
         list.setVisibility(View.GONE);
 
-        patientName = findViewById(R.id.typeName);
-        patientGender = findViewById(R.id.editGender);
-        patientDOB = findViewById(R.id.editTextDate);
         viewCurrentPatientButton = findViewById(R.id.button2); // Welcome page
 
         patientName = findViewById(R.id.typeName); // Add Patient Details Page
@@ -169,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         saveButton.setVisibility(View.GONE);
         //TODO Add meaningful logs for when the request fails
 
-        //Fetch Patient List from remote Database
+        //Fetch Patient List from remote Database (server)
         GetDataService service = ClientInstance.getRetrofitInstance().create(GetDataService.class);
         Call<List<Patient>> call = service.getPatientsList();
         call.enqueue(new Callback<List<Patient>>() {
@@ -241,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Upon clicking, save inputted information
+                // Upon clicking, save inputted information as patient details
                 patientNameStr = patientName.getText().toString();
                 patientHospIDStr = patientHospID.getText().toString();
                 int hospID = Integer.parseInt(patientHospIDStr); // convert hospID from String input to integer

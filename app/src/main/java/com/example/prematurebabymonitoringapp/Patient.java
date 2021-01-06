@@ -14,7 +14,7 @@ public class Patient {
     @SerializedName("hospID")
     private int hospID;
     @SerializedName("DOB")
-    private Date DOB; // String for now, will figure out how to set it as a date
+    private Date DOB;
     @SerializedName("timeOfBirth")
     private String timeOfBirth;
     @SerializedName("weight")
