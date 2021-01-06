@@ -21,9 +21,6 @@ import java.util.Calendar;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import java.sql.Date;
-
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -151,9 +148,6 @@ public class MainActivity extends AppCompatActivity {
     public void retrieveXMLComponents(){
         msg = findViewById(R.id.textView); // Welcome page, all pages
         addPatientButton = findViewById(R.id.button); // Welcome page
-
-        list = findViewById(R.id.patientList);
-        list.setVisibility(View.GONE);
 
         viewCurrentPatientButton = findViewById(R.id.button2); // Welcome page
 
