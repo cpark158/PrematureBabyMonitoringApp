@@ -1,6 +1,8 @@
 package com.example.prematurebabymonitoringapp;//import java.time.LocalDate;
 //import java.time.LocalTime;
 
+import java.util.ArrayList;
+
 /** Patient is a class which contains all the data for one patient */
 
 public class Patient {
@@ -19,6 +21,7 @@ public class Patient {
     private MonitoredParams param;
     private GraphPlotter graph1;    // graph of conc1 against time
     private GraphPlotter graph2;    // graph of conc2 against time
+    private ArrayList<String> comments = new ArrayList<String>();
 
     // constructor
     public Patient(String name) {
@@ -100,6 +103,21 @@ public class Patient {
     }
     public void setCondition(String condition) {
         this.condition = condition;
+    }
+
+    public void addComment(String comment){
+        comments.add(comment);
+    }
+
+    public int getNumberOfComment(){
+        return comments.size();
+    }
+
+    public String getCommentByIndex(int index){
+        if(index < comments.size()){
+            return comments.get(index);
+        }
+        else return "";
     }
 
 

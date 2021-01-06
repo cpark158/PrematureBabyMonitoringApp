@@ -14,32 +14,36 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.google.android.material.resources.TextAppearance;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
-
+import java.util.Calendar;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     // Initialise graph plotting parameters
     LineChart mpLineChart;
+    LineChart lactate_mpLineChart;
     TextFileProcessor txtFileProcessor = new TextFileProcessor();
     GraphPlotter graphPlot;
-    Patient currentPatient;
 
     // Initialise UI components from activity_main.xml
     TabLayout tabLayout;
     ViewPager viewPager;
     pagerAdapter adapter;
     TextView msg;
-    TextView list;
+    TextView currentLactateLevel;
+    TextView commentsMade;
     EditText patientName;
     EditText patientHospID;
     EditText patientGender;
     EditText patientDOB;
+    EditText commentSpace;
     Button addPatientButton;
     Button viewCurrentPatientButton;
     Button saveButton;
+    Button saveCommentButton;
     Spinner spinnerPatientList;
     ImageView patientIcon;
 
@@ -115,6 +119,12 @@ public class MainActivity extends AppCompatActivity {
         patientIcon = findViewById(R.id.icon); // View individual pages - basic info tab
         mpLineChart = findViewById(R.id.line_chart); // View individual pages - health tab
         saveButton = findViewById(R.id.saveButton); // View individual pages - health tab
+
+        lactate_mpLineChart = findViewById(R.id.lactate_line_chart);
+        currentLactateLevel = findViewById(R.id.lactateText);
+        commentSpace = findViewById(R.id.commentSpace);
+        commentsMade = findViewById(R.id.commentsMade);
+        saveCommentButton = findViewById(R.id.saveCommentButton);
     }
 
     public void callWelcomePage(String printText){
@@ -127,6 +137,11 @@ public class MainActivity extends AppCompatActivity {
         patientIcon.setVisibility(View.GONE);
         mpLineChart.setVisibility(View.GONE);
         saveButton.setVisibility(View.GONE);
+        lactate_mpLineChart.setVisibility(View.GONE);
+        currentLactateLevel.setVisibility(View.GONE);
+        commentSpace.setVisibility(View.GONE);
+        commentsMade.setVisibility(View.GONE);
+        saveCommentButton.setVisibility(View.GONE);
 
         // Set appropriate components are visible
         msg.setVisibility(View.VISIBLE);
@@ -282,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
                             callPatientTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 1) {
                             // Open Health Tab
-                            callHealthTab();
+                            callHealthTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
                         }
 
                     }
@@ -303,6 +318,11 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setVisibility(View.INVISIBLE);
         patientIcon.setVisibility(View.INVISIBLE);
         mpLineChart.setVisibility(View.INVISIBLE);
+        lactate_mpLineChart.setVisibility(View.INVISIBLE);
+        currentLactateLevel.setVisibility(View.INVISIBLE);
+        commentSpace.setVisibility(View.INVISIBLE);
+        commentsMade.setVisibility(View.INVISIBLE);
+        saveCommentButton.setVisibility(View.INVISIBLE);
 
         callWelcomePage("Refer to dropdown list above for other patients or add patient below.");
     }
@@ -312,6 +332,11 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(0).select();
         patientIcon.setVisibility(View.VISIBLE);
         mpLineChart.setVisibility(View.INVISIBLE);
+        lactate_mpLineChart.setVisibility(View.GONE);
+        currentLactateLevel.setVisibility(View.GONE);
+        commentSpace.setVisibility(View.GONE);
+        commentsMade.setVisibility(View.GONE);
+        saveCommentButton.setVisibility(View.GONE);
         msg.setTextSize(14);
         msg.setGravity(Gravity.FILL_HORIZONTAL);
       
@@ -319,11 +344,65 @@ public class MainActivity extends AppCompatActivity {
         msg.setText(String.format("%n Name: " + inputPatient.getName() + "%n Hospital ID: " + inputPatient.getHospID() + "%n Gender: " + inputPatient.getGender() + "%n Date of Birth: " + inputPatient.getDOB()));
     }
 
-    public void callHealthTab(){
+    public void callHealthTab(final Patient inputPatient){
+        final Date currentTime = Calendar.getInstance().getTime();
+        final String[] commentsToPrint = {""};
+
         patientIcon.setVisibility(View.INVISIBLE);
-        msg.setText(String.format("Current glucose level: "));
+
         mpLineChart.setVisibility(View.VISIBLE);
+        lactate_mpLineChart.setVisibility(View.VISIBLE);
+
+        msg.setText(String.format("Current glucose level: "));
+        currentLactateLevel.setVisibility(View.VISIBLE);
+        currentLactateLevel.setTextSize(14);
+        currentLactateLevel.setText("Current lactate level: ");
+
+        commentsMade.setVisibility(View.VISIBLE);
+        commentsMade.setTextSize(14);
+        if(inputPatient.getNumberOfComment() == 0){
+            commentsMade.setText("");
+        }
+        else {
+            commentsToPrint[0] = "";
+            for(int i=0; i<inputPatient.getNumberOfComment();i++){
+                commentsToPrint[0] = commentsToPrint[0] + "\n" + inputPatient.getCommentByIndex(i);
+            }
+            commentsMade.setText(commentsToPrint[0]);
+        }
+
+        commentSpace.setVisibility(View.VISIBLE);
+        saveCommentButton.setVisibility(View.VISIBLE);
+        saveCommentButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                inputPatient.addComment(parseDateTime(currentTime) + " " + commentSpace.getText().toString());
+                if(inputPatient.getNumberOfComment() == 0){
+                    commentsMade.setText("Comments: ");
+                }
+                else{
+                    commentsMade.setVisibility(View.VISIBLE);
+                    commentsMade.setTextSize(14);
+                    commentsToPrint[0] = "";
+                    for(int i=0; i<inputPatient.getNumberOfComment();i++){
+                        commentsToPrint[0] = commentsToPrint[0] + "\n" + inputPatient.getCommentByIndex(i);
+                    }
+                    commentsMade.setText(commentsToPrint[0]);
+                }
+            }
+        });
+
+        commentsMade.setVisibility(View.VISIBLE);
+
         mpLineChart.setData(graphPlot.getData());
         mpLineChart.invalidate();
+        lactate_mpLineChart.setData(graphPlot.getData());
+        lactate_mpLineChart.invalidate();
+
+    }
+
+    public String parseDateTime(Date currentDateTime){
+        String[] parsed = currentDateTime.toString().split(" ");
+        String updated = parsed[1] + " " + parsed[2] + " " + parsed[5] + " " + parsed[3];
+        return updated;
     }
 }
