@@ -170,27 +170,30 @@ public class MainActivity extends AppCompatActivity {
         //TODO Add meaningful logs for when the request fails
 
         //Fetch Patient List from remote Database
+        /* Reference 3 - taken from https://medium.com/@prakash_pun/retrofit-a-simple-android-tutorial-48437e4e5a23 */
         GetDataService service = ClientInstance.getRetrofitInstance().create(GetDataService.class);
         Call<List<Patient>> call = service.getPatientsList();
         call.enqueue(new Callback<List<Patient>>() {
             @Override
             public void onResponse(Call<List<Patient>> call, Response<List<Patient>> response) {
                 List<Patient> patientList=response.body();
-                System.out.println("Good");
                 for (Patient newPat:patientList){
-                    prematureBabies.addPatient(newPat);
-                    spinnerArray.add(prematureBabies.lastPatient().getName());
-                    System.out.println(newPat.getName());
+                    if(!prematureBabies.patientExists(newPat.getHospID())){
+                        prematureBabies.addPatient(newPat);
+                        spinnerArray.add(prematureBabies.lastPatient().getName());
+                    }
+                    else{
+                        Toast.makeText(MainActivity.this, "Patient with this Hospital id exists!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
-
             @Override
             public void onFailure(Call<List<Patient>> call, Throwable t) {
-                //Toast.makeText(MainActivity.this, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
-                System.out.println("Bad");
+                Toast.makeText(MainActivity.this, "Remote Patients list wasn't retrieved!", Toast.LENGTH_SHORT).show();
+
             }
         });
-
+        /* end of reference 1 */
 
         msg.setVisibility(View.VISIBLE);
         addPatientButton.setVisibility(View.VISIBLE);
@@ -249,30 +252,35 @@ public class MainActivity extends AppCompatActivity {
                 patientDOBStr = patientDOB.getText().toString();
 
                 // Create an instance of Patient and add to database
-                prematureBabies.addPatient(patientNameStr,hospID,patientDOBStr,patientGenderStr);
+                if (!prematureBabies.patientExists(hospID)) {
+                    prematureBabies.addPatient(patientNameStr, hospID, patientDOBStr, patientGenderStr);
 
-                // Remove current page
-                patientName.setVisibility(View.GONE);
-                patientHospID.setVisibility(View.GONE);
-                patientGender.setVisibility(View.GONE);
-                patientDOB.setVisibility(View.GONE);
-                saveButton.setVisibility(View.GONE);
-                viewCurrentPatientButton.setVisibility(View.GONE);
+                    // Remove current page
+                    patientName.setVisibility(View.GONE);
+                    patientHospID.setVisibility(View.GONE);
+                    patientGender.setVisibility(View.GONE);
+                    patientDOB.setVisibility(View.GONE);
+                    saveButton.setVisibility(View.GONE);
+                    viewCurrentPatientButton.setVisibility(View.GONE);
 
-                // Redirect to next page, which is the new Patient's page
-                spinnerPatientList.setVisibility(View.VISIBLE);
-                spinnerArray.add(patientNameStr);   // add Patient to drop-down list
-                spinnerPatientList.setSelection(prematureBabies.getDBSize());
-                saveButton.setVisibility(View.GONE);
-                tabLayout.setVisibility(View.VISIBLE);
-                tabLayout.getTabAt(0).select();
-                patientIcon.setVisibility(View.VISIBLE);
+                    // Redirect to next page, which is the new Patient's page
+                    spinnerPatientList.setVisibility(View.VISIBLE);
+                    spinnerArray.add(patientNameStr);   // add Patient to drop-down list
+                    spinnerPatientList.setSelection(prematureBabies.getDBSize());
+                    saveButton.setVisibility(View.GONE);
+                    tabLayout.setVisibility(View.VISIBLE);
+                    tabLayout.getTabAt(0).select();
+                    patientIcon.setVisibility(View.VISIBLE);
 
-                // Update spinner with patient database
-                // spinnerArray.add(String.format("Patient %d " + patientNameStr, prematureBabies.getDBSize()));
-                spinnerPatientList.setSelection(prematureBabies.getDBSize());
-                msg.setText(String.format(" Name: " + patientNameStr + "%n Hospital ID: " + patientHospIDStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
-                msg.setTextSize(14);
+                    // Update spinner with patient database
+                    // spinnerArray.add(String.format("Patient %d " + patientNameStr, prematureBabies.getDBSize()));
+                    spinnerPatientList.setSelection(prematureBabies.getDBSize());
+                    msg.setText(String.format(" Name: " + patientNameStr + "%n Hospital ID: " + patientHospIDStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
+                    msg.setTextSize(14);
+                }
+                else{
+                    //Toast.makeText(MainActivity.this, "Patient with this Hospital id exists!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
