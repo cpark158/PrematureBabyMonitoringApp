@@ -187,9 +187,9 @@
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.248"
             app:layout_constraintHorizontal_bias="0.939"/>
     <Button
-            android:text="Download Glucose Data"
+            android:text="Download Data"
             android:layout_width="231dp"
-            android:layout_height="45dp" android:id="@+id/downloadGlucose"
+            android:layout_height="45dp" android:id="@+id/downloadData"
             android:visibility="visible"
             app:layout_constraintEnd_toStartOf="@+id/line_chart"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/tabLayout"
@@ -209,7 +209,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:visibility="visible"
             app:layout_constraintHorizontal_bias="0.076" android:layout_marginBottom="34dp"
-            app:layout_constraintBottom_toTopOf="@+id/downloadGlucose"/>
+            app:layout_constraintBottom_toTopOf="@+id/downloadData"/>
     <Button
             android:text="Download Lactate Data"
             android:layout_width="231dp"
