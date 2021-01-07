@@ -3,7 +3,6 @@ package com.example.prematurebabymonitoringapp;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.prematurebabymonitoringapp.exceptions.invalidGenderException;
@@ -11,12 +10,13 @@ import com.example.prematurebabymonitoringapp.network.ClientInstance;
 import com.example.prematurebabymonitoringapp.network.GetDataService;
 import com.example.prematurebabymonitoringapp.network.PostDataService;
 import com.github.mikephil.charting.charts.LineChart;
-import android.text.Editable;
 import android.view.*;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.tabs.TabLayout;
 import java.util.Calendar;
+
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.gson.JsonObject;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,6 +28,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.app.DownloadManager;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
 
     // Initialise graph plotting parameters
@@ -35,6 +48,11 @@ public class MainActivity extends AppCompatActivity {
     LineChart lactate_mpLineChart;
     TextFileProcessor txtFileProcessor = new TextFileProcessor();
     GraphPlotter graphPlot;
+
+    //Initialising reference to file in firebase storage for download
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef = storage.getReference();
+    StorageReference fileRef = storageRef.child("Monitoring_20190731_135114.txt");
 
     // Initialise UI components from activity_main.xml
     TabLayout tabLayout;
@@ -56,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     Button downloadGlucose;
     Button downloadLactate;
     EditText enterFilename;
+    Button downloadData;
 
     // Initialise temporary Strings to retrieve and store inputted patient info
     String patientNameStr = "Name";
@@ -75,6 +94,10 @@ public class MainActivity extends AppCompatActivity {
     public MainActivity() throws IOException {
     }
 
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +106,9 @@ public class MainActivity extends AppCompatActivity {
         // Parse .txt file and plot graph, to be displayed later
         txtFileProcessor.parseFile();
         graphPlot = new GraphPlotter(txtFileProcessor.getTimeValues(), txtFileProcessor.getVolt1());
+
+
+
 
         // Retrieve XML components
         retrieveXMLComponents();
@@ -97,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
         mpLineChart = findViewById(R.id.line_chart);
         saveButton = findViewById(R.id.saveButton);
         addPatientButton = findViewById(R.id.button);
+        downloadData = findViewById(R.id.downloadData);
 
         // Add/Import existing patients from here onwards
         prematureBabies.addPatient("Martin Holloway",27863,"2020-12-12","male");
@@ -176,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         commentsMade = findViewById(R.id.commentsMade);
         saveCommentButton = findViewById(R.id.saveCommentButton);
 
-        downloadGlucose = findViewById(R.id.downloadGlucose);
+        downloadGlucose = findViewById(R.id.downloadData);
         downloadLactate = findViewById(R.id.downloadLactate);
         enterFilename = findViewById(R.id.enterFilename);
     }
@@ -531,6 +558,19 @@ public class MainActivity extends AppCompatActivity {
         lactate_mpLineChart.setData(graphPlot.getData());
         lactate_mpLineChart.invalidate();
 
+        downloadData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String filename = enterFilename.getText().toString();
+                try {
+                    downloadFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
         downloadLactate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String filename = enterFilename.getText().toString();
@@ -539,6 +579,26 @@ public class MainActivity extends AppCompatActivity {
         downloadGlucose.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String filename = enterFilename.getText().toString();
+            }
+        });
+
+    }
+
+    //Downloading data text files from firebase storage for parsing
+    public void downloadFile() throws IOException {
+        File localFile = File.createTempFile("Monitoring_20190731_135114","txt");
+        fileRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                //downloaded file is stored in default android storage and can be opened with localFile variable
+                Toast.makeText(MainActivity.this, "File Download Success",Toast.LENGTH_SHORT).show();
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Toast.makeText(MainActivity.this, "File Download Failed",Toast.LENGTH_SHORT).show();
+                //Errors will be handled here
             }
         });
 

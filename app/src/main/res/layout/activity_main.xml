@@ -187,9 +187,9 @@
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.248"
             app:layout_constraintHorizontal_bias="0.939"/>
     <Button
-            android:text="Download Glucose Data"
+            android:text="Download Data"
             android:layout_width="231dp"
-            android:layout_height="45dp" android:id="@+id/downloadGlucose"
+            android:layout_height="45dp" android:id="@+id/downloadData"
             android:visibility="visible"
             app:layout_constraintEnd_toStartOf="@+id/line_chart"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/tabLayout"
@@ -209,7 +209,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:visibility="visible"
             app:layout_constraintHorizontal_bias="0.076" android:layout_marginBottom="34dp"
-            app:layout_constraintBottom_toTopOf="@+id/downloadGlucose"/>
+            app:layout_constraintBottom_toTopOf="@+id/downloadData"/>
     <Button
             android:text="Download Lactate Data"
             android:layout_width="231dp"
@@ -285,21 +285,21 @@
             app:layout_constraintEnd_toEndOf="parent" android:textColorLink="#AC92A6" android:textColor="#000000"
             android:textColorHint="#AC92A6"/>
     -->
-<!--    <TextView-->
-<!--            android:text="@string/patientList"-->
-<!--            android:layout_width="147dp"-->
-<!--            android:layout_height="40dp" android:id="@+id/patientList"-->
-<!--            android:background="#00E7F3F4"-->
-<!--            android:textColorHint="#FFFFFF"-->
-<!--            android:textColorLink="#FFFFFF" android:textColor="#000000" android:textColorHighlight="#00DC9E"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:layout_constraintBottom_toTopOf="@+id/tabLayout" app:layout_constraintHorizontal_bias="0.993"-->
-<!--            app:layout_constraintVertical_bias="1.0" android:textAppearance="@style/TextAppearance.AppCompat.Large"/>-->
+    <!--    <TextView-->
+    <!--            android:text="@string/patientList"-->
+    <!--            android:layout_width="147dp"-->
+    <!--            android:layout_height="40dp" android:id="@+id/patientList"-->
+    <!--            android:background="#00E7F3F4"-->
+    <!--            android:textColorHint="#FFFFFF"-->
+    <!--            android:textColorLink="#FFFFFF" android:textColor="#000000" android:textColorHighlight="#00DC9E"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"-->
+    <!--            app:layout_constraintBottom_toTopOf="@+id/tabLayout" app:layout_constraintHorizontal_bias="0.993"-->
+    <!--            app:layout_constraintVertical_bias="1.0" android:textAppearance="@style/TextAppearance.AppCompat.Large"/>-->
 
     <!-- View pager to swipe views -->
 
-<!-- <<<<<<< CianneDev
+    <!-- <<<<<<< CianneDev
         <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
