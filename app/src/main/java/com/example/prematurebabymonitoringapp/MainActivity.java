@@ -117,13 +117,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Patient>> call, Response<List<Patient>> response) {
                 List<Patient> patientList=response.body();
-                for (Patient newPat:patientList){
-                    if(!prematureBabies.patientExists(newPat.getHospID())){
+                for (Patient newPat:patientList) {
+                    if (!prematureBabies.patientExists(newPat.getHospID())) {
                         prematureBabies.addPatient(newPat);
                         spinnerArray.add(prematureBabies.lastPatient().getName());
-                    }
-                    else{
-                        Toast.makeText(MainActivity.this, "Patient with this Hospital id exists!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -328,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
                         msg.setTextSize(14);
                     }
                     else{
-                        Toast.makeText(MainActivity.this, "Patient with this Hospital id exists!", Toast.LENGTH_SHORT).show();
+                        createDuplicateHospIDAlert();
                     }
 
                 }
@@ -345,10 +342,6 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("Invalid date format! Date must be in the form yyyy-mm-dd");
                 }
 
-                /* else{
-                    //TODO stop the line below from constantly appearing
-                    //Toast.makeText(MainActivity.this, "Patient with this Hospital id exists!", Toast.LENGTH_SHORT).show();
-                } */
             }
 
         });
@@ -546,5 +539,19 @@ public class MainActivity extends AppCompatActivity {
         });
         alertDialog.show();
         }
+
+    public void createDuplicateHospIDAlert() {
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle("Patient already exists in database\n"); // alert title
+        alertDialog.setMessage("\nPlease check that HospID is not duplicated.");    // alert message
+        // text on alert button, which will close the alert when clicked
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
 }
 
