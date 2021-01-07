@@ -2,8 +2,8 @@ package com.example.prematurebabymonitoringapp;//import java.time.LocalDate;
 //import java.time.LocalTime;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.sql.Date;
+import java.util.ArrayList;
 
 /** Patient is a class which contains all the data for one patient */
 
@@ -34,6 +34,7 @@ public class Patient {
     private MonitoredParams param;
     private GraphPlotter graph1;    // graph of conc1 against time
     private GraphPlotter graph2;    // graph of conc2 against time
+    private ArrayList<String> comments = new ArrayList<String>();
 
     // constructor
     public Patient(int hospID) {
@@ -60,6 +61,7 @@ public class Patient {
         return gender;
     }
     public void setGender(String gender) {
+        gender = gender.toLowerCase();  // ensures that gender is written in lowercase for uniformity
         this.gender = gender;
     }
 
@@ -137,4 +139,18 @@ public class Patient {
         graph2 = new GraphPlotter(param.getTime(), param.getLactate());
     }
 
+    public void addComment(String comment){
+        comments.add(comment);
+    }
+
+    public int getNumberOfComment(){
+        return comments.size();
+    }
+
+    public String getCommentByIndex(int index){
+        if(index < comments.size()){
+            return comments.get(index);
+        }
+        else return "";
+    }
 }

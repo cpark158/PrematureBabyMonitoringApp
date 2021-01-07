@@ -16,6 +16,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="spinner_title">Spinner</string>
     <string name="HospitalID">Hospital ID</string>
+    <string name="commentSpace">commentSpace</string>
     <string-array name="patients_array">
             <item>Patient1</item>
             <item>Patient2</item>

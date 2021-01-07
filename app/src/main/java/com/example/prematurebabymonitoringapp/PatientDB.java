@@ -1,10 +1,16 @@
 package com.example.prematurebabymonitoringapp;
 
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.Toast;
+import com.example.prematurebabymonitoringapp.network.ClientInstance;
+import com.example.prematurebabymonitoringapp.network.GetDataService;
+import com.example.prematurebabymonitoringapp.network.PostDataService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.List;
 //import java.util.Optional;
 
 // PatientDB will have a list of all the patients in the unit
@@ -37,7 +43,7 @@ public class PatientDB {
         patients.add(this.newPat);
     }
 
-    // method to add more patient details (overloading because not all parameters are required)
+    // methods to add more patient details (overloading because not all parameters are required)
     public void addName(Patient patient,String name) {
         patient.setName(name);
     }
@@ -83,8 +89,18 @@ public class PatientDB {
         return patients.get(patientNo-1); }  // exception if patientNo = 0, need to find a way around this
     }
 
+
     public Patient findPatientByIndex(int i){
         return patients.get(i);
+    }
+
+    // This method checks if patient already exists (i.e. checks for the same hospID
+    public boolean patientExists(int hospID) {
+        for(int i=0; i < patients.size(); i++) {
+            if (patients.get(i).getHospID() == hospID)
+                return true;
+        }
+        return false;
     }
 
     // This method returns the patient using index number
