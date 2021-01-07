@@ -99,12 +99,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Add/Import existing patients from here onwards
         prematureBabies.addPatient("Martin Holloway",27863,"2020-12-12","male");
-        spinnerArray.add(prematureBabies.lastPatient().getName());
+        spinnerArray.add(Integer.toString(prematureBabies.lastPatient().getHospID()));
         prematureBabies.addPatient("James Choi",52839,"2020-12-27","male");
-        spinnerArray.add(prematureBabies.lastPatient().getName());
+        spinnerArray.add(Integer.toString(prematureBabies.lastPatient().getHospID()));
         prematureBabies.addPatient("John Smith", 01, "2020-11-27", "male");
         patientNameStr = prematureBabies.lastPatient().getName();
-        spinnerArray.add(String.format(prematureBabies.lastPatient().getName()));
+        spinnerArray.add(Integer.toString(prematureBabies.lastPatient().getHospID()));
 
         //TODO Add meaningful logs for when the request fails
         //Fetch Patient List from remote Database
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                 for (Patient newPat:patientList) {
                     if (!prematureBabies.patientExists(newPat.getHospID())) {
                         prematureBabies.addPatient(newPat);
-                        spinnerArray.add(prematureBabies.lastPatient().getName());
+                        spinnerArray.add(Integer.toString(prematureBabies.lastPatient().getHospID()));
                     }
                 }
             }
