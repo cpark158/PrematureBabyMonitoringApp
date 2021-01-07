@@ -12,12 +12,8 @@ import com.github.mikephil.charting.charts.LineChart;
 import android.text.Editable;
 import android.view.*;
 import android.widget.*;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.PagerAdapter;
-import com.google.android.material.resources.TextAppearance;
 import com.google.android.material.tabs.TabLayout;
-import androidx.viewpager.widget.ViewPager;
 import java.util.Calendar;
 import com.google.gson.JsonObject;
 import retrofit2.Call;
@@ -30,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
 public class MainActivity extends AppCompatActivity {
 
     // Initialise graph plotting parameters
@@ -40,8 +37,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Initialise UI components from activity_main.xml
     TabLayout tabLayout;
-    ViewPager viewPager;
-    pagerAdapter adapter;
     TextView msg;
     TextView currentLactateLevel;
     TextView commentsMade;
@@ -110,28 +105,32 @@ public class MainActivity extends AppCompatActivity {
         patientNameStr = prematureBabies.lastPatient().getName();
         spinnerArray.add(String.format(prematureBabies.lastPatient().getName()));
 
-        //Fetch Patient List from remote Database (server)
         //TODO Add meaningful logs for when the request fails
+        //Fetch Patient List from remote Database
+        /* Reference 3 - taken from https://medium.com/@prakash_pun/retrofit-a-simple-android-tutorial-48437e4e5a23 */
         GetDataService service = ClientInstance.getRetrofitInstance().create(GetDataService.class);
         Call<List<Patient>> call = service.getPatientsList();
         call.enqueue(new Callback<List<Patient>>() {
             @Override
             public void onResponse(Call<List<Patient>> call, Response<List<Patient>> response) {
                 List<Patient> patientList=response.body();
-                System.out.println("Good");
                 for (Patient newPat:patientList){
-                    prematureBabies.addPatient(newPat);
-                    spinnerArray.add(prematureBabies.lastPatient().getName());
-                    System.out.println(newPat.getName());
+                    if(!prematureBabies.patientExists(newPat.getHospID())){
+                        prematureBabies.addPatient(newPat);
+                        spinnerArray.add(prematureBabies.lastPatient().getName());
+                    }
+                    else{
+                        Toast.makeText(MainActivity.this, "Patient with this Hospital id exists!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
-
             @Override
             public void onFailure(Call<List<Patient>> call, Throwable t) {
-                //Toast.makeText(MainActivity.this, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
-                System.out.println("Bad");
+                Toast.makeText(MainActivity.this, "Remote Patients list wasn't retrieved!", Toast.LENGTH_SHORT).show();
+
             }
         });
+        /* end of reference 1 */
 
         // Welcome page
         callWelcomePage("Welcome to Premature Baby Monitoring App. Click button below to add patient.");
@@ -192,34 +191,6 @@ public class MainActivity extends AppCompatActivity {
         downloadGlucose.setVisibility(View.GONE);
 
         // Set appropriate components are visible
-        //TODO Add meaningful logs for when the request fails
-
-        //Fetch Patient List from remote Database
-        /* Reference 3 - taken from https://medium.com/@prakash_pun/retrofit-a-simple-android-tutorial-48437e4e5a23 */
-        GetDataService service = ClientInstance.getRetrofitInstance().create(GetDataService.class);
-        Call<List<Patient>> call = service.getPatientsList();
-        call.enqueue(new Callback<List<Patient>>() {
-            @Override
-            public void onResponse(Call<List<Patient>> call, Response<List<Patient>> response) {
-                List<Patient> patientList=response.body();
-                for (Patient newPat:patientList){
-                    if(!prematureBabies.patientExists(newPat.getHospID())){
-                        prematureBabies.addPatient(newPat);
-                        spinnerArray.add(prematureBabies.lastPatient().getName());
-                    }
-                    else{
-                        Toast.makeText(MainActivity.this, "Patient with this Hospital id exists!", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-            @Override
-            public void onFailure(Call<List<Patient>> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Remote Patients list wasn't retrieved!", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-        /* end of reference 1 */
-
         msg.setVisibility(View.VISIBLE);
         addPatientButton.setVisibility(View.VISIBLE);
         viewCurrentPatientButton.setVisibility(View.VISIBLE);
@@ -309,67 +280,54 @@ public class MainActivity extends AppCompatActivity {
                     final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
                     java.util.Date d = dateFormat.parse(patientDOBStr);
 
-                    // Create an instance of Patient and add to database (if all data is input correctly)
-                    prematureBabies.addPatient(patientNameStr, hospID, patientDOBStr, patientGenderStr);
+                    // If all patient details are valid, check for duplicate hospID
+                    if(!prematureBabies.patientExists(hospID)){
+                        // Create an instance of Patient and add to local database
+                        prematureBabies.addPatient(patientNameStr, hospID, patientDOBStr, patientGenderStr);
 
-                    //Create Patient and add it to remote Database
-                    Patient newPat=new Patient(hospID);
-                    newPat.setName(patientNameStr);
-                    newPat.setDOB(Date.valueOf(patientDOBStr));
-                    newPat.setGender(patientGenderStr.toLowerCase());
-                    PostDataService service = ClientInstance.getRetrofitInstance().create(PostDataService.class);
-                    Call<JsonObject> postCall = service.sendPatient(newPat);
-                    postCall.enqueue(new Callback<JsonObject>() {
-                        @Override
-                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                            JsonObject jsonObject= response.body();
-                            String serverMsg=jsonObject.get("message").toString();
-                            Toast.makeText(MainActivity.this, serverMsg, Toast.LENGTH_SHORT).show();
-                        }
-                        @Override
-                        public void onFailure(Call<JsonObject> call, Throwable t) {
-                            Toast.makeText(MainActivity.this, "Patient couldn't be added to remote Database", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                        //Create Patient and add it to remote Database
+                        Patient newPat=new Patient(hospID);
+                        newPat.setName(patientNameStr);
+                        newPat.setDOB(java.sql.Date.valueOf(patientDOBStr));    //patientDOBStr is converted to a Date object because setDOB method does not take in a string
+                        newPat.setGender(patientGenderStr);
+                        PostDataService service = ClientInstance.getRetrofitInstance().create(PostDataService.class);
+                        Call<JsonObject> postCall = service.sendPatient(newPat);
+                        postCall.enqueue(new Callback<JsonObject>() {
+                            @Override
+                            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                                JsonObject jsonObject= response.body();
+                                String serverMsg=jsonObject.get("message").toString();
+                                Toast.makeText(MainActivity.this, serverMsg, Toast.LENGTH_SHORT).show();
+                            }
+                            @Override
+                            public void onFailure(Call<JsonObject> call, Throwable t) {
+                                Toast.makeText(MainActivity.this, "Patient couldn't be added to remote Database", Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
+                        // Remove current page
+                        patientName.setVisibility(View.GONE);
+                        patientHospID.setVisibility(View.GONE);
+                        patientGender.setVisibility(View.GONE);
+                        patientDOB.setVisibility(View.GONE);
+                        saveButton.setVisibility(View.GONE);
+                        viewCurrentPatientButton.setVisibility(View.GONE);
 
-                    // Remove current page
-                    patientName.setVisibility(View.GONE);
-                    patientHospID.setVisibility(View.GONE);
-                    patientGender.setVisibility(View.GONE);
-                    patientDOB.setVisibility(View.GONE);
-                    saveButton.setVisibility(View.GONE);
-                    viewCurrentPatientButton.setVisibility(View.GONE);
+                        // Redirect to next page, which is the new Patient's page
+                        spinnerPatientList.setVisibility(View.VISIBLE);
+                        spinnerArray.add(patientNameStr);   // add Patient to drop-down (spinner) list
+                        spinnerPatientList.setSelection(prematureBabies.getDBSize()); // set drop-down list selection to new Patient
+                        saveButton.setVisibility(View.GONE);
+                        tabLayout.setVisibility(View.VISIBLE);
+                        tabLayout.getTabAt(0).select();
+                        patientIcon.setVisibility(View.VISIBLE);
+                        msg.setText(String.format(" Name: " + patientNameStr + "%n Hospital ID: " + patientHospIDStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
+                        msg.setTextSize(14);
+                    }
+                    else{
+                        Toast.makeText(MainActivity.this, "Patient with this Hospital id exists!", Toast.LENGTH_SHORT).show();
+                    }
 
-                    // Redirect to next page, which is the new Patient's page
-                    spinnerPatientList.setVisibility(View.VISIBLE);
-                    spinnerArray.add(patientNameStr);   // add Patient to drop-down list
-                    spinnerPatientList.setSelection(prematureBabies.getDBSize());
-                    saveButton.setVisibility(View.GONE);
-                    tabLayout.setVisibility(View.VISIBLE);
-                    tabLayout.getTabAt(0).select();
-                    patientIcon.setVisibility(View.VISIBLE);
-                    // Remove current page
-                    patientName.setVisibility(View.GONE);
-                    patientHospID.setVisibility(View.GONE);
-                    patientGender.setVisibility(View.GONE);
-                    patientDOB.setVisibility(View.GONE);
-                    saveButton.setVisibility(View.GONE);
-                    viewCurrentPatientButton.setVisibility(View.GONE);
-                    // Redirect to next page, which is the new Patient's page
-                    spinnerPatientList.setVisibility(View.VISIBLE);
-                    spinnerArray.add(patientNameStr);   // add Patient to drop-down list
-                    spinnerPatientList.setSelection(prematureBabies.getDBSize());
-                    saveButton.setVisibility(View.GONE);
-                    tabLayout.setVisibility(View.VISIBLE);
-                    tabLayout.getTabAt(0).select();
-                    patientIcon.setVisibility(View.VISIBLE);
-
-                    // Update spinner with patient database
-                    // spinnerArray.add(String.format("Patient %d " + patientNameStr, prematureBabies.getDBSize()));
-                    spinnerPatientList.setSelection(prematureBabies.getDBSize());
-                    msg.setText(String.format(" Name: " + patientNameStr + "%n Hospital ID: " + patientHospIDStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
-                    msg.setTextSize(14);
                 }
                 catch (NumberFormatException ex) {  // catch invalid hospID
                     System.out.println("Invalid input! HospID must be a number.");
@@ -383,17 +341,13 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                     System.out.println("Invalid date format! Date must be in the form yyyy-mm-dd");
                 }
-                    // Update spinner with patient database
-                    // spinnerArray.add(String.format("Patient %d " + patientNameStr, prematureBabies.getDBSize()));
-                    spinnerPatientList.setSelection(prematureBabies.getDBSize());
-                    msg.setText(String.format(" Name: " + patientNameStr + "%n Hospital ID: " + patientHospIDStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
-                    msg.setTextSize(14);
-                }
-                else{
+
+                /* else{
                     //TODO stop the line below from constantly appearing
                     //Toast.makeText(MainActivity.this, "Patient with this Hospital id exists!", Toast.LENGTH_SHORT).show();
-                }
+                } */
             }
+
         });
     }
 

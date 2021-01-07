@@ -43,7 +43,7 @@ public class PatientDB {
         patients.add(this.newPat);
     }
 
-    // method to add more patient details (overloading because not all parameters are required)
+    // methods to add more patient details (overloading because not all parameters are required)
     public void addName(Patient patient,String name) {
         patient.setName(name);
     }
@@ -94,7 +94,7 @@ public class PatientDB {
         return patients.get(i);
     }
 
-    // This method checks if patient already exists
+    // This method checks if patient already exists (i.e. checks for the same hospID
     public boolean patientExists(int hospID) {
         for(int i=0; i < patients.size(); i++) {
             if (patients.get(i).getHospID() == hospID)
