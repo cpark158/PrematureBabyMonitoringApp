@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button downloadGlucose;
     Button downloadLactate;
+    EditText enterFilename;
 
     // Initialise temporary Strings to retrieve and store inputted patient info
     String patientNameStr = "Name";
@@ -177,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
         downloadGlucose = findViewById(R.id.downloadGlucose);
         downloadLactate = findViewById(R.id.downloadLactate);
+        enterFilename = findViewById(R.id.enterFilename);
     }
 
     public void callWelcomePage(String printText){
@@ -196,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
         saveCommentButton.setVisibility(View.GONE);
         downloadLactate.setVisibility(View.GONE);
         downloadGlucose.setVisibility(View.GONE);
+        enterFilename.setVisibility(View.GONE);
 
         // Set appropriate components are visible
         msg.setVisibility(View.VISIBLE);
@@ -444,6 +447,7 @@ public class MainActivity extends AppCompatActivity {
         saveCommentButton.setVisibility(View.INVISIBLE);
         downloadGlucose.setVisibility(View.INVISIBLE);
         downloadLactate.setVisibility(View.INVISIBLE);
+        enterFilename.setVisibility(View.INVISIBLE);
 
         callWelcomePage("Refer to dropdown list above for other patients or add patient below.");
     }
@@ -460,6 +464,7 @@ public class MainActivity extends AppCompatActivity {
         saveCommentButton.setVisibility(View.GONE);
         downloadGlucose.setVisibility(View.INVISIBLE);
         downloadLactate.setVisibility(View.INVISIBLE);
+        enterFilename.setVisibility(View.INVISIBLE);
         msg.setTextSize(14);
         msg.setGravity(Gravity.FILL_HORIZONTAL);
 
@@ -477,6 +482,7 @@ public class MainActivity extends AppCompatActivity {
         lactate_mpLineChart.setVisibility(View.VISIBLE);
         downloadGlucose.setVisibility(View.VISIBLE);
         downloadLactate.setVisibility(View.VISIBLE);
+        enterFilename.setVisibility(View.VISIBLE);
 
         msg.setText(String.format("Current glucose level: "));
         currentLactateLevel.setVisibility(View.VISIBLE);
@@ -516,12 +522,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
         commentsMade.setVisibility(View.VISIBLE);
 
         mpLineChart.setData(graphPlot.getData());
         mpLineChart.invalidate();
         lactate_mpLineChart.setData(graphPlot.getData());
         lactate_mpLineChart.invalidate();
+
+        downloadLactate.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                String filename = enterFilename.getText().toString();
+            }
+        });
+        downloadGlucose.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                String filename = enterFilename.getText().toString();
+            }
+        });
 
     }
 
