@@ -83,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
         txtFileProcessor.parseFile();
         graphPlot = new GraphPlotter(txtFileProcessor.getTimeValues(), txtFileProcessor.getVolt1());
 
+
+
         // Retrieve XML components
         retrieveXMLComponents();
 
