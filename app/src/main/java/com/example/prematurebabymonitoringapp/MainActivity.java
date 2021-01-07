@@ -1,5 +1,7 @@
 package com.example.prematurebabymonitoringapp;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -25,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -527,4 +530,21 @@ public class MainActivity extends AppCompatActivity {
         String updated = parsed[1] + " " + parsed[2] + " " + parsed[5] + " " + parsed[3];
         return updated;
     }
+
+    // Method to create an alert/warning on screen if invalid details are entered
+    // Reference: https://stackoverflow.com/questions/45177044/alertdialog-cannot-resolve-symbol
+    public void createAlertDialog() {
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle("Invalid Data Input"); // alert title
+        alertDialog.setMessage("Alert message to be shown");    // alert message
+        // text on alert button, which will close the alert when clicked
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
+                new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+        });
+        alertDialog.show();
+        }
 }
+
