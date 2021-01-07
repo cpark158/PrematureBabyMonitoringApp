@@ -334,14 +334,14 @@ public class MainActivity extends AppCompatActivity {
                 }
                 catch (NumberFormatException ex) {  // catch invalid hospID
                     System.out.println("Invalid input! HospID must be a number.");
-                    // error warning (pop-up)
+                    createAlertDialog();    // error warning (pop-up)
                 }
                 catch (invalidGenderException e) {  // catch invalid gender
-                    // error warning (pop-up)
+                    createAlertDialog();    // error warning (pop-up)
                     System.out.println("Invalid input! Gender must be Male or Female.");
                 }
                 catch (ParseException e) {  // catch invalid date
-                    e.printStackTrace();
+                    createAlertDialog();    // error warning (pop-up)
                     System.out.println("Invalid date format! Date must be in the form yyyy-mm-dd");
                 }
 
@@ -535,8 +535,8 @@ public class MainActivity extends AppCompatActivity {
     // Reference: https://stackoverflow.com/questions/45177044/alertdialog-cannot-resolve-symbol
     public void createAlertDialog() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-        alertDialog.setTitle("Invalid Data Input"); // alert title
-        alertDialog.setMessage("Alert message to be shown");    // alert message
+        alertDialog.setTitle("Invalid Data Input\n"); // alert title
+        alertDialog.setMessage("\nHospID must be a number. \nGender must be Male or Female. \nDate must be in the form yyyy-mm-dd.");    // alert message
         // text on alert button, which will close the alert when clicked
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
                 new DialogInterface.OnClickListener() {
