@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button downloadGlucose;
     Button downloadLactate;
+    EditText enterFilename;
 
     // Initialise temporary Strings to retrieve and store inputted patient info
     String patientNameStr = "Name";
@@ -101,12 +102,13 @@ public class MainActivity extends AppCompatActivity {
 
         // Add/Import existing patients from here onwards
         prematureBabies.addPatient("Martin Holloway",27863,"2020-12-12","male");
-        spinnerArray.add(prematureBabies.lastPatient().getName());
+        spinnerArray.add(Integer.toString(prematureBabies.lastPatient().getHospID()));
         prematureBabies.addPatient("James Choi",52839,"2020-12-27","male");
-        spinnerArray.add(prematureBabies.lastPatient().getName());
+        spinnerArray.add(Integer.toString(prematureBabies.lastPatient().getHospID()));
         prematureBabies.addPatient("John Smith", 01, "2020-11-27", "male");
         patientNameStr = prematureBabies.lastPatient().getName();
-        spinnerArray.add(String.format(prematureBabies.lastPatient().getName()));
+        patientHospIDStr = Integer.toString(prematureBabies.lastPatient().getHospID());
+        spinnerArray.add(Integer.toString(prematureBabies.lastPatient().getHospID()));
 
         //TODO Add meaningful logs for when the request fails
         //Fetch Patient List from remote Database
@@ -120,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 for (Patient newPat:patientList) {
                     if (!prematureBabies.patientExists(newPat.getHospID())) {
                         prematureBabies.addPatient(newPat);
-                        spinnerArray.add(prematureBabies.lastPatient().getName());
+                        spinnerArray.add(Integer.toString(prematureBabies.lastPatient().getHospID()));
                     }
                 }
             }
@@ -178,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
 
         downloadGlucose = findViewById(R.id.downloadGlucose);
         downloadLactate = findViewById(R.id.downloadLactate);
+        enterFilename = findViewById(R.id.enterFilename);
     }
 
     public void callWelcomePage(String printText){
@@ -197,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
         saveCommentButton.setVisibility(View.GONE);
         downloadLactate.setVisibility(View.GONE);
         downloadGlucose.setVisibility(View.GONE);
+        enterFilename.setVisibility(View.GONE);
 
         // Set appropriate components are visible
         msg.setVisibility(View.VISIBLE);
@@ -323,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
 
                         // Redirect to next page, which is the new Patient's page
                         spinnerPatientList.setVisibility(View.VISIBLE);
-                        spinnerArray.add(patientNameStr);   // add Patient to drop-down (spinner) list
+                        spinnerArray.add(patientHospIDStr);   // add Patient to drop-down (spinner) list
                         spinnerPatientList.setSelection(prematureBabies.getDBSize()); // set drop-down list selection to new Patient
                         saveButton.setVisibility(View.GONE);
                         tabLayout.setVisibility(View.VISIBLE);
@@ -445,6 +449,7 @@ public class MainActivity extends AppCompatActivity {
         saveCommentButton.setVisibility(View.INVISIBLE);
         downloadGlucose.setVisibility(View.INVISIBLE);
         downloadLactate.setVisibility(View.INVISIBLE);
+        enterFilename.setVisibility(View.INVISIBLE);
 
         callWelcomePage("Refer to dropdown list above for other patients or add patient below.");
     }
@@ -461,6 +466,7 @@ public class MainActivity extends AppCompatActivity {
         saveCommentButton.setVisibility(View.GONE);
         downloadGlucose.setVisibility(View.INVISIBLE);
         downloadLactate.setVisibility(View.INVISIBLE);
+        enterFilename.setVisibility(View.INVISIBLE);
         msg.setTextSize(14);
         msg.setGravity(Gravity.FILL_HORIZONTAL);
 
@@ -478,6 +484,7 @@ public class MainActivity extends AppCompatActivity {
         lactate_mpLineChart.setVisibility(View.VISIBLE);
         downloadGlucose.setVisibility(View.VISIBLE);
         downloadLactate.setVisibility(View.VISIBLE);
+        enterFilename.setVisibility(View.VISIBLE);
 
         msg.setText(String.format("Current glucose level: "));
         currentLactateLevel.setVisibility(View.VISIBLE);
@@ -517,12 +524,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
         commentsMade.setVisibility(View.VISIBLE);
 
         mpLineChart.setData(graphPlot.getData());
         mpLineChart.invalidate();
         lactate_mpLineChart.setData(graphPlot.getData());
         lactate_mpLineChart.invalidate();
+
+        downloadLactate.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                String filename = enterFilename.getText().toString();
+            }
+        });
+        downloadGlucose.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                String filename = enterFilename.getText().toString();
+            }
+        });
 
     }
 

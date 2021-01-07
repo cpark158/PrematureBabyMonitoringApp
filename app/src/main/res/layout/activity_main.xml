@@ -167,21 +167,6 @@
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textView" app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0.32"/>
-    <EditText
-            android:layout_width="409dp"
-            android:layout_height="102dp"
-            android:inputType="textPersonName"
-            android:text="Comment"
-            android:ems="10"
-            android:id="@+id/commentSpace"
-            android:importantForAutofill="no"
-            tools:targetApi="o"
-            android:hint="@string/type"
-            app:layout_constraintTop_toBottomOf="@+id/line_chart"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:visibility="visible" android:layout_marginTop="260dp"
-            app:layout_constraintHorizontal_bias="0.501"/>
     <Button
             android:text="Save Comment"
             android:layout_width="wrap_content"
@@ -208,7 +193,23 @@
             android:visibility="visible"
             app:layout_constraintEnd_toStartOf="@+id/line_chart"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/tabLayout"
-            app:layout_constraintBottom_toBottomOf="@+id/line_chart"/>
+            app:layout_constraintBottom_toBottomOf="@+id/line_chart" app:layout_constraintHorizontal_bias="0.615"
+            app:layout_constraintVertical_bias="0.819"/>
+    <EditText
+            android:layout_width="183dp"
+            android:layout_height="74dp"
+            android:inputType="textPersonName"
+            android:text="Enter Filename"
+            android:ems="10"
+            android:id="@+id/enterFilename"
+            android:importantForAutofill="no"
+            tools:targetApi="o"
+            android:hint="@string/type"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="visible"
+            app:layout_constraintHorizontal_bias="0.076" android:layout_marginBottom="34dp"
+            app:layout_constraintBottom_toTopOf="@+id/downloadGlucose"/>
     <Button
             android:text="Download Lactate Data"
             android:layout_width="231dp"
@@ -216,9 +217,24 @@
             android:visibility="visible"
             app:layout_constraintEnd_toStartOf="@+id/line_chart"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="0.507"
+            app:layout_constraintHorizontal_bias="0.615"
             app:layout_constraintTop_toBottomOf="@+id/lactateText"
             app:layout_constraintBottom_toBottomOf="@+id/lactate_line_chart" app:layout_constraintVertical_bias="0.0"/>
+    <EditText
+            android:layout_width="409dp"
+            android:layout_height="102dp"
+            android:inputType="textPersonName"
+            android:text="Comment"
+            android:ems="10"
+            android:id="@+id/commentSpace"
+            android:importantForAutofill="no"
+            tools:targetApi="o"
+            android:hint="@string/type"
+            app:layout_constraintTop_toBottomOf="@+id/line_chart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="visible" android:layout_marginTop="268dp"
+            app:layout_constraintHorizontal_bias="0.501"/>
     <!--<ImageView
             android:layout_width="199dp"
             android:layout_height="209dp" tools:srcCompat="@tools:sample/avatars" android:id="@+id/imageView"
