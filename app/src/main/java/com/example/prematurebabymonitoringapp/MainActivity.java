@@ -104,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
         spinnerArray.add(Integer.toString(prematureBabies.lastPatient().getHospID()));
         prematureBabies.addPatient("John Smith", 01, "2020-11-27", "male");
         patientNameStr = prematureBabies.lastPatient().getName();
+        patientHospIDStr = Integer.toString(prematureBabies.lastPatient().getHospID());
         spinnerArray.add(Integer.toString(prematureBabies.lastPatient().getHospID()));
 
         //TODO Add meaningful logs for when the request fails
@@ -321,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
 
                         // Redirect to next page, which is the new Patient's page
                         spinnerPatientList.setVisibility(View.VISIBLE);
-                        spinnerArray.add(patientNameStr);   // add Patient to drop-down (spinner) list
+                        spinnerArray.add(patientHospIDStr);   // add Patient to drop-down (spinner) list
                         spinnerPatientList.setSelection(prematureBabies.getDBSize()); // set drop-down list selection to new Patient
                         saveButton.setVisibility(View.GONE);
                         tabLayout.setVisibility(View.VISIBLE);
