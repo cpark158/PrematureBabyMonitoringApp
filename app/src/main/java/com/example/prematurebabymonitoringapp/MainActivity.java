@@ -448,9 +448,7 @@ public class MainActivity extends AppCompatActivity {
                             // Open Health Tab
                             callHealthTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 2) {
-                            // Remove Patient
-                            callNoPatientsTab();
-                            spinnerArray.remove(Integer.toString(prematureBabies.findPatientByIndex(currentChosenSpinner - 1).getHospID()));
+                            removePatientConfirmation(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
                         }
                     }
                     case 2: {
@@ -461,10 +459,7 @@ public class MainActivity extends AppCompatActivity {
                             // Open Health Tab
                             callHealthTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 2) {
-                            // Remove Patient
-                            spinnerPatientList.setSelection(0);
-                            callNoPatientsTab();
-                            spinnerArray.remove(Integer.toString(prematureBabies.findPatientByIndex(currentChosenSpinner - 1).getHospID()));
+                            removePatientConfirmation(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
                         }
                     }
                 }
@@ -641,7 +636,7 @@ public class MainActivity extends AppCompatActivity {
                 }
         });
         alertDialog.show();
-        }
+    }
 
     public void createDuplicateHospIDAlert() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
@@ -649,6 +644,28 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.setMessage("\nPlease check that HospID is not duplicated.");    // alert message
         // text on alert button, which will close the alert when clicked
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+    public void removePatientConfirmation(final Patient inputPatient) {
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle("Patient Removal Confirmation\n"); // alert title
+        alertDialog.setMessage("\n Are you sure you want to remove patient " + Integer.toString(inputPatient.getHospID()) + " ?");    // alert message
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Confirm",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Remove Patient
+                        spinnerPatientList.setSelection(0);
+                        callNoPatientsTab();
+                        spinnerArray.remove(Integer.toString(inputPatient.getHospID()));
+                    }
+                });
+        // text on alert button, which will close the alert when clicked
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Cancel",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
