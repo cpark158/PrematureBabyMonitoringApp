@@ -447,8 +447,25 @@ public class MainActivity extends AppCompatActivity {
                         } else if (tab.getPosition() == 1) {
                             // Open Health Tab
                             callHealthTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                        } else if (tab.getPosition() == 2) {
+                            // Remove Patient
+                            callNoPatientsTab();
+                            spinnerArray.remove(Integer.toString(prematureBabies.findPatientByIndex(currentChosenSpinner - 1).getHospID()));
                         }
-
+                    }
+                    case 2: {
+                        if (tab.getPosition() == 0) {
+                            // Open Basic Information Tab
+                            callPatientTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                        } else if (tab.getPosition() == 1) {
+                            // Open Health Tab
+                            callHealthTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                        } else if (tab.getPosition() == 2) {
+                            // Remove Patient
+                            spinnerPatientList.setSelection(0);
+                            callNoPatientsTab();
+                            spinnerArray.remove(Integer.toString(prematureBabies.findPatientByIndex(currentChosenSpinner - 1).getHospID()));
+                        }
                     }
                 }
             }
