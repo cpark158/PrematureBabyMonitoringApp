@@ -76,11 +76,44 @@ public class MainActivity extends AppCompatActivity {
     EditText enterFilename;
     Button downloadData;
 
+    EditText patientWeight;
+    EditText patientTOB;
+    EditText patientMotherName;
+    EditText patientFatherName;
+    EditText patientContact;
+    EditText patientConditions;
+    Button saveName;
+    Button saveHospID;
+    Button saveGender;
+    Button saveDOB;
+    Button saveWeight;
+    Button saveTOB;
+    Button saveMotherName;
+    Button saveFatherName;
+    Button saveContact;
+    Button saveCondition;
+
     // Initialise temporary Strings to retrieve and store inputted patient info
     String patientNameStr = "Name";
     String patientHospIDStr = "0";
     String patientGenderStr = "Male";
     String patientDOBStr = "1990-01-01";
+    String patientWeightStr;
+    String patientTOBStr;
+    String patientMotherNameStr;
+    String patientFatherNameStr;
+    String patientContactStr;
+    String patientConditionsStr;
+    String saveNameStr;
+    String saveHospIDStr;
+    String saveGenderStr;
+    String saveDOBStr;
+    String saveWeightStr;
+    String saveTOBStr;
+    String saveMotherNameStr;
+    String saveFatherNameStr;
+    String saveContactStr;
+    String saveConditionStr;
 
     int currentChosenSpinner = 1;
     String currentChosenItem = " ";
@@ -93,11 +126,6 @@ public class MainActivity extends AppCompatActivity {
 
     public MainActivity() throws IOException {
     }
-
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,9 +134,6 @@ public class MainActivity extends AppCompatActivity {
         // Parse .txt file and plot graph, to be displayed later
         txtFileProcessor.parseFile();
         graphPlot = new GraphPlotter(txtFileProcessor.getTimeValues(), txtFileProcessor.getVolt1());
-
-
-
 
         // Retrieve XML components
         retrieveXMLComponents();
@@ -206,26 +231,29 @@ public class MainActivity extends AppCompatActivity {
         downloadGlucose = findViewById(R.id.downloadData);
         downloadLactate = findViewById(R.id.downloadLactate);
         enterFilename = findViewById(R.id.enterFilename);
+
+        // Add Details Page
+        patientWeight = findViewById(R.id.editWeight);
+        patientTOB = findViewById(R.id.editTOB);
+        patientMotherName = findViewById(R.id.editMotherName);
+        patientFatherName = findViewById(R.id.editFatherName);
+        patientContact = findViewById(R.id.editContact);
+        patientConditions = findViewById(R.id.editConditions);
+        saveName = findViewById(R.id.saveName);
+        saveHospID = findViewById(R.id.saveHospID);
+        saveGender = findViewById(R.id.saveGender);
+        saveDOB = findViewById(R.id.saveDOB);
+        saveWeight = findViewById(R.id.saveWeight);
+        saveTOB = findViewById(R.id.saveTOB);
+        saveMotherName = findViewById(R.id.saveMotherName);
+        saveFatherName = findViewById(R.id.saveFatherName);
+        saveContact = findViewById(R.id.saveContact);
+        saveCondition = findViewById(R.id.saveCondition);
     }
 
     public void callWelcomePage(String printText){
         // Ensure other components aren't on the page
-        patientName.setVisibility(View.GONE);
-        patientHospID.setVisibility(View.GONE);
-        patientGender.setVisibility(View.GONE);
-        patientDOB.setVisibility(View.GONE);
-        tabLayout.setVisibility(View.GONE);
-        patientIcon.setVisibility(View.GONE);
-        mpLineChart.setVisibility(View.GONE);
-        saveButton.setVisibility(View.GONE);
-        lactate_mpLineChart.setVisibility(View.GONE);
-        currentLactateLevel.setVisibility(View.GONE);
-        commentSpace.setVisibility(View.GONE);
-        commentsMade.setVisibility(View.GONE);
-        saveCommentButton.setVisibility(View.GONE);
-        downloadLactate.setVisibility(View.GONE);
-        downloadGlucose.setVisibility(View.GONE);
-        enterFilename.setVisibility(View.GONE);
+        clearPage();
 
         // Set appropriate components are visible
         msg.setVisibility(View.VISIBLE);
@@ -321,6 +349,12 @@ public class MainActivity extends AppCompatActivity {
                     if(!prematureBabies.patientExists(hospID)){
                         // Create an instance of Patient and add to local database
                         prematureBabies.addPatient(patientNameStr, hospID, patientDOBStr, patientGenderStr);
+                        prematureBabies.lastPatient().setCondition(" ");
+                        prematureBabies.lastPatient().setContactNum(" ");
+                        prematureBabies.lastPatient().setFatherName(" ");
+                        prematureBabies.lastPatient().setMotherName(" ");
+                        prematureBabies.lastPatient().setTimeOfBirth(" ");
+                        patientWeightStr = "";
 
                         //Create Patient and add it to remote Database
                         Patient newPat=new Patient(hospID);
@@ -358,6 +392,7 @@ public class MainActivity extends AppCompatActivity {
                         tabLayout.setVisibility(View.VISIBLE);
                         tabLayout.getTabAt(0).select();
                         patientIcon.setVisibility(View.VISIBLE);
+                        msg.setVisibility(View.VISIBLE);
                         msg.setText(String.format(" Name: " + patientNameStr + "%n Hospital ID: " + patientHospIDStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
                         msg.setTextSize(14);
                     }
@@ -438,6 +473,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     case 1: {
                         patientIcon.setVisibility(View.INVISIBLE);
+                        msg.setVisibility(View.VISIBLE);
                         msg.setTextSize(14);
                         msg.setGravity(Gravity.FILL_HORIZONTAL);
 
@@ -448,6 +484,8 @@ public class MainActivity extends AppCompatActivity {
                             // Open Health Tab
                             callHealthTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 2) {
+                            callEditDetailsPage(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                        } else if (tab.getPosition() == 3) {
                             removePatientConfirmation(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
                         }
                     }
@@ -459,6 +497,21 @@ public class MainActivity extends AppCompatActivity {
                             // Open Health Tab
                             callHealthTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 2) {
+                            callEditDetailsPage(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                        } else if (tab.getPosition() == 3) {
+                            removePatientConfirmation(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                        }
+                    }
+                    case 3: {
+                        if (tab.getPosition() == 0) {
+                            // Open Basic Information Tab
+                            callPatientTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                        } else if (tab.getPosition() == 1) {
+                            // Open Health Tab
+                            callHealthTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                        } else if (tab.getPosition() == 2) {
+                            callEditDetailsPage(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                        } else if (tab.getPosition() == 3) {
                             removePatientConfirmation(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
                         }
                     }
@@ -476,6 +529,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void callNoPatientsTab(){
+        clearEditDetailsPage();
         tabLayout.setVisibility(View.INVISIBLE);
         patientIcon.setVisibility(View.INVISIBLE);
         mpLineChart.setVisibility(View.INVISIBLE);
@@ -492,6 +546,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void callPatientTab(Patient inputPatient){
+        clearEditDetailsPage();
         tabLayout.setVisibility(View.VISIBLE);
         tabLayout.getTabAt(0).select();
         patientIcon.setVisibility(View.VISIBLE);
@@ -504,24 +559,27 @@ public class MainActivity extends AppCompatActivity {
         downloadGlucose.setVisibility(View.INVISIBLE);
         downloadLactate.setVisibility(View.INVISIBLE);
         enterFilename.setVisibility(View.INVISIBLE);
+        msg.setVisibility(View.VISIBLE);
         msg.setTextSize(14);
         msg.setGravity(Gravity.FILL_HORIZONTAL);
 
         int index = prematureBabies.getDBSize();
-        msg.setText(String.format("%n Name: " + inputPatient.getName() + "%n Hospital ID: " + inputPatient.getHospID() + "%n Gender: " + inputPatient.getGender() + "%n Date of Birth: " + inputPatient.getDOB()));
+        printPatientDetails(inputPatient);
     }
 
     public void callHealthTab(final Patient inputPatient){
         final Date currentTime = Calendar.getInstance().getTime();
         final String[] commentsToPrint = {""};
 
+        clearEditDetailsPage();
+        tabLayout.setVisibility(View.VISIBLE);
         patientIcon.setVisibility(View.INVISIBLE);
-
         mpLineChart.setVisibility(View.VISIBLE);
         lactate_mpLineChart.setVisibility(View.VISIBLE);
         downloadGlucose.setVisibility(View.VISIBLE);
         downloadLactate.setVisibility(View.INVISIBLE);
         enterFilename.setVisibility(View.VISIBLE);
+        msg.setVisibility(View.VISIBLE);
 
         msg.setText(String.format("Current glucose level: "));
         currentLactateLevel.setVisibility(View.VISIBLE);
@@ -561,8 +619,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
         commentsMade.setVisibility(View.VISIBLE);
 
         mpLineChart.setData(graphPlot.getData());
@@ -594,6 +650,155 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void callEditDetailsPage(final Patient inputPatient){
+        clearPage();
+        tabLayout.setVisibility(View.VISIBLE);
+        spinnerPatientList.setVisibility(View.VISIBLE);
+
+        patientName.setVisibility(View.GONE);
+        patientHospID.setVisibility(View.GONE);
+        patientGender.setVisibility(View.GONE);
+        patientDOB.setVisibility(View.GONE);
+
+        patientWeight.setVisibility(View.VISIBLE);
+        patientTOB.setVisibility(View.VISIBLE);
+        patientMotherName.setVisibility(View.VISIBLE);
+        patientFatherName.setVisibility(View.VISIBLE);
+        patientContact.setVisibility(View.VISIBLE);
+        patientConditions.setVisibility(View.VISIBLE);
+
+        saveName.setVisibility(View.GONE);
+        saveHospID.setVisibility(View.GONE);
+        saveGender.setVisibility(View.GONE);
+        saveDOB.setVisibility(View.GONE);
+
+        saveWeight.setVisibility(View.VISIBLE);
+        saveTOB.setVisibility(View.VISIBLE);
+        saveMotherName.setVisibility(View.VISIBLE);
+        saveFatherName.setVisibility(View.VISIBLE);
+        saveContact.setVisibility(View.VISIBLE);
+        saveCondition.setVisibility(View.VISIBLE);
+
+        msg.setVisibility(View.GONE);
+//        patientName.setText("Name");
+//        patientHospID.setText("Hospital ID");
+//        patientDOB.setText("yyyy-mm-dd");
+//        patientGender.setText("Gender");
+
+        saveWeight.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                patientWeightStr = patientWeight.getText().toString();
+                inputPatient.setWeight(Double.parseDouble(patientWeightStr));
+            }
+        });
+        saveTOB.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                patientTOBStr = patientTOB.getText().toString();
+                inputPatient.setTimeOfBirth(patientTOBStr);
+            }
+        });
+        saveMotherName.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                patientMotherNameStr = patientMotherName.getText().toString();
+                inputPatient.setMotherName(patientMotherNameStr);
+            }
+        });
+        saveFatherName.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                patientFatherNameStr = patientFatherName.getText().toString();
+                inputPatient.setFatherName(patientFatherNameStr);
+            }
+        });
+        saveContact.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                patientContactStr = patientContact.getText().toString();
+                inputPatient.setContactNum(patientContactStr);
+            }
+        });
+        saveCondition.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                patientConditionsStr = patientConditions.getText().toString();
+                inputPatient.setCondition(patientConditionsStr);
+            }
+        });
+    }
+
+    public void printPatientDetails(Patient inputPatient){
+        String basicInfoStr = "";
+        basicInfoStr = basicInfoStr + "ID: " + Integer.toString(inputPatient.getHospID()) + "\n";
+        basicInfoStr = basicInfoStr + "Name: " + inputPatient.getName() + "\n";
+        basicInfoStr = basicInfoStr + "Gender: " + inputPatient.getGender() + "\n";
+        basicInfoStr = basicInfoStr + "Date of Birth: " + inputPatient.getDOB().toString() + "\n";
+        basicInfoStr = basicInfoStr + "Weight: " + patientWeightStr + "\n";
+        basicInfoStr = basicInfoStr + "Time of Birth: " + inputPatient.getTimeOfBirth() + "\n";
+        basicInfoStr = basicInfoStr + "Mother's Name: " + inputPatient.getMotherName() + "\n";
+        basicInfoStr = basicInfoStr + "Father's Name: " + inputPatient.getFatherName() + "\n";
+        basicInfoStr = basicInfoStr + "Emergency Contact: " + inputPatient.getContactNum() + "\n";
+        basicInfoStr = basicInfoStr + "Conditions: " + inputPatient.getCondition() + "\n";
+
+        msg.setVisibility(View.VISIBLE);
+        msg.setTextSize(14);
+        msg.setText(basicInfoStr);
+    }
+
+    public void clearPage(){
+        patientName.setVisibility(View.GONE);
+        patientHospID.setVisibility(View.GONE);
+        patientGender.setVisibility(View.GONE);
+        patientDOB.setVisibility(View.GONE);
+        tabLayout.setVisibility(View.GONE);
+        patientIcon.setVisibility(View.GONE);
+        mpLineChart.setVisibility(View.GONE);
+        saveButton.setVisibility(View.GONE);
+        lactate_mpLineChart.setVisibility(View.GONE);
+        currentLactateLevel.setVisibility(View.GONE);
+        commentSpace.setVisibility(View.GONE);
+        commentsMade.setVisibility(View.GONE);
+        saveCommentButton.setVisibility(View.GONE);
+        downloadLactate.setVisibility(View.GONE);
+        downloadGlucose.setVisibility(View.GONE);
+        enterFilename.setVisibility(View.GONE);
+        patientWeight.setVisibility(View.GONE);
+        patientTOB.setVisibility(View.GONE);
+        patientMotherName.setVisibility(View.GONE);
+        patientFatherName.setVisibility(View.GONE);
+        patientContact.setVisibility(View.GONE);
+        patientConditions.setVisibility(View.GONE);
+        saveName.setVisibility(View.GONE);
+        saveHospID.setVisibility(View.GONE);
+        saveGender.setVisibility(View.GONE);
+        saveDOB.setVisibility(View.GONE);
+        saveWeight.setVisibility(View.GONE);
+        saveTOB.setVisibility(View.GONE);
+        saveMotherName.setVisibility(View.GONE);
+        saveFatherName.setVisibility(View.GONE);
+        saveContact.setVisibility(View.GONE);
+        saveCondition.setVisibility(View.GONE);
+    }
+
+    public void clearEditDetailsPage(){
+        patientName.setVisibility(View.GONE);
+        patientHospID.setVisibility(View.GONE);
+        patientGender.setVisibility(View.GONE);
+        patientDOB.setVisibility(View.GONE);
+        patientWeight.setVisibility(View.GONE);
+        patientTOB.setVisibility(View.GONE);
+        patientMotherName.setVisibility(View.GONE);
+        patientFatherName.setVisibility(View.GONE);
+        patientContact.setVisibility(View.GONE);
+        patientConditions.setVisibility(View.GONE);
+        saveName.setVisibility(View.GONE);
+        saveHospID.setVisibility(View.GONE);
+        saveGender.setVisibility(View.GONE);
+        saveDOB.setVisibility(View.GONE);
+        saveWeight.setVisibility(View.GONE);
+        saveTOB.setVisibility(View.GONE);
+        saveMotherName.setVisibility(View.GONE);
+        saveFatherName.setVisibility(View.GONE);
+        saveContact.setVisibility(View.GONE);
+        saveCondition.setVisibility(View.GONE);
     }
 
     //Downloading data text files from firebase storage for parsing

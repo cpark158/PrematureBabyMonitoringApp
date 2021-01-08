@@ -9,16 +9,17 @@
     <!--Main Page-->
     <TextView
             android:id="@+id/textView"
-            android:layout_width="308dp"
-            android:layout_height="114dp"
+            android:layout_width="311dp"
+            android:layout_height="238dp"
             android:text="Main Page"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_gravity="center"
             android:layout_centerInParent="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.13"/>
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.145"
+            app:layout_constraintHorizontal_bias="0.504"/>
     <Button
             android:text="+ Add Patient"
             android:layout_width="wrap_content"
@@ -58,7 +59,8 @@
             tools:targetApi="o"
             android:hint="@string/type"
             app:layout_constraintTop_toBottomOf="@+id/textView" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone"
             android:layout_marginTop="8dp"/>
     <EditText
             android:layout_width="wrap_content"
@@ -71,7 +73,8 @@
             tools:targetApi="o"
             android:hint="@string/type"
             app:layout_constraintTop_toBottomOf="@+id/textView" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone"
             android:layout_marginTop="52dp"/>
     <EditText
             android:layout_width="wrap_content"
@@ -130,6 +133,10 @@
         <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Edit Details" android:id="@+id/editDetailsTab"/>
+        <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Remove Patient" android:id="@+id/removePatient"/>
     </com.google.android.material.tabs.TabLayout>
     <ImageView
@@ -141,6 +148,25 @@
             app:layout_constraintBottom_toTopOf="@+id/typeName" app:layout_constraintVertical_bias="0.485"
             android:visibility="visible"/>
     <!--Patient Health Page-->
+    <Button
+            android:text="Download Lactate Data"
+            android:layout_width="231dp"
+            android:layout_height="45dp" android:id="@+id/downloadLactate"
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@+id/line_chart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.546"
+            app:layout_constraintTop_toBottomOf="@+id/lactateText"
+            app:layout_constraintBottom_toBottomOf="@+id/lactate_line_chart"
+            app:layout_constraintVertical_bias="0.012"/>
+    <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lactate_line_chart"
+            android:layout_width="307dp"
+            android:layout_height="161dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.33" app:layout_constraintHorizontal_bias="0.499"/>
     <TextView
             android:id="@+id/lactateText"
             android:layout_width="308dp"
@@ -152,8 +178,8 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.34"
-            app:layout_constraintHorizontal_bias="0.501"/>
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.347"
+    />
     <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/line_chart"
             android:layout_width="307dp"
@@ -162,14 +188,6 @@
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textView" app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.499" app:layout_constraintVertical_bias="0.052"/>
-    <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/lactate_line_chart"
-            android:layout_width="307dp"
-            android:layout_height="161dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.32"/>
     <EditText
             android:layout_width="183dp"
             android:layout_height="74dp"
@@ -194,16 +212,6 @@
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/tabLayout"
             app:layout_constraintBottom_toBottomOf="@+id/line_chart" app:layout_constraintHorizontal_bias="0.615"
             app:layout_constraintVertical_bias="0.819"/>
-    <Button
-            android:text="Download Lactate Data"
-            android:layout_width="231dp"
-            android:layout_height="45dp" android:id="@+id/downloadLactate"
-            android:visibility="gone"
-            app:layout_constraintEnd_toStartOf="@+id/line_chart"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="0.615"
-            app:layout_constraintTop_toBottomOf="@+id/lactateText"
-            app:layout_constraintBottom_toBottomOf="@+id/lactate_line_chart" app:layout_constraintVertical_bias="0.0"/>
     <EditText
             android:layout_width="409dp"
             android:layout_height="102dp"
@@ -239,4 +247,174 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.248"
             app:layout_constraintHorizontal_bias="0.939"/>
+    <!--Patient Edit Details Page-->
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:ems="10"
+            android:id="@+id/editFatherName"
+            android:importantForAutofill="no"
+            tools:targetApi="o"
+            android:hint="@string/type"
+            android:text="Father's Name"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editMotherName" android:layout_marginTop="8dp"
+            app:layout_constraintHorizontal_bias="0.455"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:ems="10"
+            android:id="@+id/editMotherName"
+            android:importantForAutofill="no"
+            tools:targetApi="o"
+            android:hint="@string/type"
+            android:text="Mother's Name"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTOB" android:layout_marginTop="8dp"
+            app:layout_constraintHorizontal_bias="0.455"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:ems="10"
+            android:id="@+id/editConditions"
+            android:importantForAutofill="no"
+            tools:targetApi="o"
+            android:hint="@string/type"
+            android:text="Medical Conditions"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editContact" android:layout_marginTop="8dp"
+            app:layout_constraintHorizontal_bias="0.455"/>
+    <Button
+            android:text="Save"
+            android:layout_width="73dp"
+            android:layout_height="40dp" android:id="@+id/saveFatherName"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@+id/editFatherName" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/saveMotherName" android:layout_marginTop="16dp"
+            app:layout_constraintHorizontal_bias="0.0"/>
+    <Button
+            android:text="Save"
+            android:layout_width="73dp"
+            android:layout_height="40dp" android:id="@+id/saveWeight"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@+id/editWeight" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/saveDOB" android:layout_marginTop="60dp"
+            app:layout_constraintHorizontal_bias="0.0"/>
+    <Button
+            android:text="Save"
+            android:layout_width="73dp"
+            android:layout_height="40dp" android:id="@+id/saveContact"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@+id/editContact" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/saveFatherName" android:layout_marginTop="16dp"
+            app:layout_constraintHorizontal_bias="0.0"/>
+    <Button
+            android:text="Save"
+            android:layout_width="73dp"
+            android:layout_height="40dp" android:id="@+id/saveMotherName"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@+id/editMotherName" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/saveTOB" android:layout_marginTop="12dp"
+            app:layout_constraintHorizontal_bias="0.0"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/editWeight"
+            android:importantForAutofill="no"
+            tools:targetApi="o"
+            android:hint="@string/type"
+            android:text="Weight"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.455"
+            app:layout_constraintTop_toBottomOf="@+id/tabLayout" android:layout_marginTop="108dp"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="time"
+            android:ems="10"
+            android:id="@+id/editTOB"
+            android:importantForAutofill="no"
+            tools:targetApi="o"
+            android:hint="@string/type"
+            android:text="Time of Birth"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editWeight" android:layout_marginTop="8dp"
+            app:layout_constraintHorizontal_bias="0.455"/>
+    <Button
+            android:text="Save"
+            android:layout_width="73dp"
+            android:layout_height="40dp" android:id="@+id/saveTOB"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@+id/editTOB" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/saveWeight" android:layout_marginTop="4dp"
+            app:layout_constraintHorizontal_bias="0.0"/>
+    <Button
+            android:text="Save"
+            android:layout_width="73dp"
+            android:layout_height="40dp" android:id="@+id/saveCondition"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@+id/editConditions" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/saveContact" android:layout_marginTop="16dp"
+            app:layout_constraintHorizontal_bias="0.0"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:ems="10"
+            android:id="@+id/editContact"
+            android:importantForAutofill="no"
+            tools:targetApi="o"
+            android:hint="@string/type"
+            android:text="Contact Number"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editFatherName" android:layout_marginTop="8dp"
+            app:layout_constraintHorizontal_bias="0.455"/>
+    <Button
+            android:text="Save"
+            android:layout_width="73dp"
+            android:layout_height="40dp" android:id="@+id/saveName"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/typeName" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/button"
+            app:layout_constraintHorizontal_bias="0.0"/>
+    <Button
+            android:text="Save"
+            android:layout_width="73dp"
+            android:layout_height="40dp" android:id="@+id/saveHospID"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/typeName" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/saveName" android:layout_marginTop="8dp"
+            app:layout_constraintHorizontal_bias="0.0" />
+    <Button
+            android:text="Save"
+            android:layout_width="73dp"
+            android:layout_height="40dp" android:id="@+id/saveGender"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/typeName" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/saveHospID" android:layout_marginTop="8dp"
+            app:layout_constraintHorizontal_bias="0.0"/>
+    <Button
+            android:text="Save"
+            android:layout_width="73dp"
+            android:layout_height="40dp" android:id="@+id/saveDOB"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/typeName" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/saveGender" android:layout_marginTop="8dp"
+            app:layout_constraintHorizontal_bias="0.0"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
