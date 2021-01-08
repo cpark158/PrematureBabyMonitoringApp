@@ -662,6 +662,7 @@ public class MainActivity extends AppCompatActivity {
                         spinnerPatientList.setSelection(0);
                         callNoPatientsTab();
                         spinnerArray.remove(Integer.toString(inputPatient.getHospID()));
+                        prematureBabies.removePatient(inputPatient);
                     }
                 });
         // text on alert button, which will close the alert when clicked
