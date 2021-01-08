@@ -520,7 +520,7 @@ public class MainActivity extends AppCompatActivity {
         mpLineChart.setVisibility(View.VISIBLE);
         lactate_mpLineChart.setVisibility(View.VISIBLE);
         downloadGlucose.setVisibility(View.VISIBLE);
-        downloadLactate.setVisibility(View.VISIBLE);
+        downloadLactate.setVisibility(View.INVISIBLE);
         enterFilename.setVisibility(View.VISIBLE);
 
         msg.setText(String.format("Current glucose level: "));
