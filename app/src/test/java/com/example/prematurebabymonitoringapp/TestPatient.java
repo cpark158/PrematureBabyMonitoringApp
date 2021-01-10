@@ -29,9 +29,7 @@ public class TestPatient {
     // test setting date of birth (Date variable)
     public void testSetDOB() {
         p.setDOB(Date.valueOf("2020-06-15"));
-        // convert date into string to compare
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Assert.assertEquals(dateFormat.format(p.getDOB()),"2020-06-15");
+        Assert.assertEquals(p.getDOB(),Date.valueOf("2020-06-15"));
     }
 
     @Test
