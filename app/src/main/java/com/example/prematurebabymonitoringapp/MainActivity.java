@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.tabs.TabLayout;
 import java.util.Calendar;
 
-import com.google.firebase.storage.FirebaseStorage;
+
 import com.google.gson.JsonObject;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     Spinner spinnerPatientList;
     ImageView patientIcon;
 
-    Button downloadGlucose;
+
     Button downloadLactate;
     EditText enterFilename;
     Button downloadData;
@@ -124,6 +124,20 @@ public class MainActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.saveButton);
         addPatientButton = findViewById(R.id.button);
         downloadData = findViewById(R.id.downloadData);
+
+        downloadData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    downloadFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+
 
         // Add/Import existing patients from here onwards
         prematureBabies.addPatient("Martin Holloway",27863,"2020-12-12","male");
@@ -203,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
         commentsMade = findViewById(R.id.commentsMade);
         saveCommentButton = findViewById(R.id.saveCommentButton);
 
-        downloadGlucose = findViewById(R.id.downloadData);
+        downloadData = findViewById(R.id.downloadData);
         downloadLactate = findViewById(R.id.downloadLactate);
         enterFilename = findViewById(R.id.enterFilename);
     }
@@ -224,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
         commentsMade.setVisibility(View.GONE);
         saveCommentButton.setVisibility(View.GONE);
         downloadLactate.setVisibility(View.GONE);
-        downloadGlucose.setVisibility(View.GONE);
+        downloadData.setVisibility(View.GONE);
         enterFilename.setVisibility(View.GONE);
 
         // Set appropriate components are visible
@@ -472,7 +486,7 @@ public class MainActivity extends AppCompatActivity {
         commentSpace.setVisibility(View.INVISIBLE);
         commentsMade.setVisibility(View.INVISIBLE);
         saveCommentButton.setVisibility(View.INVISIBLE);
-        downloadGlucose.setVisibility(View.INVISIBLE);
+        downloadData.setVisibility(View.INVISIBLE);
         downloadLactate.setVisibility(View.INVISIBLE);
         enterFilename.setVisibility(View.INVISIBLE);
 
@@ -489,7 +503,7 @@ public class MainActivity extends AppCompatActivity {
         commentSpace.setVisibility(View.GONE);
         commentsMade.setVisibility(View.GONE);
         saveCommentButton.setVisibility(View.GONE);
-        downloadGlucose.setVisibility(View.INVISIBLE);
+        downloadData.setVisibility(View.INVISIBLE);
         downloadLactate.setVisibility(View.INVISIBLE);
         enterFilename.setVisibility(View.INVISIBLE);
         msg.setTextSize(14);
@@ -507,7 +521,7 @@ public class MainActivity extends AppCompatActivity {
 
         mpLineChart.setVisibility(View.VISIBLE);
         lactate_mpLineChart.setVisibility(View.VISIBLE);
-        downloadGlucose.setVisibility(View.VISIBLE);
+        downloadData.setVisibility(View.VISIBLE);
         downloadLactate.setVisibility(View.VISIBLE);
         enterFilename.setVisibility(View.VISIBLE);
 
@@ -558,31 +572,19 @@ public class MainActivity extends AppCompatActivity {
         lactate_mpLineChart.setData(graphPlot.getData());
         lactate_mpLineChart.invalidate();
 
-        downloadData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String filename = enterFilename.getText().toString();
-                try {
-                    downloadFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        //will download selected text file from firebase cloud storage when clicked for parsing
 
-            }
-        });
 
         downloadLactate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String filename = enterFilename.getText().toString();
             }
         });
-        downloadGlucose.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                String filename = enterFilename.getText().toString();
-            }
-        });
+
 
     }
+
+
 
     //Downloading data text files from firebase storage for parsing
     public void downloadFile() throws IOException {
