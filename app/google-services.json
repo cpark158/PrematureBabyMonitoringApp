@@ -7,6 +7,35 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:902579457848:android:c3c141bb505e0a10befbcd",
+        "android_client_info": {
+          "package_name": "com.example.downloadtest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "902579457848-tqpdiv8osq84mcrnfsch0redeshiro4i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwoFwzfsbVJDGQhmNJ5cfy18X02PyPL5c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "902579457848-tqpdiv8osq84mcrnfsch0redeshiro4i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:902579457848:android:415194be2be9ce98befbcd",
         "android_client_info": {
           "package_name": "com.example.prematurebabymonitoringapp"
