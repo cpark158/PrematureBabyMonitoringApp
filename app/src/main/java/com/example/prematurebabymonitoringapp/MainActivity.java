@@ -447,7 +447,7 @@ public class MainActivity extends AppCompatActivity {
                             currentChosenSpinner = adapterView.getSelectedItemPosition();
                             currentChosenItem = adapterView.getSelectedItem().toString();
 
-                            callPatientTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            callPatientTab(prematureBabies.findPatient(currentChosenSpinner-1));
                         }
                     }
                 }
@@ -469,7 +469,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (tab.getPosition()) {
                     case 0: {
                         // Open Basic Information Tab
-                        callPatientTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                        callPatientTab(prematureBabies.findPatient(currentChosenSpinner-1));
                     }
                     case 1: {
                         patientIcon.setVisibility(View.INVISIBLE);
@@ -479,40 +479,40 @@ public class MainActivity extends AppCompatActivity {
 
                         if (tab.getPosition() == 0) {
                             // Open Basic Information Tab
-                            callPatientTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            callPatientTab(prematureBabies.findPatient(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 1) {
                             // Open Health Tab
-                            callHealthTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            callHealthTab(prematureBabies.findPatient(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 2) {
-                            callEditDetailsPage(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            callEditDetailsPage(prematureBabies.findPatient(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 3) {
-                            removePatientConfirmation(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            removePatientConfirmation(prematureBabies.findPatient(currentChosenSpinner-1));
                         }
                     }
                     case 2: {
                         if (tab.getPosition() == 0) {
                             // Open Basic Information Tab
-                            callPatientTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            callPatientTab(prematureBabies.findPatient(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 1) {
                             // Open Health Tab
-                            callHealthTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            callHealthTab(prematureBabies.findPatient(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 2) {
-                            callEditDetailsPage(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            callEditDetailsPage(prematureBabies.findPatient(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 3) {
-                            removePatientConfirmation(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            removePatientConfirmation(prematureBabies.findPatient(currentChosenSpinner-1));
                         }
                     }
                     case 3: {
                         if (tab.getPosition() == 0) {
                             // Open Basic Information Tab
-                            callPatientTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            callPatientTab(prematureBabies.findPatient(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 1) {
                             // Open Health Tab
-                            callHealthTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            callHealthTab(prematureBabies.findPatient(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 2) {
-                            callEditDetailsPage(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            callEditDetailsPage(prematureBabies.findPatient(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 3) {
-                            removePatientConfirmation(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            removePatientConfirmation(prematureBabies.findPatient(currentChosenSpinner-1));
                         }
                     }
                 }
