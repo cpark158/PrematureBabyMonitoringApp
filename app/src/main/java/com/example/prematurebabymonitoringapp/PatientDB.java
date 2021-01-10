@@ -107,20 +107,6 @@ public class PatientDB {
         return false;
     }
 
-    // This method returns the patient using index number
-    public Patient findPatIdx(int index) {
-        return patients.get(index-1);
-    }
-
-    /* method to display all patients in the database to android app
-     public void patientMenu() {
-        // Reference: https://stackoverflow.com/questions/6525916/dynamically-display-string-text-on-android-screen
-        TextView myText = new TextView();
-        for (Patient p:patients) {
-            myText.setText("Name: "+p.getName()+" Hospital ID: "+p.getHospID());
-        }
-     } */
-
      // method to return number of patients
     public int getDBSize() {
         return patients.size();
