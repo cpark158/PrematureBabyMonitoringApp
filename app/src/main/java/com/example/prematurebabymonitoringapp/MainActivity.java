@@ -793,13 +793,34 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                 //downloaded file is stored in default android storage and can be opened with localFile variable
-                Toast.makeText(MainActivity.this, "File Download Success",Toast.LENGTH_SHORT).show();
+                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                alertDialog.setTitle("Download Success!\n"); // alert title
+                alertDialog.setMessage("\nFile has been successfully downloaded.");    // alert message
+                // text on alert button, which will close the alert when clicked
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
 
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                Toast.makeText(MainActivity.this, "File Download Failed",Toast.LENGTH_SHORT).show();
+                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                alertDialog.setTitle("Download Failed!\n"); // alert title
+                alertDialog.setMessage("\nFile has not been downloaded. Check filename is correct and exists in storage location and try again.");    // alert message
+                // text on alert button, which will close the alert when clicked
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+
                 //Errors will be handled here
             }
         });
