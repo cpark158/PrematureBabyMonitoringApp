@@ -148,8 +148,8 @@ public class Patient {
     }
 
     public String getCommentByIndex(int index){
-        if(index <= comments.size()){
-            return comments.get(index-1);
+        if(index < comments.size()){
+            return comments.get(index);
         }
         else return "";
     }

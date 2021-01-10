@@ -35,7 +35,6 @@ import android.os.Bundle;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
@@ -155,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         spinnerArray.add(Integer.toString(prematureBabies.lastPatient().getHospID()));
         prematureBabies.addPatient("James Choi",52839,"2020-12-27","male");
         spinnerArray.add(Integer.toString(prematureBabies.lastPatient().getHospID()));
-        prematureBabies.addPatient("John Smith", 01, "2020-11-27", "male");
+        prematureBabies.addPatient("John Smith", 33678, "2020-11-27", "male");
         patientNameStr = prematureBabies.lastPatient().getName();
         patientHospIDStr = Integer.toString(prematureBabies.lastPatient().getHospID());
         spinnerArray.add(Integer.toString(prematureBabies.lastPatient().getHospID()));
@@ -731,7 +730,7 @@ public class MainActivity extends AppCompatActivity {
         basicInfoStr = basicInfoStr + "Name: " + inputPatient.getName() + "\n";
         basicInfoStr = basicInfoStr + "Gender: " + inputPatient.getGender() + "\n";
         basicInfoStr = basicInfoStr + "Date of Birth: " + inputPatient.getDOB().toString() + "\n";
-        basicInfoStr = basicInfoStr + "Weight: " + patientWeightStr + "\n";
+        basicInfoStr = basicInfoStr + "Weight: " + Double.toString(inputPatient.getWeight()) + "\n";
         basicInfoStr = basicInfoStr + "Time of Birth: " + inputPatient.getTimeOfBirth() + "\n";
         basicInfoStr = basicInfoStr + "Mother's Name: " + inputPatient.getMotherName() + "\n";
         basicInfoStr = basicInfoStr + "Father's Name: " + inputPatient.getFatherName() + "\n";
