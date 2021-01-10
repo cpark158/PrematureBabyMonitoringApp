@@ -843,6 +843,7 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    // create an alert for duplicate hospID entered
     public void createDuplicateHospIDAlert() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Patient already exists in database\n"); // alert title
@@ -856,6 +857,8 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
+
+    // create an alert to confirm the removal of patient from list/database
     public void removePatientConfirmation(final Patient inputPatient) {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Patient Removal Confirmation\n"); // alert title
@@ -872,6 +875,36 @@ public class MainActivity extends AppCompatActivity {
                 });
         // text on alert button, which will close the alert when clicked
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+
+    // create an alert to warn clinicians when parameters go below normal limits
+    public void createBelowLimitAlert() {
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle("Parameter is below normal range!\n"); // alert title
+        alertDialog.setMessage("\nPlease check on patient. To restore parameter, try the following:\n(Ways to increase parameter)");    // alert message
+        // text on alert button, which will close the alert when clicked
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+
+    // create an alert to warn clinicians when parameters go above normal limits
+    public void createAboveLimitAlert() {
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle("Parameter is above normal range!\n"); // alert title
+        alertDialog.setMessage("\nPlease check on patient. To restore parameter, try the following:\n(Ways to decrease parameter)");    // alert message
+        // text on alert button, which will close the alert when clicked
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
