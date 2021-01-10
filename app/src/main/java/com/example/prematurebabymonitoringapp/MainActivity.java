@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     //Initialising reference to file in firebase storage for download
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
-    StorageReference fileRef = storageRef.child("Monitoring_20190731_135114.txt");
+    //StorageReference fileRef = storageRef.child("Monitoring_20190731_135114.txt");
 
     // Initialise UI components from activity_main.xml
     TabLayout tabLayout;
@@ -624,9 +624,13 @@ public class MainActivity extends AppCompatActivity {
         downloadData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*The files currently in storage linked to this app are:
+                Monitoring_20190731_135114.txt, Monitoring_20190731_155851.txt and Monitoring_20190731_182058.txt
+                Text files are uploaded to firebase cloud storage from another app used by our clients and downloaded for processing in this app
+                */
                 String filename = enterFilename.getText().toString();
                 try {
-                    downloadFile();
+                    downloadFile(filename);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -787,8 +791,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Downloading data text files from firebase storage for parsing
-    public void downloadFile() throws IOException {
-        File localFile = File.createTempFile("Monitoring_20190731_135114","txt");
+    public void downloadFile(String fileName) throws IOException {
+        String fileToDownload = fileName;
+        StorageReference fileRef = storageRef.child(fileToDownload);
+        File localFile = File.createTempFile(fileToDownload,"txt");
         fileRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
@@ -821,7 +827,6 @@ public class MainActivity extends AppCompatActivity {
                         });
                 alertDialog.show();
 
-                //Errors will be handled here
             }
         });
 
