@@ -43,6 +43,10 @@ public class PatientDB {
         patients.add(this.newPat);
     }
 
+    public void removePatient(Patient patientToRemove){
+        patients.remove(patientToRemove);
+    }
+
     // methods to add more patient details (overloading because not all parameters are required)
     public void addName(Patient patient,String name) {
         patient.setName(name);
