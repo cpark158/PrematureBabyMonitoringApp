@@ -25,10 +25,10 @@ public class TestPatient {
 
     // test setting date of birth (Date variable)
     public void testSetDOB() {
-        p.setDOB(Date.valueOf("2001-06-15"));
+        p.setDOB(Date.valueOf("2020-06-15"));
         // convert date into string to compare
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-        Assert.assertEquals(dateFormat.format(p.getDOB()),"2001-06-15");
+        Assert.assertEquals(dateFormat.format(p.getDOB()),"2020-06-15");
     }
 
     // test if gender is always stored as lowercase string
@@ -58,6 +58,11 @@ public class TestPatient {
         Assert.assertEquals(p.getTimeOfBirth(),"13:45");
     }
 
+    public void testSetWeight() {
+        p.setWeight(2.56);
+        Assert.assertEquals(p.getWeight(),2.56);
+    }
+
     public void testSetFatherName() {
         p.setFatherName("Bob");
         Assert.assertEquals(p.getFatherName(),"Bob");
@@ -76,6 +81,11 @@ public class TestPatient {
     public void testSetCondition() {
         p.setCondition("Beta Thalassemia Carrier");
         Assert.assertEquals(p.getCondition(),"Beta Thalassemia Carrier");
+    }
+
+    public void testSetHealthIndex() {
+        p.setHealthIndex(86.8);
+        Assert.assertEquals(p.getHealthIndex(),86.8);
     }
 
 }
