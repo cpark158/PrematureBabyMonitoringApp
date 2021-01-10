@@ -40,42 +40,42 @@ public class PatientDB {
 
     // methods to add more patient details (overloading because not all parameters are required)
     public void addName(Patient patient, String name) {
-        int i = this.findPatientNo(patient);
+        int i = findPatientNo(patient.getHospID());
         patients.get(i).setName(name);
     }
 
     public void addTimeOfBirth(Patient patient, String time) {
-        int i = this.findPatientNo(patient);
+        int i = this.findPatientNo(patient.getHospID());
         patients.get(i).setTimeOfBirth(time);
     }
 
     public void addWeight(Patient patient, double weight) {
-        int i = this.findPatientNo(patient);
+        int i = this.findPatientNo(patient.getHospID());
         patients.get(i).setWeight(weight);
     }
 
     public void addContactNum(Patient patient, String contactNum) {
-        int i = this.findPatientNo(patient);
+        int i = this.findPatientNo(patient.getHospID());
         patients.get(i).setContactNum(contactNum);
     }
 
     public void addMom(Patient patient, String mom) {
-        int i = this.findPatientNo(patient);
+        int i = this.findPatientNo(patient.getHospID());
         patients.get(i).setMotherName(mom);
     }
 
     public void addDad(Patient patient, String dad) {
-        int i = this.findPatientNo(patient);
+        int i = this.findPatientNo(patient.getHospID());
         patients.get(i).setFatherName(dad);
     }
 
     public void addHealthIdx(Patient patient, double healthIdx) {
-        int i = this.findPatientNo(patient);
+        int i = this.findPatientNo(patient.getHospID());
         patients.get(i).setHealthIndex(healthIdx);
     }
 
     public void addDetails(Patient patient, String condition) {
-        int i = this.findPatientNo(patient);
+        int i = this.findPatientNo(patient.getHospID());
         patients.get(i).setCondition(condition);
     }
 
@@ -87,7 +87,7 @@ public class PatientDB {
     /* Reference: https://www.baeldung.com/find-list-element-java */
     public Patient findPatient(Patient patient) {
         for (Patient p : patients) {
-            if (p.equals(patient)) {
+            if (p.getHospID() == patient.getHospID()) {
                 return p;
             }
         }
@@ -100,11 +100,11 @@ public class PatientDB {
     }
 
     // Finds the patient's number/position in database
-    public int findPatientNo(Patient patient) {
-        int patientNo = 0;
+    public int findPatientNo(int hospID) {
+        int patientNo = -1;
         for (int i = 0; i < patients.size(); i++) {
-            if (patients.get(i).equals(patient)) {
-                patientNo = i+1;
+            if (hospID == (patients.get(i).getHospID())) {
+                patientNo = i;
             }
         }
         return patientNo;
