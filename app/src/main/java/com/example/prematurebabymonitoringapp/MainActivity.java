@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.tabs.TabLayout;
 import java.util.Calendar;
 
-import com.google.firebase.storage.FirebaseStorage;
+
 import com.google.gson.JsonObject;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -71,8 +71,7 @@ public class MainActivity extends AppCompatActivity {
     Spinner spinnerPatientList;
     ImageView patientIcon;
 
-    Button downloadGlucose;
-    Button downloadLactate;
+
     EditText enterFilename;
     Button downloadData;
 
@@ -148,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         mpLineChart = findViewById(R.id.line_chart);
         saveButton = findViewById(R.id.saveButton);
         addPatientButton = findViewById(R.id.button);
-        downloadData = findViewById(R.id.downloadData);
+
 
         // Add/Import existing patients from here onwards
         prematureBabies.addPatient("Martin Holloway",27863,"2020-12-12","male");
@@ -228,8 +227,7 @@ public class MainActivity extends AppCompatActivity {
         commentsMade = findViewById(R.id.commentsMade);
         saveCommentButton = findViewById(R.id.saveCommentButton);
 
-        downloadGlucose = findViewById(R.id.downloadData);
-        downloadLactate = findViewById(R.id.downloadLactate);
+        downloadData = findViewById(R.id.downloadData);
         enterFilename = findViewById(R.id.enterFilename);
 
         // Add Details Page
@@ -538,8 +536,7 @@ public class MainActivity extends AppCompatActivity {
         commentSpace.setVisibility(View.INVISIBLE);
         commentsMade.setVisibility(View.INVISIBLE);
         saveCommentButton.setVisibility(View.INVISIBLE);
-        downloadGlucose.setVisibility(View.INVISIBLE);
-        downloadLactate.setVisibility(View.INVISIBLE);
+        downloadData.setVisibility(View.INVISIBLE);
         enterFilename.setVisibility(View.INVISIBLE);
 
         callWelcomePage("Refer to dropdown list above for other patients or add patient below.");
@@ -556,8 +553,7 @@ public class MainActivity extends AppCompatActivity {
         commentSpace.setVisibility(View.GONE);
         commentsMade.setVisibility(View.GONE);
         saveCommentButton.setVisibility(View.GONE);
-        downloadGlucose.setVisibility(View.INVISIBLE);
-        downloadLactate.setVisibility(View.INVISIBLE);
+        downloadData.setVisibility(View.INVISIBLE);
         enterFilename.setVisibility(View.INVISIBLE);
         msg.setVisibility(View.VISIBLE);
         msg.setTextSize(14);
@@ -576,8 +572,7 @@ public class MainActivity extends AppCompatActivity {
         patientIcon.setVisibility(View.INVISIBLE);
         mpLineChart.setVisibility(View.VISIBLE);
         lactate_mpLineChart.setVisibility(View.VISIBLE);
-        downloadGlucose.setVisibility(View.VISIBLE);
-        downloadLactate.setVisibility(View.INVISIBLE);
+        downloadData.setVisibility(View.VISIBLE);
         enterFilename.setVisibility(View.VISIBLE);
         msg.setVisibility(View.VISIBLE);
 
@@ -639,16 +634,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        downloadLactate.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                String filename = enterFilename.getText().toString();
-            }
-        });
-        downloadGlucose.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                String filename = enterFilename.getText().toString();
-            }
-        });
+
 
     }
 
@@ -757,8 +743,7 @@ public class MainActivity extends AppCompatActivity {
         commentSpace.setVisibility(View.GONE);
         commentsMade.setVisibility(View.GONE);
         saveCommentButton.setVisibility(View.GONE);
-        downloadLactate.setVisibility(View.GONE);
-        downloadGlucose.setVisibility(View.GONE);
+        downloadData.setVisibility(View.GONE);
         enterFilename.setVisibility(View.GONE);
         patientWeight.setVisibility(View.GONE);
         patientTOB.setVisibility(View.GONE);
