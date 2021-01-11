@@ -2,9 +2,10 @@ package com.example.prematurebabymonitoringapp;
 
 import java.sql.Date;
 import java.util.ArrayList;
-//import java.util.Optional;
 
-// PatientDB will have a list of all the patients in the unit
+/** PatientDB is a class which has stores a list of all the patients in the ward locally
+ *  Patients from the remote server are added to the local database and the data for each
+ *  patient in the database can be edited. */
 
 public class PatientDB {
     ArrayList<Patient> patients = new ArrayList<Patient>();
