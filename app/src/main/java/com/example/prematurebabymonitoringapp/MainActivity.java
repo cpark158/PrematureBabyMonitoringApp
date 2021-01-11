@@ -33,6 +33,7 @@ import android.os.Bundle;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
@@ -131,8 +132,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
         // Parse .txt file and plot graph, to be displayed later
 
         graphPlot = new GraphPlotter(testXData, testYData);
@@ -151,19 +150,7 @@ public class MainActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.saveButton);
         addPatientButton = findViewById(R.id.button);
 
-
-        // Add/Import existing patients from here onwards
-        prematureBabies.addPatient("Martin Holloway",27863,"2020-12-12","male");
-        spinnerArray.add(Integer.toString(prematureBabies.lastPatient().getHospID()));
-        prematureBabies.addPatient("James Choi",52839,"2020-12-27","male");
-        spinnerArray.add(Integer.toString(prematureBabies.lastPatient().getHospID()));
-        prematureBabies.addPatient("John Smith", 33678, "2020-11-27", "male");
-        patientNameStr = prematureBabies.lastPatient().getName();
-        patientHospIDStr = Integer.toString(prematureBabies.lastPatient().getHospID());
-        spinnerArray.add(Integer.toString(prematureBabies.lastPatient().getHospID()));
-
-        //TODO Add meaningful logs for when the request fails
-        //Fetch Patient List from remote Database
+        //Fetch Patient List from remote Database and add to the local database and drop-down list
         /* Reference 3 - taken from https://medium.com/@prakash_pun/retrofit-a-simple-android-tutorial-48437e4e5a23 */
         GetDataService service = ClientInstance.getRetrofitInstance().create(GetDataService.class);
         Call<List<Patient>> call = service.getPatientsList();
@@ -181,8 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Patient>> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Remote Patients list wasn't retrieved!", Toast.LENGTH_SHORT).show();
-
+                createFailedRetrieveAlert();    // displays alert when patient list retrieval request fails
             }
         });
         /* end of reference 1 */
@@ -311,11 +297,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void callNewPatientPage(){
 
+        // Editable text boxs to input patient details
         patientName.setText("Name");
         patientHospID.setText("Hospital ID");
         patientDOB.setText("yyyy-mm-dd");
         patientGender.setText("Gender");
 
+        // Inputted details are used to create a new Patient when save button is clicked
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Upon clicking, save inputted information as patient details
@@ -859,6 +847,21 @@ public class MainActivity extends AppCompatActivity {
                     dialog.dismiss();
                 }
         });
+        alertDialog.show();
+    }
+
+    // create an alert for failed retrieval of remote patient database
+    public void createFailedRetrieveAlert() {
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle("Failed to retrieve the remote patient database\n"); // alert title
+        alertDialog.setMessage("\nPlease restart the app.");    // alert message
+        // text on alert button, which will close the alert when clicked
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
         alertDialog.show();
     }
 
