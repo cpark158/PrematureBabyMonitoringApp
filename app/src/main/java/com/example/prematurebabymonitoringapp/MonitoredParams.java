@@ -38,15 +38,15 @@ public class MonitoredParams {
     } */
 
     // Method to calibrate and add data from parsed text files
-    public void addParsedData(TextFileProcessor data) {
+    /*public void addParsedData(TextFileProcessor data) {
         for (int i=0; i<data.getSize();i++) {
             // need to add calibration
-            this.addGlucose(data.getVolt1().get(i));
+            this.addGlucose(data.getTestVolt1().get(i));
             this.addLactate(data.getVolt2().get(i));
-            this.addTime(data.getTimeValues().get(i));
+            this.addTime(data.getTestTimeValues().get(i));
             //this.addTime(data.getTimeValues().get(i));
         }
-    }
+    }*/
 
     public ArrayList<Integer> getGlucose() {
         return glucose;

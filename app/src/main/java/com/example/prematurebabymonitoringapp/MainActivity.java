@@ -14,7 +14,8 @@ import android.view.*;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.tabs.TabLayout;
-import java.util.Calendar;
+
+import java.util.*;
 
 
 import com.google.gson.JsonObject;
@@ -24,9 +25,6 @@ import retrofit2.Response;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import android.app.DownloadManager;
 import androidx.annotation.NonNull;
@@ -46,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
     // Initialise graph plotting parameters
     LineChart mpLineChart;
     LineChart lactate_mpLineChart;
-    TextFileProcessor txtFileProcessor = new TextFileProcessor();
     GraphPlotter graphPlot;
+    TextFileProcessor txtFileProcessor;
 
     //Initialising reference to file in firebase storage for download
     FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -122,6 +120,10 @@ public class MainActivity extends AppCompatActivity {
 
     //To populate spinner (dropdown patient list)
     List<String> spinnerArray = new ArrayList<String>();
+    ArrayList<Integer> testXData = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8,9,10));
+    ArrayList<Integer> testYData = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8,9,10));
+
+
 
     public MainActivity() throws IOException {
     }
@@ -130,9 +132,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
         // Parse .txt file and plot graph, to be displayed later
-        txtFileProcessor.parseFile();
-        graphPlot = new GraphPlotter(txtFileProcessor.getTimeValues(), txtFileProcessor.getVolt1());
+
+        graphPlot = new GraphPlotter(testXData, testYData);
 
         // Retrieve XML components
         retrieveXMLComponents();
@@ -794,7 +798,7 @@ public class MainActivity extends AppCompatActivity {
     public void downloadFile(String fileName) throws IOException {
         String fileToDownload = fileName;
         StorageReference fileRef = storageRef.child(fileToDownload);
-        File localFile = File.createTempFile(fileToDownload,"txt");
+        final File localFile = File.createTempFile(fileToDownload,"txt");
         fileRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
@@ -810,6 +814,11 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                 alertDialog.show();
+                //downloaded file is passed to text file processor for data extraction
+                txtFileProcessor = new TextFileProcessor(localFile);
+                txtFileProcessor.parseFile();
+                //checks data has been successfully read in
+                Toast.makeText(MainActivity.this,txtFileProcessor.testValString(),Toast.LENGTH_LONG).show();
 
             }
         }).addOnFailureListener(new OnFailureListener() {
