@@ -1,5 +1,4 @@
-package com.example.prematurebabymonitoringapp;//import java.time.LocalDate;
-//import java.time.LocalTime;
+package com.example.prematurebabymonitoringapp;
 
 import com.google.gson.annotations.SerializedName;
 import java.sql.Date;
@@ -31,15 +30,14 @@ public class Patient {
     private String condition;   // stores additional details on pre-existing conditions/diseases
     @SerializedName("healthIndex")
     private double healthIndex;
-    private MonitoredParams param;
-    private GraphPlotter graph1;    // graph of conc1 against time
-    private GraphPlotter graph2;    // graph of conc2 against time
+    ArrayList<Integer> glucose = new ArrayList<Integer>();
+    ArrayList<Integer> lactate = new ArrayList<Integer>();
+    ArrayList<Integer> time = new ArrayList<Integer>(); // ideally will change this to type Time
     private ArrayList<String> comments = new ArrayList<String>();
 
     // constructor
     public Patient(int hospID) {
         this.hospID = hospID;
-        param = new MonitoredParams();
     }
 
     // getters and setters
@@ -120,25 +118,6 @@ public class Patient {
     }
 
     // Main functions
-
-    /* Set monitoredParams manually
-    public void manualInput(ArrayList<Integers> conc1,ArrayList<Integers> conc2,ArrayList<Time> time) {
-        for (int i=0; i<conc1.getSize();i++) {
-            this.addConc(conc1.get(i),conc2.get(i));
-            //this.addTime(time.get(i));
-        }
-     */
-
-    // Method to plot glucose concentration against time (ideally against time of day)
-    public void plotGlucose() {
-        graph1 = new GraphPlotter(param.getTime(), param.getGlucose());
-    }
-
-    // Method to plot lactate concentration against time (ideally against time of day)
-    public void plotLactate() {
-        graph2 = new GraphPlotter(param.getTime(), param.getLactate());
-    }
-
     public void addComment(String comment){
         comments.add(comment);
     }
