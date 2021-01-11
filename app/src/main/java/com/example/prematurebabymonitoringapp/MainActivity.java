@@ -33,7 +33,6 @@ import android.os.Bundle;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
@@ -158,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
         spinnerArray.add(Integer.toString(prematureBabies.lastPatient().getHospID()));
         prematureBabies.addPatient("James Choi",52839,"2020-12-27","male");
         spinnerArray.add(Integer.toString(prematureBabies.lastPatient().getHospID()));
-        prematureBabies.addPatient("John Smith", 01, "2020-11-27", "male");
+        prematureBabies.addPatient("John Smith", 33678, "2020-11-27", "male");
         patientNameStr = prematureBabies.lastPatient().getName();
         patientHospIDStr = Integer.toString(prematureBabies.lastPatient().getHospID());
         spinnerArray.add(Integer.toString(prematureBabies.lastPatient().getHospID()));
@@ -449,7 +448,7 @@ public class MainActivity extends AppCompatActivity {
                             currentChosenSpinner = adapterView.getSelectedItemPosition();
                             currentChosenItem = adapterView.getSelectedItem().toString();
 
-                            callPatientTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            callPatientTab(prematureBabies.findPatient(currentChosenSpinner-1));
                         }
                     }
                 }
@@ -471,7 +470,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (tab.getPosition()) {
                     case 0: {
                         // Open Basic Information Tab
-                        callPatientTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                        callPatientTab(prematureBabies.findPatient(currentChosenSpinner-1));
                     }
                     case 1: {
                         patientIcon.setVisibility(View.INVISIBLE);
@@ -481,40 +480,40 @@ public class MainActivity extends AppCompatActivity {
 
                         if (tab.getPosition() == 0) {
                             // Open Basic Information Tab
-                            callPatientTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            callPatientTab(prematureBabies.findPatient(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 1) {
                             // Open Health Tab
-                            callHealthTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            callHealthTab(prematureBabies.findPatient(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 2) {
-                            callEditDetailsPage(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            callEditDetailsPage(prematureBabies.findPatient(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 3) {
-                            removePatientConfirmation(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            removePatientConfirmation(prematureBabies.findPatient(currentChosenSpinner-1));
                         }
                     }
                     case 2: {
                         if (tab.getPosition() == 0) {
                             // Open Basic Information Tab
-                            callPatientTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            callPatientTab(prematureBabies.findPatient(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 1) {
                             // Open Health Tab
-                            callHealthTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            callHealthTab(prematureBabies.findPatient(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 2) {
-                            callEditDetailsPage(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            callEditDetailsPage(prematureBabies.findPatient(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 3) {
-                            removePatientConfirmation(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            removePatientConfirmation(prematureBabies.findPatient(currentChosenSpinner-1));
                         }
                     }
                     case 3: {
                         if (tab.getPosition() == 0) {
                             // Open Basic Information Tab
-                            callPatientTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            callPatientTab(prematureBabies.findPatient(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 1) {
                             // Open Health Tab
-                            callHealthTab(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            callHealthTab(prematureBabies.findPatient(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 2) {
-                            callEditDetailsPage(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            callEditDetailsPage(prematureBabies.findPatient(currentChosenSpinner-1));
                         } else if (tab.getPosition() == 3) {
-                            removePatientConfirmation(prematureBabies.findPatientByIndex(currentChosenSpinner-1));
+                            removePatientConfirmation(prematureBabies.findPatient(currentChosenSpinner-1));
                         }
                     }
                 }
@@ -725,7 +724,7 @@ public class MainActivity extends AppCompatActivity {
         basicInfoStr = basicInfoStr + "Name: " + inputPatient.getName() + "\n";
         basicInfoStr = basicInfoStr + "Gender: " + inputPatient.getGender() + "\n";
         basicInfoStr = basicInfoStr + "Date of Birth: " + inputPatient.getDOB().toString() + "\n";
-        basicInfoStr = basicInfoStr + "Weight: " + patientWeightStr + "\n";
+        basicInfoStr = basicInfoStr + "Weight: " + Double.toString(inputPatient.getWeight()) + "\n";
         basicInfoStr = basicInfoStr + "Time of Birth: " + inputPatient.getTimeOfBirth() + "\n";
         basicInfoStr = basicInfoStr + "Mother's Name: " + inputPatient.getMotherName() + "\n";
         basicInfoStr = basicInfoStr + "Father's Name: " + inputPatient.getFatherName() + "\n";

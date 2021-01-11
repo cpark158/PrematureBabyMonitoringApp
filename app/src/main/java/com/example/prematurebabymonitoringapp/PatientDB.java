@@ -1,16 +1,7 @@
 package com.example.prematurebabymonitoringapp;
 
-import android.widget.Toast;
-import com.example.prematurebabymonitoringapp.network.ClientInstance;
-import com.example.prematurebabymonitoringapp.network.GetDataService;
-import com.example.prematurebabymonitoringapp.network.PostDataService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.List;
 //import java.util.Optional;
 
 // PatientDB will have a list of all the patients in the unit
@@ -39,91 +30,99 @@ public class PatientDB {
     }
 
     public void addPatient(Patient newPat) {
-        this.newPat=newPat;
+        this.newPat = newPat;
         patients.add(this.newPat);
     }
 
-    public void removePatient(Patient patientToRemove){
+    public void removePatient(Patient patientToRemove) {
         patients.remove(patientToRemove);
     }
 
     // methods to add more patient details (overloading because not all parameters are required)
-    public void addName(Patient patient,String name) {
-        patient.setName(name);
+    public void addName(Patient patient, String name) {
+        int i = findPatientNo(patient.getHospID());
+        patients.get(i).setName(name);
     }
-    public void addTimeOfBirth(Patient patient,String time) {
-        patient.setTimeOfBirth(time);
+
+    public void addTimeOfBirth(Patient patient, String time) {
+        int i = this.findPatientNo(patient.getHospID());
+        patients.get(i).setTimeOfBirth(time);
     }
-    public void addWeight(Patient patient,double weight) {
-        patient.setWeight(weight);
+
+    public void addWeight(Patient patient, double weight) {
+        int i = this.findPatientNo(patient.getHospID());
+        patients.get(i).setWeight(weight);
     }
-    public void addContactNum(Patient patient,String contactNum) {
-        patient.setContactNum(contactNum);
+
+    public void addContactNum(Patient patient, String contactNum) {
+        int i = this.findPatientNo(patient.getHospID());
+        patients.get(i).setContactNum(contactNum);
     }
-    public void addMom(Patient patient,String mom) {
-        patient.setMotherName(mom);
+
+    public void addMom(Patient patient, String mom) {
+        int i = this.findPatientNo(patient.getHospID());
+        patients.get(i).setMotherName(mom);
     }
-    public void addDad(Patient patient,String dad) {
-        patient.setFatherName(dad);
+
+    public void addDad(Patient patient, String dad) {
+        int i = this.findPatientNo(patient.getHospID());
+        patients.get(i).setFatherName(dad);
     }
-    public void addHealthIdx(Patient patient,double healthIdx) {
-        patient.setHealthIndex(healthIdx);
+
+    public void addHealthIdx(Patient patient, double healthIdx) {
+        int i = this.findPatientNo(patient.getHospID());
+        patients.get(i).setHealthIndex(healthIdx);
     }
-    public void addDetails(Patient patient,String condition) {
-        patient.setCondition(condition);
+
+    public void addDetails(Patient patient, String condition) {
+        int i = this.findPatientNo(patient.getHospID());
+        patients.get(i).setCondition(condition);
     }
 
     public Patient lastPatient() {
         return newPat;
     }
 
-    // This method searches for a patient in the database using patient's name
-    public Patient findPatient(String name) {
-        int patientNo = 0;
-        for(int i=0; i < patients.size(); i++) {
-            if (patients.get(i).getName() == name)
-                patientNo = i+1;
+    // This method searches for a patient in the database
+    /* Reference: https://www.baeldung.com/find-list-element-java */
+    public Patient findPatient(Patient patient) {
+        for (Patient p : patients) {
+            if (p.getHospID() == patient.getHospID()) {
+                return p;
+            }
         }
-
-        if (patientNo == 0) {
-            System.out.println("Not a registered patient");
-            return patients.get(0);
-        }
-        else {
-        return patients.get(patientNo-1); }  // exception if patientNo = 0, need to find a way around this
+        return null;
     }
 
-
-    public Patient findPatientByIndex(int i){
+    // Finds patient by index number
+    public Patient findPatient(int i) {
         return patients.get(i);
+    }
+
+    // Finds the patient's number/position in database
+    public int findPatientNo(int hospID) {
+        int patientNo = -1;
+        for (int i = 0; i < patients.size(); i++) {
+            if (hospID == (patients.get(i).getHospID())) {
+                patientNo = i;
+            }
+        }
+        return patientNo;
     }
 
     // This method checks if patient already exists (i.e. checks for the same hospID
     public boolean patientExists(int hospID) {
-        for(int i=0; i < patients.size(); i++) {
+        for (int i = 0; i < patients.size(); i++) {
             if (patients.get(i).getHospID() == hospID)
                 return true;
         }
         return false;
     }
 
-    // This method returns the patient using index number
-    public Patient findPatIdx(int index) {
-        return patients.get(index-1);
-    }
-
-    /* method to display all patients in the database to android app
-     public void patientMenu() {
-        // Reference: https://stackoverflow.com/questions/6525916/dynamically-display-string-text-on-android-screen
-        TextView myText = new TextView();
-        for (Patient p:patients) {
-            myText.setText("Name: "+p.getName()+" Hospital ID: "+p.getHospID());
-        }
-     } */
-
-     // method to return number of patients
+    // method to return number of patients
     public int getDBSize() {
         return patients.size();
     }
 
 }
+
