@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.prematurebabymonitoringapp.exceptions.invalidGenderException;
 import com.example.prematurebabymonitoringapp.network.ClientInstance;
+import com.example.prematurebabymonitoringapp.network.DeleteDataService;
 import com.example.prematurebabymonitoringapp.network.GetDataService;
 import com.example.prematurebabymonitoringapp.network.PostDataService;
 import com.github.mikephil.charting.charts.LineChart;
@@ -356,8 +357,10 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                                 JsonObject jsonObject= response.body();
-                                String serverMsg=jsonObject.get("message").toString();
-                                Toast.makeText(MainActivity.this, serverMsg, Toast.LENGTH_SHORT).show();
+                                if(jsonObject!=null) {
+                                    String serverMsg = jsonObject.get("message").toString();
+                                    Toast.makeText(MainActivity.this, serverMsg, Toast.LENGTH_SHORT).show();
+                                }
                             }
                             @Override
                             public void onFailure(Call<JsonObject> call, Throwable t) {
@@ -893,6 +896,23 @@ public class MainActivity extends AppCompatActivity {
                         callNoPatientsTab();
                         spinnerArray.remove(Integer.toString(inputPatient.getHospID()));
                         prematureBabies.removePatient(inputPatient);
+
+                        DeleteDataService service = ClientInstance.getRetrofitInstance().create(DeleteDataService.class);
+                        Call<JsonObject> deleteCall = service.deletePatient(inputPatient.getHospID());
+                        deleteCall.enqueue(new Callback<JsonObject>() {
+                            @Override
+                            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                                JsonObject jsonObject = response.body();
+                                if (jsonObject != null) {
+                                    String serverMsg = jsonObject.get("message").toString();
+                                    Toast.makeText(MainActivity.this, serverMsg, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            @Override
+                            public void onFailure(Call<JsonObject> call, Throwable t) {
+                                System.out.println("bad");
+                            }
+                        });
                     }
                 });
         // text on alert button, which will close the alert when clicked
