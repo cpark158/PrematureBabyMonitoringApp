@@ -897,6 +897,7 @@ public class MainActivity extends AppCompatActivity {
                         spinnerArray.remove(Integer.toString(inputPatient.getHospID()));
                         prematureBabies.removePatient(inputPatient);
 
+                        //Remove patient from remote database
                         DeleteDataService service = ClientInstance.getRetrofitInstance().create(DeleteDataService.class);
                         Call<JsonObject> deleteCall = service.deletePatient(inputPatient.getHospID());
                         deleteCall.enqueue(new Callback<JsonObject>() {
