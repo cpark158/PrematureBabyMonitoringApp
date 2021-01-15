@@ -642,7 +642,7 @@ public class MainActivity extends AppCompatActivity {
         mpLineChart.setData(graphPlot.getData());
         mpLineChart.invalidate();
         lactate_mpLineChart.setData(graphPlot.getData());
-        lactate_mpLineChart.invalidate(); */
+        lactate_mpLineChart.invalidate();
 
         downloadData.setOnClickListener(new View.OnClickListener() {
             @Override
