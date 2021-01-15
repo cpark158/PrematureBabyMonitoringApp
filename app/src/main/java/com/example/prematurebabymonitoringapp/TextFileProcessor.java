@@ -94,6 +94,27 @@ public class TextFileProcessor {
         }
     }
 
+    //getters
+    public ArrayList<Integer> getGlucConc(){
+        return this.glucConc;
+    }
+
+    public ArrayList<Integer> getLactConc(){
+        return this.lactConc;
+    }
+
+    public ArrayList<Integer> getHour(){
+        return this.hour;
+    }
+
+    public ArrayList<Integer> getMin(){
+        return this.min;
+    }
+
+    public ArrayList<Double> getSec(){
+        return this.sec;
+    }
+
 
 
     //this returns a test value for comparison against the downloaded data file to check data has been correctly taken in

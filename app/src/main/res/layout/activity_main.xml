@@ -149,16 +149,26 @@
             android:visibility="visible"/>
     <!--Patient Health Page-->
     <Button
+            android:text="Show Glucose Data"
+            android:layout_width="231dp"
+            android:layout_height="45dp" android:id="@+id/downloadGlucose"
+            android:visibility="visible"
+            app:layout_constraintEnd_toStartOf="@+id/line_chart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.384"
+            app:layout_constraintTop_toTopOf="@+id/line_chart" android:layout_marginTop="124dp"
+            android:shadowColor="#613232"/>
+    <Button
             android:text="Show Lactate Data"
             android:layout_width="231dp"
             android:layout_height="45dp" android:id="@+id/downloadLactate"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintEnd_toStartOf="@+id/line_chart"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="0.546"
+            app:layout_constraintHorizontal_bias="0.384"
             app:layout_constraintTop_toBottomOf="@+id/lactateText"
             app:layout_constraintBottom_toBottomOf="@+id/lactate_line_chart"
-            app:layout_constraintVertical_bias="0.012"/>
+            app:layout_constraintVertical_bias="1.0"/>
     <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/lactate_line_chart"
             android:layout_width="307dp"
@@ -178,8 +188,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.347"
-    />
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.347"/>
     <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/line_chart"
             android:layout_width="307dp"
@@ -201,17 +210,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:visibility="visible"
-            app:layout_constraintHorizontal_bias="0.076" android:layout_marginBottom="34dp"
+            app:layout_constraintHorizontal_bias="0.055" android:layout_marginBottom="4dp"
             app:layout_constraintBottom_toTopOf="@+id/downloadData"/>
     <Button
             android:text="Download Data"
-            android:layout_width="231dp"
-            android:layout_height="45dp" android:id="@+id/downloadData"
+            android:layout_width="165dp"
+            android:layout_height="39dp" android:id="@+id/downloadData"
             android:visibility="visible"
             app:layout_constraintEnd_toStartOf="@+id/line_chart"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/tabLayout"
-            app:layout_constraintBottom_toBottomOf="@+id/line_chart" app:layout_constraintHorizontal_bias="0.615"
-            app:layout_constraintVertical_bias="0.819"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.3"
+            app:layout_constraintBottom_toTopOf="@+id/lactateText" android:layout_marginBottom="116dp"/>
     <EditText
             android:layout_width="288dp"
             android:layout_height="185dp"
