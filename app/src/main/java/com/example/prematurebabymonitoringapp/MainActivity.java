@@ -638,9 +638,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
-
     }
 
     public void callEditDetailsPage(final Patient inputPatient){
