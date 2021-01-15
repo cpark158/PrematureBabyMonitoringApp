@@ -115,6 +115,10 @@ public class TextFileProcessor {
         return this.sec;
     }
 
+    public int getDataSize(){
+        return glucConc.size();
+    }
+
 
 
     //this returns a test value for comparison against the downloaded data file to check data has been correctly taken in
