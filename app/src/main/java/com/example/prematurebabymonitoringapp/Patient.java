@@ -32,7 +32,7 @@ public class Patient {
     private double healthIndex;
     ArrayList<Integer> glucose = new ArrayList<Integer>();
     ArrayList<Integer> lactate = new ArrayList<Integer>();
-    ArrayList<Integer> time = new ArrayList<Integer>(); // ideally will change this to type Time
+    Time time = new Time(); //stores arraylists for hour, min, sec together
     private ArrayList<String> comments = new ArrayList<String>();
 
     // constructor
@@ -115,6 +115,30 @@ public class Patient {
     }
     public void setCondition(String condition) {
         this.condition = condition;
+    }
+
+    public void setGlucose(ArrayList<Integer> glucConc){
+        for (int i=0; i<glucConc.size(); i++){
+            glucose.add(glucConc.get(i));
+        }
+    }
+
+    public ArrayList<Integer> getGlucose(){
+        return this.glucose;
+    }
+
+    public void setLactate(ArrayList<Integer> lactConc){
+        for (int i=0; i<lactConc.size(); i++){
+            glucose.add(lactConc.get(i));
+        }
+    }
+
+    public ArrayList<Integer> getLactate(){
+        return this.lactate;
+    }
+
+    public void setTime(Time t){
+        this.time = t;
     }
 
     // Main functions

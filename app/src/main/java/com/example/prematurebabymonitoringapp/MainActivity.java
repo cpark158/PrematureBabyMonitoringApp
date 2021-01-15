@@ -606,7 +606,7 @@ public class MainActivity extends AppCompatActivity {
 
         commentsMade.setVisibility(View.VISIBLE);
 
-        //This code will be moved to display only upon clicking of 'show glucose' and 'show lactate' buttons
+       /* //This code will be moved to display only upon clicking of 'show glucose' and 'show lactate' buttons
 
         graphPlot = new GraphPlotter();
 
@@ -619,7 +619,7 @@ public class MainActivity extends AppCompatActivity {
         mpLineChart.setData(graphPlot.getData());
         mpLineChart.invalidate();
         lactate_mpLineChart.setData(graphPlot.getData());
-        lactate_mpLineChart.invalidate();
+        lactate_mpLineChart.invalidate(); */
 
 
         downloadData.setOnClickListener(new View.OnClickListener() {
@@ -631,7 +631,7 @@ public class MainActivity extends AppCompatActivity {
                 */
                 String filename = enterFilename.getText().toString();
                 try {
-                    downloadFile(filename);
+                    downloadFile(filename,inputPatient);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -792,8 +792,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Download text files in cloud storage for processing
-    public void downloadFile(String fileName) throws IOException {
+    public void downloadFile(String fileName, Patient inputPatient) throws IOException {
         String fileToDownload = fileName;
+        final Patient selectedPatient = inputPatient;
         StorageReference fileRef = storageRef.child(fileToDownload);
         final File localFile = File.createTempFile(fileToDownload,"txt");
         fileRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -811,9 +812,19 @@ public class MainActivity extends AppCompatActivity {
                 txtFileProcessor.calibrateGlucose();
                 txtFileProcessor.calibrateLactate();
 
+                //creating a time object to store arraylists hour, min, sec together
+                Time time = new Time();
+                time.setH(txtFileProcessor.getHour());
+                time.setM(txtFileProcessor.getMin());
+                time.setS(txtFileProcessor.getSec());
+
                 //checks data has been successfully read in
                 //Toast.makeText(MainActivity.this,txtFileProcessor.testValString(),Toast.LENGTH_LONG).show();
 
+                //pass extracted and calibrated values to selected patient from database
+                selectedPatient.setGlucose(txtFileProcessor.getGlucConc());
+                selectedPatient.setLactate(txtFileProcessor.getLactConc());
+                selectedPatient.setTime(time);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
