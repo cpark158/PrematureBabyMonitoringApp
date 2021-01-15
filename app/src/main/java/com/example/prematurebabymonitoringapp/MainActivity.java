@@ -853,14 +853,14 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 //print out the most recent glucose and lactate values - would give current glucose and lactate value if adapted for real-time monitoring
-                msg.setText(String.format("Current glucose level: " + txtFileProcessor.getGlucConc().get(txtFileProcessor.getDataSize()-1)));
+                msg.setText(String.format("Current glucose level: " + txtFileProcessor.getGlucConc().get(txtFileProcessor.getDataSize()-1) + "mM"));
                 currentLactateLevel.setVisibility(View.VISIBLE);
                 currentLactateLevel.setTextSize(14);
-                currentLactateLevel.setText("Current lactate level: " + txtFileProcessor.getLactConc().get(txtFileProcessor.getDataSize()-1));
+                currentLactateLevel.setText("Current lactate level: " + txtFileProcessor.getLactConc().get(txtFileProcessor.getDataSize()-1) + "mM");
 
-                //pass extracted and calibrated values to selected patient from database
+                //pass extracted and calibrated values to selected patient from database - there is an error here that needs fixing
                 //selectedPatient.setGlucose(txtFileProcessor.getGlucConc());
-               // selectedPatient.setLactate(txtFileProcessor.getLactConc());
+                // selectedPatient.setLactate(txtFileProcessor.getLactConc());
                 //selectedPatient.setTime(time);
               
             }
