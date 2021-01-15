@@ -848,13 +848,20 @@ public class MainActivity extends AppCompatActivity {
                 time.setS(txtFileProcessor.getSec());
 
                 //checks data has been successfully read in
-                //Toast.makeText(MainActivity.this,txtFileProcessor.testValString(),Toast.LENGTH_LONG).show();
+                if (txtFileProcessor.getHour().size()!=0){
+                    Toast.makeText(MainActivity.this,"Data successfully extracted!",Toast.LENGTH_LONG).show();
+                }
 
+                //print out the most recent glucose and lactate values - would give current glucose and lactate value if adapted for real-time monitoring
+                msg.setText(String.format("Current glucose level: " + txtFileProcessor.getGlucConc().get(txtFileProcessor.getDataSize()-1)));
+                currentLactateLevel.setVisibility(View.VISIBLE);
+                currentLactateLevel.setTextSize(14);
+                currentLactateLevel.setText("Current lactate level: " + txtFileProcessor.getLactConc().get(txtFileProcessor.getDataSize()-1));
 
                 //pass extracted and calibrated values to selected patient from database
-                selectedPatient.setGlucose(txtFileProcessor.getGlucConc());
-                selectedPatient.setLactate(txtFileProcessor.getLactConc());
-                selectedPatient.setTime(time);
+                //selectedPatient.setGlucose(txtFileProcessor.getGlucConc());
+               // selectedPatient.setLactate(txtFileProcessor.getLactConc());
+                //selectedPatient.setTime(time);
               
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -1039,6 +1046,8 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
+
+
 }
 
 
