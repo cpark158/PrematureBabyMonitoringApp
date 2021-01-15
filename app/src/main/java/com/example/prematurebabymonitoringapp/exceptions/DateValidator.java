@@ -18,7 +18,7 @@ public class DateValidator {
 
             // ResolverStyle.STRICT for 30, 31 days checking, and also leap year.
             LocalDate.parse(date,
-                    DateTimeFormatter.ofPattern("yyyy-M-d")
+                    DateTimeFormatter.ofPattern("uuuu-M-d")
                             .withResolverStyle(ResolverStyle.STRICT)
             );
 
