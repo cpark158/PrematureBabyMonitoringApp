@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.example.prematurebabymonitoringapp.exceptions.DateValidator;
 import com.example.prematurebabymonitoringapp.exceptions.invalidGenderException;
 import com.example.prematurebabymonitoringapp.network.ClientInstance;
 import com.example.prematurebabymonitoringapp.network.DeleteDataService;
@@ -16,6 +17,9 @@ import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.tabs.TabLayout;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -23,14 +27,8 @@ import com.google.gson.JsonObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import java.io.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
-import android.app.DownloadManager;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
@@ -39,6 +37,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /** The code can be split into 7 sections:
  * Initialisation
@@ -329,23 +329,36 @@ public class MainActivity extends AppCompatActivity {
                 If there are invalid inputs, a warning is printed to console and user needs to input data again
                 If all inputs are valid, a Patient object is created and added to Patient Database
                 */
+                boolean validData = false;  // boolean which stores whether data input is valid or not
                 try {
-                    int hospID = Integer.parseInt(patientHospIDStr); // convert hospID from String input to integer, which throws exception
+                    int hospID = Integer.parseInt(patientHospIDStr); // check if patientHospIDStr can be converted to an int
+                    // If hospID is correctly entered as a number, check for duplicate hospID
+                    if(!prematureBabies.patientExists(hospID)) {
+                        validData = true;
+                    }
+                    else {
+                        validData = false;
+                        createDuplicateHospIDAlert();
+                    }
 
-                    // throws exception if gender is not male or female
+                    // throw exception if gender is not male or female
                     // Reference: https://stackoverflow.com/questions/11027190/custom-made-exception
                     if (!"male".equals(patientGenderStr) && !"female".equals(patientGenderStr)) {
                         throw new invalidGenderException("Invalid gender. Gender can only be Male or Female");
                     }
 
                     // Check if patientDOBstr is in the right format and convert to Date
-                    // Reference: https://stackoverflow.com/questions/36867756/unparsable-date-exception-string-to-java-sql-date
-                    final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-                    java.util.Date d = dateFormat.parse(patientDOBStr);
-                    dateFormat.setLenient(false);   // checks if an actual date is entered
+                    // Also checks if date entered is valid (i.e. month cannot be more than 12)
+                    // Reference: https://mkyong.com/java/how-to-check-if-date-is-valid-in-java/
+                    DateValidator checkDate = new DateValidator();
+                    if(checkDate.isValid(patientDOBStr)) {validData = true;}
+                    else {
+                        validData = false;
+                        createInvalidDateAlert();
+                    }
 
-                    // If all patient details are valid, check for duplicate hospID
-                    if(!prematureBabies.patientExists(hospID)){
+                    // new patient can only be created if all data input is valid
+                    if(validData) {
                         // Create an instance of Patient and add to local database
                         prematureBabies.addPatient(patientNameStr, hospID, patientDOBStr, patientGenderStr);
                         prematureBabies.lastPatient().setCondition(" ");
@@ -397,22 +410,14 @@ public class MainActivity extends AppCompatActivity {
                         msg.setText(String.format(" Name: " + patientNameStr + "%n Hospital ID: " + patientHospIDStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
                         msg.setTextSize(14);
                     }
-                    else{
-                        createDuplicateHospIDAlert();
-                    }
-
                 }
                 catch (NumberFormatException ex) {  // catch invalid hospID
                     System.out.println("Invalid input! HospID must be a number.");
                     createAlertDialog();    // error warning (pop-up)
                 }
                 catch (invalidGenderException e) {  // catch invalid gender
-                    createAlertDialog();    // error warning (pop-up)
+                    createInvalidGenderAlert();    // error warning (pop-up)
                     System.out.println("Invalid input! Gender must be Male or Female.");
-                }
-                catch (ParseException e) {  // catch invalid date
-                    createAlertDialog();    // error warning (pop-up)
-                    System.out.println("Invalid date entered! Date must be in the form yyyy-mm-dd. Month must be between 1 and 12. Day must be between 1 and 31.");
                 }
 
             }
@@ -833,12 +838,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /** Section 7: Methods to create alert boxes. */
-    /** Method 7.1: This method creates an alert/warning on screen if invalid details are entered. */
+    /** Method 7.1: This method creates an alert/warning on screen if invalid hospID is entered. */
     // Reference: https://stackoverflow.com/questions/45177044/alertdialog-cannot-resolve-symbol
     public void createAlertDialog() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-        alertDialog.setTitle("Invalid Data Input\n"); // alert title
-        alertDialog.setMessage("\nHospID must be a number. \nGender must be Male or Female. \nInvalid date entered! Date must be in the form yyyy-mm-dd. Month must be between 1 and 12. Day must be between 1 and 31.\"");    // alert message
+        alertDialog.setTitle("Invalid HospID Input\n"); // alert title
+        alertDialog.setMessage("\nHospID must be a number.");    // alert message
         // text on alert button, which will close the alert when clicked
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
                 new DialogInterface.OnClickListener() {
@@ -848,7 +853,35 @@ public class MainActivity extends AppCompatActivity {
         });
         alertDialog.show();
     }
-    /** Method 7.2: This method creates an alert for failed retrieval of remote patient database */
+    /** Method 7.2: This method creates an alert/warning on screen if invalid gender is entered. */
+    public void createInvalidGenderAlert() {
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle("Invalid Gender Input\n"); // alert title
+        alertDialog.setMessage("\nGender must be Male or Female.");    // alert message
+        // text on alert button, which will close the alert when clicked
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+    /** Method 7.3: This method creates an alert/warning on screen if invalid date is entered. */
+    public void createInvalidDateAlert() {
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle("Invalid Date Input\n"); // alert title
+        alertDialog.setMessage("\nDate must be in the form yyyy-mm-dd. Month must be between 1 and 12. Day must be between 1 and 31.\"");    // alert message
+        // text on alert button, which will close the alert when clicked
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+    /** Method 7.4: This method creates an alert for failed retrieval of remote patient database */
     public void createFailedRetrieveAlert() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Failed to retrieve the remote patient database\n"); // alert title
@@ -862,7 +895,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
-    /** Method 7.3: This method creates an alert for duplicate hospID entered. */
+    /** Method 7.5: This method creates an alert for duplicate hospID entered. */
     public void createDuplicateHospIDAlert() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Patient already exists in database\n"); // alert title
@@ -876,7 +909,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
-    /** Method 7.4: This method creates an alert to confirm the removal of patient from list/database. */
+    /** Method 7.6: This method creates an alert to confirm the removal of patient from list/database. */
     public void removePatientConfirmation(final Patient inputPatient) {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Patient Removal Confirmation\n"); // alert title
@@ -918,7 +951,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
-    /** Method 7.5: This method creates an alert to warn clinicians when parameters go below normal limits. */
+    /** Method 7.7: This method creates an alert to warn clinicians when parameters go below normal limits. */
     public void createBelowLimitAlert() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Parameter is below normal range!\n"); // alert title
@@ -932,7 +965,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
-    /** Method 7.6: This method creates an alert to warn clinicians when parameters go above normal limits. */
+    /** Method 7.8: This method creates an alert to warn clinicians when parameters go above normal limits. */
     public void createAboveLimitAlert() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Parameter is above normal range!\n"); // alert title
@@ -946,7 +979,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
-    /** Method 7.7: This method creates an alert if file download successful. */
+    /** Method 7.9: This method creates an alert if file download successful. */
     public void createDownloadSuccessAlert(){
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Download Success!\n");
@@ -959,7 +992,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
-    /** Method 7.8: This method creates an alert if file download failed. */
+    /** Method 7.10: This method creates an alert if file download failed. */
     public void createDownloadFailedAlert(){
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Download Failed!\n");
