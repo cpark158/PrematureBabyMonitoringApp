@@ -24,82 +24,82 @@ public class TestPatient {
     // test setting name
     public void testSetName() {
         p.setName("Calista");
-        assertEquals(p.getName(),"Calista");
+        assertEquals("Calista",p.getName());
     }
 
     @Test
     // test setting date of birth (Date variable)
     public void testSetDOB() {
         p.setDOB(Date.valueOf("2020-06-15"));
-        assertEquals(p.getDOB(),Date.valueOf("2020-06-15"));
+        assertEquals(Date.valueOf("2020-06-15"),p.getDOB());
     }
 
     @Test
     // test if gender is always stored as lowercase string
     public void testSetGender() {
         p.setGender("Female");
-        assertEquals(p.getGender(),"female");
+        assertEquals("female",p.getGender());
     }
 
     @Test
     // test if correct number of comments is returned
     public void testGetNumberOfComment() {
-        assertEquals(p.getNumberOfComment(),2);
+        assertEquals(2,p.getNumberOfComment());
     }
 
     @Test
     // test if comment is actually added to arraylist
     public void testAddComment() {
         p.addComment("New Comment");
-        assertEquals(p.getNumberOfComment(),3);
+        assertEquals(3,p.getNumberOfComment());
     }
 
     @Test
     // test if comment is returned correctly using index number
     public void testGetCommentByIndex() {
-        assertEquals(p.getCommentByIndex(1),"Comment 1");
+        assertEquals("Comment 2",p.getCommentByIndex(1));
     }
 
     @Test
     public void testSetTimeOfBirth() {
         p.setTimeOfBirth("13:45");
-        assertEquals(p.getTimeOfBirth(),"13:45");
+        assertEquals("13:45",p.getTimeOfBirth());
     }
 
     @Test
     public void testSetWeight() {
         p.setWeight(2.56);
-        assertEquals(p.getWeight(),2.56,0);
+        assertEquals(2.56, p.getWeight(),0);
     }
 
     @Test
     public void testSetFatherName() {
         p.setFatherName("Bob");
-        assertEquals(p.getFatherName(),"Bob");
+        assertEquals("Bob",p.getFatherName());
     }
 
     @Test
     public void testSetMotherName() {
         p.setMotherName("Mary");
-        assertEquals(p.getMotherName(),"Mary");
+        assertEquals("Mary",p.getMotherName());
     }
 
     @Test
     public void testSetContact() {
         p.setContactNum("0771812356");
-        assertEquals(p.getContactNum(),"0771812356");
+        assertEquals("0771812356",p.getContactNum());
     }
 
     @Test
     public void testSetCondition() {
         p.setCondition("Beta Thalassemia Carrier");
-        assertEquals(p.getCondition(),"Beta Thalassemia Carrier");
+        assertEquals("Beta Thalassemia Carrier",p.getCondition());
     }
 
     @Test
     public void testSetHealthIndex() {
         p.setHealthIndex(86.8);
-        assertEquals(p.getHealthIndex(),86.8,0);
+        assertEquals(86.8,p.getHealthIndex(),0);
     }
 
 }
