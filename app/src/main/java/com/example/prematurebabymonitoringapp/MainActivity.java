@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.example.prematurebabymonitoringapp.exceptions.DateValidatorDateTimeFormatter;
 import com.example.prematurebabymonitoringapp.exceptions.invalidGenderException;
 import com.example.prematurebabymonitoringapp.network.ClientInstance;
 import com.example.prematurebabymonitoringapp.network.DeleteDataService;
@@ -16,6 +17,9 @@ import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.tabs.TabLayout;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -23,14 +27,8 @@ import com.google.gson.JsonObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import java.io.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
-import android.app.DownloadManager;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
@@ -39,6 +37,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -317,6 +317,7 @@ public class MainActivity extends AppCompatActivity {
                 If there are invalid inputs, a warning is printed to console and user needs to input data again
                 If all inputs are valid, a Patient object is created and added to Patient Database
                 */
+                boolean validData = false;
                 try {
                     int hospID = Integer.parseInt(patientHospIDStr); // convert hospID from String input to integer, which throws exception
 
@@ -328,12 +329,22 @@ public class MainActivity extends AppCompatActivity {
 
                     // Check if patientDOBstr is in the right format and convert to Date
                     // Reference: https://stackoverflow.com/questions/36867756/unparsable-date-exception-string-to-java-sql-date
-                    final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-                    java.util.Date d = dateFormat.parse(patientDOBStr);
-                    dateFormat.setLenient(false);   // checks if an actual date is entered
+                    DateValidatorDateTimeFormatter checkDate = new DateValidatorDateTimeFormatter("yyyy-mm-dd");
+                    if(checkDate.isValid(patientDOBStr)) {validData = true;}
+                    else {
+                        createInvalidDateAlert();
+                    }
 
                     // If all patient details are valid, check for duplicate hospID
-                    if(!prematureBabies.patientExists(hospID)){
+                    if(!prematureBabies.patientExists(hospID)) {
+                        validData = true;
+                    }
+                    else {
+                        validData = false;
+                        createDuplicateHospIDAlert();
+                    }
+
+                    if(validData) {
                         // Create an instance of Patient and add to local database
                         prematureBabies.addPatient(patientNameStr, hospID, patientDOBStr, patientGenderStr);
                         prematureBabies.lastPatient().setCondition(" ");
@@ -385,9 +396,6 @@ public class MainActivity extends AppCompatActivity {
                         msg.setText(String.format(" Name: " + patientNameStr + "%n Hospital ID: " + patientHospIDStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
                         msg.setTextSize(14);
                     }
-                    else{
-                        createDuplicateHospIDAlert();
-                    }
 
                 }
                 catch (NumberFormatException ex) {  // catch invalid hospID
@@ -395,12 +403,8 @@ public class MainActivity extends AppCompatActivity {
                     createAlertDialog();    // error warning (pop-up)
                 }
                 catch (invalidGenderException e) {  // catch invalid gender
-                    createAlertDialog();    // error warning (pop-up)
+                    createInvalidGenderAlert();    // error warning (pop-up)
                     System.out.println("Invalid input! Gender must be Male or Female.");
-                }
-                catch (ParseException e) {  // catch invalid date
-                    createAlertDialog();    // error warning (pop-up)
-                    System.out.println("Invalid date entered! Date must be in the form yyyy-mm-dd. Month must be between 1 and 12. Day must be between 1 and 31.");
                 }
 
             }
@@ -833,7 +837,7 @@ public class MainActivity extends AppCompatActivity {
     // Reference: https://stackoverflow.com/questions/45177044/alertdialog-cannot-resolve-symbol
     public void createAlertDialog() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-        alertDialog.setTitle("Invalid Data Input\n"); // alert title
+        alertDialog.setTitle("Invalid HospID Input\n"); // alert title
         alertDialog.setMessage("\nHospID must be a number. \nGender must be Male or Female. \nInvalid date entered! Date must be in the form yyyy-mm-dd. Month must be between 1 and 12. Day must be between 1 and 31.\"");    // alert message
         // text on alert button, which will close the alert when clicked
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
@@ -842,6 +846,34 @@ public class MainActivity extends AppCompatActivity {
                     dialog.dismiss();
                 }
         });
+        alertDialog.show();
+    }
+
+    public void createInvalidGenderAlert() {
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle("Invalid Gender Input\n"); // alert title
+        alertDialog.setMessage("\nGender must be Male or Female.");    // alert message
+        // text on alert button, which will close the alert when clicked
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+
+    public void createInvalidDateAlert() {
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle("Invalid Date Input\n"); // alert title
+        alertDialog.setMessage("\nDate must be in the form yyyy-mm-dd. Month must be between 1 and 12. Day must be between 1 and 31.\"");    // alert message
+        // text on alert button, which will close the alert when clicked
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
         alertDialog.show();
     }
 
