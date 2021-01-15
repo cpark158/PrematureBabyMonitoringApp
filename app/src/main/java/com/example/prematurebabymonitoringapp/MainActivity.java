@@ -329,7 +329,7 @@ public class MainActivity extends AppCompatActivity {
                 If there are invalid inputs, a warning is printed to console and user needs to input data again
                 If all inputs are valid, a Patient object is created and added to Patient Database
                 */
-                boolean validData = false;
+                boolean validData = false;  // boolean which stores whether data input is valid or not
                 try {
                     int hospID = Integer.parseInt(patientHospIDStr); // check if patientHospIDStr can be converted to an int
                     // If hospID is correctly entered as a number, check for duplicate hospID
@@ -357,6 +357,7 @@ public class MainActivity extends AppCompatActivity {
                         createInvalidDateAlert();
                     }
 
+                    // new patient can only be created if all data input is valid
                     if(validData) {
                         // Create an instance of Patient and add to local database
                         prematureBabies.addPatient(patientNameStr, hospID, patientDOBStr, patientGenderStr);
@@ -409,7 +410,6 @@ public class MainActivity extends AppCompatActivity {
                         msg.setText(String.format(" Name: " + patientNameStr + "%n Hospital ID: " + patientHospIDStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
                         msg.setTextSize(14);
                     }
-
                 }
                 catch (NumberFormatException ex) {  // catch invalid hospID
                     System.out.println("Invalid input! HospID must be a number.");
@@ -838,7 +838,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /** Section 7: Methods to create alert boxes. */
-    /** Method 7.1: This method creates an alert/warning on screen if invalid details are entered. */
+    /** Method 7.1: This method creates an alert/warning on screen if invalid hospID is entered. */
     // Reference: https://stackoverflow.com/questions/45177044/alertdialog-cannot-resolve-symbol
     public void createAlertDialog() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
@@ -853,7 +853,7 @@ public class MainActivity extends AppCompatActivity {
         });
         alertDialog.show();
     }
-
+    /** Method 7.2: This method creates an alert/warning on screen if invalid gender is entered. */
     public void createInvalidGenderAlert() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Invalid Gender Input\n"); // alert title
@@ -867,7 +867,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
-
+    /** Method 7.3: This method creates an alert/warning on screen if invalid date is entered. */
     public void createInvalidDateAlert() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Invalid Date Input\n"); // alert title
@@ -881,7 +881,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
-    /** Method 7.2: This method creates an alert for failed retrieval of remote patient database */
+    /** Method 7.4: This method creates an alert for failed retrieval of remote patient database */
     public void createFailedRetrieveAlert() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Failed to retrieve the remote patient database\n"); // alert title
@@ -895,7 +895,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
-    /** Method 7.3: This method creates an alert for duplicate hospID entered. */
+    /** Method 7.5: This method creates an alert for duplicate hospID entered. */
     public void createDuplicateHospIDAlert() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Patient already exists in database\n"); // alert title
@@ -909,7 +909,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
-    /** Method 7.4: This method creates an alert to confirm the removal of patient from list/database. */
+    /** Method 7.6: This method creates an alert to confirm the removal of patient from list/database. */
     public void removePatientConfirmation(final Patient inputPatient) {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Patient Removal Confirmation\n"); // alert title
@@ -951,7 +951,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
-    /** Method 7.5: This method creates an alert to warn clinicians when parameters go below normal limits. */
+    /** Method 7.7: This method creates an alert to warn clinicians when parameters go below normal limits. */
     public void createBelowLimitAlert() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Parameter is below normal range!\n"); // alert title
@@ -965,7 +965,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
-    /** Method 7.6: This method creates an alert to warn clinicians when parameters go above normal limits. */
+    /** Method 7.8: This method creates an alert to warn clinicians when parameters go above normal limits. */
     public void createAboveLimitAlert() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Parameter is above normal range!\n"); // alert title
@@ -979,7 +979,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
-    /** Method 7.7: This method creates an alert if file download successful. */
+    /** Method 7.9: This method creates an alert if file download successful. */
     public void createDownloadSuccessAlert(){
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Download Success!\n");
@@ -992,7 +992,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
-    /** Method 7.8: This method creates an alert if file download failed. */
+    /** Method 7.10: This method creates an alert if file download failed. */
     public void createDownloadFailedAlert(){
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Download Failed!\n");
