@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.example.prematurebabymonitoringapp.exceptions.DateValidator;
 import com.example.prematurebabymonitoringapp.exceptions.invalidGenderException;
 import com.example.prematurebabymonitoringapp.network.ClientInstance;
 import com.example.prematurebabymonitoringapp.network.DeleteDataService;
@@ -16,6 +17,9 @@ import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.tabs.TabLayout;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -23,14 +27,8 @@ import com.google.gson.JsonObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import java.io.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
-import android.app.DownloadManager;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
@@ -39,8 +37,34 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/** The code can be split into 7 sections:
+ * Initialisation
+ * Main Activity
+ * Main Methods
+ * Methods within 'Individual Patient' Page
+ * Methods to clear pages
+ * Methods for data processing
+ * Methods to create alert boxes
+ * */
 
 public class MainActivity extends AppCompatActivity {
+
+    /** Section 1: Initialisation
+     * This section initialises necessary components for the UI:
+     * Local patient database
+     * XML components; string variables to temporarily store user's inputs
+     * Graph plotting components; cloud database where text files to be processes are stored
+     * **/
+
+    // Instantiate database to store patients
+    PatientDB prematureBabies = new PatientDB();
+
+    //Initialise reference to data location in firebase cloud storage
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef = storage.getReference();
 
     // Initialise graph plotting and data extraction objects
     LineChart mpLineChart;
@@ -48,11 +72,9 @@ public class MainActivity extends AppCompatActivity {
     GraphPlotter graphPlot;
     TextFileProcessor txtFileProcessor;
 
-
-    //Initialise reference to data location in firebase cloud storage
-    FirebaseStorage storage = FirebaseStorage.getInstance();
-    StorageReference storageRef = storage.getReference();
-
+    //Test data for demonstrating graph plotting - need to adjust axis to plot in time of day rather than integer array
+    ArrayList<Integer> testXData = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8,9,10));
+    ArrayList<Integer> testYData = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8,9,10));
 
     // Initialise UI components from activity_main.xml
     TabLayout tabLayout;
@@ -88,6 +110,13 @@ public class MainActivity extends AppCompatActivity {
     Button saveFatherName;
     Button saveContact;
     Button saveCondition;
+    Button showGlucoseData;
+    Button showLactateData;
+
+    //To populate spinner (dropdown patient list)
+    List<String> spinnerArray = new ArrayList<String>();
+    int currentChosenSpinner = 1;
+    String currentChosenItem = " ";
 
     // Initialise temporary Strings to retrieve and store inputted patient info
     String patientNameStr = "Name";
@@ -111,29 +140,18 @@ public class MainActivity extends AppCompatActivity {
     String saveContactStr;
     String saveConditionStr;
 
-    int currentChosenSpinner = 1;
-    String currentChosenItem = " ";
-
-    // Instantiate database to store patients
-    PatientDB prematureBabies = new PatientDB();
-
-    //To populate spinner (dropdown patient list)
-    List<String> spinnerArray = new ArrayList<String>();
-
-    //Test data for demonstrating graph plotting - need to adjust axis to plot in time of day rather than integer array
-    ArrayList<Integer> testXData = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8,9,10));
-    ArrayList<Integer> testYData = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8,9,10));
-
-
-
-    public MainActivity() throws IOException {
-    }
+    /** Section 2: Main activity
+     * Retrieve XML components
+     * Retrieve patients (local and remote database)
+     * Set up UI - different pages/tabs
+     * */
+    public MainActivity() throws IOException {}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Retrieve XML components
+        /** Section 2a: Retrieve XML components */
         retrieveXMLComponents();
 
         // Set up spinner files and adapter
@@ -143,9 +161,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPatientList.setAdapter(adapter);
 
-        saveButton = findViewById(R.id.saveButton);
-        addPatientButton = findViewById(R.id.button);
-
+        /** Section 2b: Retrieve patients */
         //Fetch Patient List from remote Database and add to the local database and drop-down list
         /* Reference 3 - taken from https://medium.com/@prakash_pun/retrofit-a-simple-android-tutorial-48437e4e5a23 */
         GetDataService service = ClientInstance.getRetrofitInstance().create(GetDataService.class);
@@ -169,44 +185,39 @@ public class MainActivity extends AppCompatActivity {
         });
         /* end of reference 1 */
 
-        // Welcome page
-        callWelcomePage("Welcome to Premature Baby Monitoring App. Click button below to add patient.");
-
-        // Add Patient Details Page
-        callNewPatientPage();
-
-        // View Individual Pages
-        callSpinner();
-
-        // View different tabs - Basic Information and Health
-        callDiffTabs();
-
+        /** Section 2c: Set up UI */
+        callWelcomePage("Welcome to Premature Baby Monitoring App. Click button below to add patient."); // Welcome page
+        callNewPatientPage(); // Add Patient Details Page
+        callSpinner(); // View Individual Pages of different patients, which can be retrieved with the spinner
+        callDiffTabs(); // View different tabs of a patient within a patient's individual page
     }
 
+    /** Section 3: Main Methods */
+    /** Method 3.1: This method finds all XML components previously initialised. */
     public void retrieveXMLComponents(){
+
+        // Components in 'Welcome' Page
         msg = findViewById(R.id.textView); // Welcome page, all pages
         addPatientButton = findViewById(R.id.button); // Welcome page
-
         viewCurrentPatientButton = findViewById(R.id.button2); // Welcome page
 
-        // Components in 'Add Patient Details' Page
+        // Components in 'Add Patient' Page
         patientName = findViewById(R.id.typeName); // Add Patient Name text
         patientHospID = findViewById(R.id.typeHospID); // Add Patient HospID text
         patientGender = findViewById(R.id.editGender); // Add Patient Gender text
         patientDOB = findViewById(R.id.editTextDate); // Add Patient DOB text
-
         spinnerPatientList = findViewById(R.id.spinnerPatient);
         tabLayout = findViewById(R.id.tabLayout);
         patientIcon = findViewById(R.id.icon);
 
-        // View Individual Pages
+        // Components in 'Individual' Page
         spinnerPatientList = findViewById(R.id.spinnerPatient); // View individual pages
         tabLayout = findViewById(R.id.tabLayout); // View individual pages
         patientIcon = findViewById(R.id.icon); // View individual pages - basic info tab
         mpLineChart = findViewById(R.id.line_chart); // View individual pages - health tab
         saveButton = findViewById(R.id.saveButton); // View individual pages - health tab
 
-        //health page
+        // Components in 'Health' Tab
         mpLineChart = findViewById(R.id.line_chart);
         lactate_mpLineChart = findViewById(R.id.lactate_line_chart);
         currentLactateLevel = findViewById(R.id.lactateText);
@@ -215,8 +226,10 @@ public class MainActivity extends AppCompatActivity {
         saveCommentButton = findViewById(R.id.saveCommentButton);
         downloadData = findViewById(R.id.downloadData);
         enterFilename = findViewById(R.id.enterFilename);
+        showGlucoseData = findViewById(R.id.downloadGlucose);
+        showLactateData = findViewById(R.id.downloadLactate);
 
-        // Add Details Page
+        // Components in 'Add Details' Tab
         patientWeight = findViewById(R.id.editWeight);
         patientTOB = findViewById(R.id.editTOB);
         patientMotherName = findViewById(R.id.editMotherName);
@@ -235,11 +248,12 @@ public class MainActivity extends AppCompatActivity {
         saveCondition = findViewById(R.id.saveCondition);
     }
 
+    /** Method 3.2: This method calls the 'Welcome' Page. */
     public void callWelcomePage(String printText){
-        // Ensure other components aren't on the page
-        clearPage();
 
-        // Set appropriate components are visible
+        clearPage(); // Ensure other components aren't on the page
+
+        // Show appropriate components
         msg.setVisibility(View.VISIBLE);
         addPatientButton.setVisibility(View.VISIBLE);
         viewCurrentPatientButton.setVisibility(View.VISIBLE);
@@ -250,6 +264,7 @@ public class MainActivity extends AppCompatActivity {
         msg.setText(String.format(printText));
         msg.setGravity(Gravity.CENTER_HORIZONTAL);
 
+        // This enables the method to be used as a 'Welcome' Page or a 'View Current Patients' Page.
         if (printText == "Welcome to Premature Baby Monitoring App. Click button below to add patient.")
         {
             spinnerPatientList.setVisibility(View.GONE);
@@ -261,6 +276,7 @@ public class MainActivity extends AppCompatActivity {
             viewCurrentPatientButton.setVisibility(View.GONE);
         }
 
+        // Buttons Click Listeners
         addPatientButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Redirect to Add Patient Details Page
@@ -275,23 +291,23 @@ public class MainActivity extends AppCompatActivity {
                 patientDOB.setVisibility(View.VISIBLE);
                 saveButton.setVisibility(View.VISIBLE);
 
-                // Remove Add Patient button
+                // Remove buttons
                 addPatientButton.setVisibility(View.GONE);
                 viewCurrentPatientButton.setVisibility(View.GONE);
             }
         });
-
         viewCurrentPatientButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Redirect to Add Patient Details Page
                 callWelcomePage("Refer to dropdown list above for other patients or add patient below.");
 
-                // Remove Add Patient button
+                // Remove button
                 viewCurrentPatientButton.setVisibility(View.GONE);
             }
         });
     }
 
+    /** Method 3.3: This method allows user to add a new patient. */
     public void callNewPatientPage(){
 
         // Editable text boxs to input patient details
@@ -317,22 +333,36 @@ public class MainActivity extends AppCompatActivity {
                 If there are invalid inputs, a warning is printed to console and user needs to input data again
                 If all inputs are valid, a Patient object is created and added to Patient Database
                 */
+                boolean validData = false;  // boolean which stores whether data input is valid or not
                 try {
-                    int hospID = Integer.parseInt(patientHospIDStr); // convert hospID from String input to integer, which throws exception
+                    int hospID = Integer.parseInt(patientHospIDStr); // check if patientHospIDStr can be converted to an int
+                    // If hospID is correctly entered as a number, check for duplicate hospID
+                    if(!prematureBabies.patientExists(hospID)) {
+                        validData = true;
+                    }
+                    else {
+                        validData = false;
+                        createDuplicateHospIDAlert();
+                    }
 
-                    // throws exception if gender is not male or female
+                    // throw exception if gender is not male or female
                     // Reference: https://stackoverflow.com/questions/11027190/custom-made-exception
                     if (!"male".equals(patientGenderStr) && !"female".equals(patientGenderStr)) {
                         throw new invalidGenderException("Invalid gender. Gender can only be Male or Female");
                     }
 
                     // Check if patientDOBstr is in the right format and convert to Date
-                    // Reference: https://stackoverflow.com/questions/36867756/unparsable-date-exception-string-to-java-sql-date
-                    final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-                    java.util.Date d = dateFormat.parse(patientDOBStr);
+                    // Also checks if date entered is valid (i.e. month cannot be more than 12)
+                    // Reference: https://mkyong.com/java/how-to-check-if-date-is-valid-in-java/
+                    DateValidator checkDate = new DateValidator();
+                    if(checkDate.isValid(patientDOBStr)) {validData = true;}
+                    else {
+                        validData = false;
+                        createInvalidDateAlert();
+                    }
 
-                    // If all patient details are valid, check for duplicate hospID
-                    if(!prematureBabies.patientExists(hospID)){
+                    // new patient can only be created if all data input is valid
+                    if(validData) {
                         // Create an instance of Patient and add to local database
                         prematureBabies.addPatient(patientNameStr, hospID, patientDOBStr, patientGenderStr);
                         prematureBabies.lastPatient().setCondition(" ");
@@ -372,7 +402,7 @@ public class MainActivity extends AppCompatActivity {
                         saveButton.setVisibility(View.GONE);
                         viewCurrentPatientButton.setVisibility(View.GONE);
 
-                        // Redirect to next page, which is the new Patient's page
+                        // Redirect to next page, which is the new Patient's Individual Page
                         spinnerPatientList.setVisibility(View.VISIBLE);
                         spinnerArray.add(patientHospIDStr);   // add Patient to drop-down (spinner) list
                         spinnerPatientList.setSelection(prematureBabies.getDBSize()); // set drop-down list selection to new Patient
@@ -384,22 +414,14 @@ public class MainActivity extends AppCompatActivity {
                         msg.setText(String.format(" Name: " + patientNameStr + "%n Hospital ID: " + patientHospIDStr + "%n Gender: " + patientGenderStr + "%n Date of Birth: " + patientDOBStr));
                         msg.setTextSize(14);
                     }
-                    else{
-                        createDuplicateHospIDAlert();
-                    }
-
                 }
                 catch (NumberFormatException ex) {  // catch invalid hospID
                     System.out.println("Invalid input! HospID must be a number.");
                     createAlertDialog();    // error warning (pop-up)
                 }
                 catch (invalidGenderException e) {  // catch invalid gender
-                    createAlertDialog();    // error warning (pop-up)
+                    createInvalidGenderAlert();    // error warning (pop-up)
                     System.out.println("Invalid input! Gender must be Male or Female.");
-                }
-                catch (ParseException e) {  // catch invalid date
-                    createAlertDialog();    // error warning (pop-up)
-                    System.out.println("Invalid date format! Date must be in the form yyyy-mm-dd");
                 }
 
             }
@@ -407,6 +429,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /** Method 3.4: This method redirects between pages of different patients. */
     public void callSpinner(){
         spinnerPatientList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -417,10 +440,10 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, item.toString(),
                             Toast.LENGTH_SHORT).show();
                     if (spinnerPatientList.getVisibility() == View.VISIBLE) {
-                        // Redirect to 'Add Patient Selected Page'
-                        if (item.toString() == "Add Patient") { callNoPatientsTab();
-                             }
-                        // Redirect to Individual Patient Page
+                        if (item.toString() == "Add Patient") {
+                            // Redirect to 'No Patient Selected' Page
+                            callNoPatientsTab();
+                        }
                         else {
                             // Remove current page
                             addPatientButton.setVisibility(View.GONE);
@@ -430,26 +453,23 @@ public class MainActivity extends AppCompatActivity {
                             patientDOB.setVisibility(View.GONE);
                             saveButton.setVisibility(View.GONE);
 
-                            // callPatientTab(patientDB.findPatIdx(position));
-
+                            // Redirect to 'Individual Patient' Page
                             currentChosenSpinner = adapterView.getSelectedItemPosition();
                             currentChosenItem = adapterView.getSelectedItem().toString();
-
                             callPatientTab(prematureBabies.findPatient(currentChosenSpinner-1));
                         }
                     }
                 }
                 Toast.makeText(MainActivity.this, "Selected",
                         Toast.LENGTH_SHORT).show();
-
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
     }
 
+    /** Method 3.5: This method redirects between tabs of an individual patient. */
     public void callDiffTabs(){
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -466,41 +486,35 @@ public class MainActivity extends AppCompatActivity {
                         msg.setGravity(Gravity.FILL_HORIZONTAL);
 
                         if (tab.getPosition() == 0) {
-                            // Open Basic Information Tab
-                            callPatientTab(prematureBabies.findPatient(currentChosenSpinner-1));
+                            callPatientTab(prematureBabies.findPatient(currentChosenSpinner-1)); // Open Basic Information Tab
                         } else if (tab.getPosition() == 1) {
-                            // Open Health Tab
-                            callHealthTab(prematureBabies.findPatient(currentChosenSpinner-1));
+                            callHealthTab(prematureBabies.findPatient(currentChosenSpinner-1)); // Open Health Tab
                         } else if (tab.getPosition() == 2) {
-                            callEditDetailsPage(prematureBabies.findPatient(currentChosenSpinner-1));
+                            callEditDetailsPage(prematureBabies.findPatient(currentChosenSpinner-1)); // Open Edit Details Tab
                         } else if (tab.getPosition() == 3) {
-                            removePatientConfirmation(prematureBabies.findPatient(currentChosenSpinner-1));
+                            removePatientConfirmation(prematureBabies.findPatient(currentChosenSpinner-1)); // Remove Patient
                         }
                     }
                     case 2: {
                         if (tab.getPosition() == 0) {
-                            // Open Basic Information Tab
-                            callPatientTab(prematureBabies.findPatient(currentChosenSpinner-1));
+                            callPatientTab(prematureBabies.findPatient(currentChosenSpinner-1)); // Open Basic Information Tab
                         } else if (tab.getPosition() == 1) {
-                            // Open Health Tab
-                            callHealthTab(prematureBabies.findPatient(currentChosenSpinner-1));
+                            callHealthTab(prematureBabies.findPatient(currentChosenSpinner-1)); // Open Health Tab
                         } else if (tab.getPosition() == 2) {
-                            callEditDetailsPage(prematureBabies.findPatient(currentChosenSpinner-1));
+                            callEditDetailsPage(prematureBabies.findPatient(currentChosenSpinner-1)); // Open Edit Details Tab
                         } else if (tab.getPosition() == 3) {
-                            removePatientConfirmation(prematureBabies.findPatient(currentChosenSpinner-1));
+                            removePatientConfirmation(prematureBabies.findPatient(currentChosenSpinner-1)); // Remove Patient
                         }
                     }
                     case 3: {
                         if (tab.getPosition() == 0) {
-                            // Open Basic Information Tab
-                            callPatientTab(prematureBabies.findPatient(currentChosenSpinner-1));
+                            callPatientTab(prematureBabies.findPatient(currentChosenSpinner-1)); // Open Basic Information Tab
                         } else if (tab.getPosition() == 1) {
-                            // Open Health Tab
-                            callHealthTab(prematureBabies.findPatient(currentChosenSpinner-1));
+                            callHealthTab(prematureBabies.findPatient(currentChosenSpinner-1)); // Open Health Tab
                         } else if (tab.getPosition() == 2) {
-                            callEditDetailsPage(prematureBabies.findPatient(currentChosenSpinner-1));
+                            callEditDetailsPage(prematureBabies.findPatient(currentChosenSpinner-1)); // Open Edit Details Tab
                         } else if (tab.getPosition() == 3) {
-                            removePatientConfirmation(prematureBabies.findPatient(currentChosenSpinner-1));
+                            removePatientConfirmation(prematureBabies.findPatient(currentChosenSpinner-1)); // Remove Patient
                         }
                     }
                 }
@@ -516,6 +530,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /** Method 3.6: This method returns to the 'No Patient Selected' Page. */
     public void callNoPatientsTab(){
         clearEditDetailsPage();
         tabLayout.setVisibility(View.INVISIBLE);
@@ -528,10 +543,14 @@ public class MainActivity extends AppCompatActivity {
         saveCommentButton.setVisibility(View.INVISIBLE);
         downloadData.setVisibility(View.INVISIBLE);
         enterFilename.setVisibility(View.INVISIBLE);
-
+        showGlucoseData.setVisibility(View.INVISIBLE);
+        showLactateData.setVisibility(View.INVISIBLE);
         callWelcomePage("Refer to dropdown list above for other patients or add patient below.");
     }
 
+    /** Section 4: Methods within an 'Individual Patient' Page. */
+
+    /** Method 4.1: This method shows the patient's basic information. */
     public void callPatientTab(Patient inputPatient){
         clearEditDetailsPage();
         tabLayout.setVisibility(View.VISIBLE);
@@ -544,6 +563,8 @@ public class MainActivity extends AppCompatActivity {
         commentsMade.setVisibility(View.GONE);
         saveCommentButton.setVisibility(View.GONE);
         downloadData.setVisibility(View.INVISIBLE);
+        showGlucoseData.setVisibility(View.INVISIBLE);
+        showLactateData.setVisibility(View.INVISIBLE);
         enterFilename.setVisibility(View.INVISIBLE);
         msg.setVisibility(View.VISIBLE);
         msg.setTextSize(14);
@@ -552,7 +573,7 @@ public class MainActivity extends AppCompatActivity {
         int index = prematureBabies.getDBSize();
         printPatientDetails(inputPatient);
     }
-
+    /** Method 4.2: This method shows the patient's health data and comment space. */
     public void callHealthTab(final Patient inputPatient){
         final Date currentTime = Calendar.getInstance().getTime();
         final String[] commentsToPrint = {""};
@@ -564,6 +585,8 @@ public class MainActivity extends AppCompatActivity {
         lactate_mpLineChart.setVisibility(View.VISIBLE);
         downloadData.setVisibility(View.VISIBLE);
         enterFilename.setVisibility(View.VISIBLE);
+        showLactateData.setVisibility(View.VISIBLE);
+        showGlucoseData.setVisibility(View.VISIBLE);
         msg.setVisibility(View.VISIBLE);
 
         msg.setText(String.format("Current glucose level: "));
@@ -606,8 +629,8 @@ public class MainActivity extends AppCompatActivity {
 
         commentsMade.setVisibility(View.VISIBLE);
 
-       /* //This code will be moved to display only upon clicking of 'show glucose' and 'show lactate' buttons
 
+        //This code will be moved to display only upon clicking of 'show glucose' and 'show lactate' buttons
         graphPlot = new GraphPlotter();
 
         //Currently plotted with test data as we are still working on converting axis from integer input to time of day
@@ -620,7 +643,6 @@ public class MainActivity extends AppCompatActivity {
         mpLineChart.invalidate();
         lactate_mpLineChart.setData(graphPlot.getData());
         lactate_mpLineChart.invalidate(); */
-
 
         downloadData.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -638,11 +660,19 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
+        showGlucoseData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+        showLactateData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
 
     }
-
+    /** Method 4.3: This method allows user to add more details about a patient. */
     public void callEditDetailsPage(final Patient inputPatient){
         clearPage();
         tabLayout.setVisibility(View.VISIBLE);
@@ -673,10 +703,6 @@ public class MainActivity extends AppCompatActivity {
         saveCondition.setVisibility(View.VISIBLE);
 
         msg.setVisibility(View.GONE);
-//        patientName.setText("Name");
-//        patientHospID.setText("Hospital ID");
-//        patientDOB.setText("yyyy-mm-dd");
-//        patientGender.setText("Gender");
 
         saveWeight.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -715,7 +741,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
+    /** Method 4.4: This method prints the patient's details. */
     public void printPatientDetails(Patient inputPatient){
         String basicInfoStr = "";
         basicInfoStr = basicInfoStr + "ID: " + Integer.toString(inputPatient.getHospID()) + "\n";
@@ -734,6 +760,8 @@ public class MainActivity extends AppCompatActivity {
         msg.setText(basicInfoStr);
     }
 
+    /** Section 5: Methods to clear pages. */
+    /** Method 5.1: This method clears the entire page. */
     public void clearPage(){
         patientName.setVisibility(View.GONE);
         patientHospID.setVisibility(View.GONE);
@@ -766,8 +794,10 @@ public class MainActivity extends AppCompatActivity {
         saveFatherName.setVisibility(View.GONE);
         saveContact.setVisibility(View.GONE);
         saveCondition.setVisibility(View.GONE);
+        showLactateData.setVisibility(View.GONE);
+        showGlucoseData.setVisibility(View.GONE);
     }
-
+    /** Method 5.2: This method clears all the input boxes on the page. */
     public void clearEditDetailsPage(){
         patientName.setVisibility(View.GONE);
         patientHospID.setVisibility(View.GONE);
@@ -789,9 +819,12 @@ public class MainActivity extends AppCompatActivity {
         saveFatherName.setVisibility(View.GONE);
         saveContact.setVisibility(View.GONE);
         saveCondition.setVisibility(View.GONE);
+        showGlucoseData.setVisibility(View.GONE);
+        showLactateData.setVisibility(View.GONE);
     }
 
-    //Download text files in cloud storage for processing
+    /** Section 6: Methods for data processing. */
+    /** Method 6.1: This method downloads text files in cloud storage for processing. */
     public void downloadFile(String fileName, Patient inputPatient) throws IOException {
         String fileToDownload = fileName;
         final Patient selectedPatient = inputPatient;
@@ -821,33 +854,34 @@ public class MainActivity extends AppCompatActivity {
                 //checks data has been successfully read in
                 //Toast.makeText(MainActivity.this,txtFileProcessor.testValString(),Toast.LENGTH_LONG).show();
 
+
                 //pass extracted and calibrated values to selected patient from database
                 selectedPatient.setGlucose(txtFileProcessor.getGlucConc());
                 selectedPatient.setLactate(txtFileProcessor.getLactConc());
                 selectedPatient.setTime(time);
+              
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 createDownloadFailedAlert();
-
             }
         });
-
     }
-
+    /** Method 6.2: This method parses date and time and returns in a more readable format. */
     public String parseDateTime(Date currentDateTime){
         String[] parsed = currentDateTime.toString().split(" ");
         String updated = parsed[1] + " " + parsed[2] + " " + parsed[5] + " " + parsed[3];
         return updated;
     }
 
-    // Method to create an alert/warning on screen if invalid details are entered
+    /** Section 7: Methods to create alert boxes. */
+    /** Method 7.1: This method creates an alert/warning on screen if invalid hospID is entered. */
     // Reference: https://stackoverflow.com/questions/45177044/alertdialog-cannot-resolve-symbol
     public void createAlertDialog() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-        alertDialog.setTitle("Invalid Data Input\n"); // alert title
-        alertDialog.setMessage("\nHospID must be a number. \nGender must be Male or Female. \nDate must be in the form yyyy-mm-dd.");    // alert message
+        alertDialog.setTitle("Invalid HospID Input\n"); // alert title
+        alertDialog.setMessage("\nHospID must be a number.");    // alert message
         // text on alert button, which will close the alert when clicked
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
                 new DialogInterface.OnClickListener() {
@@ -857,8 +891,35 @@ public class MainActivity extends AppCompatActivity {
         });
         alertDialog.show();
     }
-
-    // create an alert for failed retrieval of remote patient database
+    /** Method 7.2: This method creates an alert/warning on screen if invalid gender is entered. */
+    public void createInvalidGenderAlert() {
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle("Invalid Gender Input\n"); // alert title
+        alertDialog.setMessage("\nGender must be Male or Female.");    // alert message
+        // text on alert button, which will close the alert when clicked
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+    /** Method 7.3: This method creates an alert/warning on screen if invalid date is entered. */
+    public void createInvalidDateAlert() {
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle("Invalid Date Input\n"); // alert title
+        alertDialog.setMessage("\nDate must be in the form yyyy-mm-dd. Month must be between 1 and 12. Day must be between 1 and 31.\"");    // alert message
+        // text on alert button, which will close the alert when clicked
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+    /** Method 7.4: This method creates an alert for failed retrieval of remote patient database */
     public void createFailedRetrieveAlert() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Failed to retrieve the remote patient database\n"); // alert title
@@ -872,8 +933,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
-
-    // create an alert for duplicate hospID entered
+    /** Method 7.5: This method creates an alert for duplicate hospID entered. */
     public void createDuplicateHospIDAlert() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Patient already exists in database\n"); // alert title
@@ -887,8 +947,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
-
-    // create an alert to confirm the removal of patient from list/database
+    /** Method 7.6: This method creates an alert to confirm the removal of patient from list/database. */
     public void removePatientConfirmation(final Patient inputPatient) {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Patient Removal Confirmation\n"); // alert title
@@ -930,8 +989,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
-
-    // create an alert to warn clinicians when parameters go below normal limits
+    /** Method 7.7: This method creates an alert to warn clinicians when parameters go below normal limits. */
     public void createBelowLimitAlert() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Parameter is below normal range!\n"); // alert title
@@ -945,8 +1003,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
-
-    // create an alert to warn clinicians when parameters go above normal limits
+    /** Method 7.8: This method creates an alert to warn clinicians when parameters go above normal limits. */
     public void createAboveLimitAlert() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Parameter is above normal range!\n"); // alert title
@@ -960,8 +1017,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
-
-    //create an alert if file download successful
+    /** Method 7.9: This method creates an alert if file download successful. */
     public void createDownloadSuccessAlert(){
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Download Success!\n");
@@ -973,11 +1029,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         alertDialog.show();
-
-
     }
-
-    //create an alert if file download failed
+    /** Method 7.10: This method creates an alert if file download failed. */
     public void createDownloadFailedAlert(){
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Download Failed!\n");

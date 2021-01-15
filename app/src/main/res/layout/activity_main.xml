@@ -149,21 +149,31 @@
             android:visibility="visible"/>
     <!--Patient Health Page-->
     <Button
-            android:text="Download Lactate Data"
+            android:text="Show Glucose Data"
             android:layout_width="231dp"
-            android:layout_height="45dp" android:id="@+id/downloadLactate"
-            android:visibility="gone"
+            android:layout_height="45dp" android:id="@+id/downloadGlucose"
+            android:visibility="visible"
             app:layout_constraintEnd_toStartOf="@+id/line_chart"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="0.546"
+            app:layout_constraintHorizontal_bias="0.384"
+            app:layout_constraintTop_toTopOf="@+id/line_chart" android:layout_marginTop="124dp"
+            android:shadowColor="#613232"/>
+    <Button
+            android:text="Show Lactate Data"
+            android:layout_width="231dp"
+            android:layout_height="45dp" android:id="@+id/downloadLactate"
+            android:visibility="visible"
+            app:layout_constraintEnd_toStartOf="@+id/line_chart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.384"
             app:layout_constraintTop_toBottomOf="@+id/lactateText"
             app:layout_constraintBottom_toBottomOf="@+id/lactate_line_chart"
-            app:layout_constraintVertical_bias="0.012"/>
+            app:layout_constraintVertical_bias="1.0"/>
     <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/lactate_line_chart"
             android:layout_width="307dp"
             android:layout_height="161dp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textView" app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0.33" app:layout_constraintHorizontal_bias="0.499"/>
@@ -172,19 +182,18 @@
             android:layout_width="308dp"
             android:layout_height="114dp"
             android:text="Current Lactate Level"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_gravity="center"
             android:layout_centerInParent="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.347"
-    />
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.347"/>
     <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/line_chart"
             android:layout_width="307dp"
             android:layout_height="161dp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textView" app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.499" app:layout_constraintVertical_bias="0.052"/>
@@ -200,21 +209,21 @@
             android:hint="@string/type"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:visibility="gone"
-            app:layout_constraintHorizontal_bias="0.076" android:layout_marginBottom="34dp"
+            android:visibility="visible"
+            app:layout_constraintHorizontal_bias="0.055" android:layout_marginBottom="4dp"
             app:layout_constraintBottom_toTopOf="@+id/downloadData"/>
     <Button
             android:text="Download Data"
-            android:layout_width="231dp"
-            android:layout_height="45dp" android:id="@+id/downloadData"
-            android:visibility="gone"
+            android:layout_width="165dp"
+            android:layout_height="39dp" android:id="@+id/downloadData"
+            android:visibility="visible"
             app:layout_constraintEnd_toStartOf="@+id/line_chart"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/tabLayout"
-            app:layout_constraintBottom_toBottomOf="@+id/line_chart" app:layout_constraintHorizontal_bias="0.615"
-            app:layout_constraintVertical_bias="0.819"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.3"
+            app:layout_constraintBottom_toTopOf="@+id/lactateText" android:layout_marginBottom="116dp"/>
     <EditText
-            android:layout_width="409dp"
-            android:layout_height="102dp"
+            android:layout_width="288dp"
+            android:layout_height="185dp"
             android:inputType="textPersonName"
             android:text="Comment"
             android:ems="10"
@@ -225,7 +234,7 @@
             app:layout_constraintTop_toBottomOf="@+id/line_chart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:visibility="gone" android:layout_marginTop="268dp"
+            android:visibility="visible" android:layout_marginTop="268dp"
             app:layout_constraintHorizontal_bias="0.501"/>
     <Button
             android:text="Save Comment"
@@ -233,21 +242,21 @@
             android:layout_height="wrap_content" android:id="@+id/saveCommentButton"
             app:layout_constraintTop_toBottomOf="@+id/commentSpace" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="12dp"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
+    <!--Patient Edit Details Page-->
     <TextView
             android:id="@+id/commentsMade"
-            android:layout_width="227dp"
-            android:layout_height="313dp"
+            android:layout_width="221dp"
+            android:layout_height="939dp"
             android:text="Comments:"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_gravity="center"
             android:layout_centerInParent="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.248"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.769"
             app:layout_constraintHorizontal_bias="0.939"/>
-    <!--Patient Edit Details Page-->
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -258,7 +267,7 @@
             tools:targetApi="o"
             android:hint="@string/type"
             android:text="Father's Name"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editMotherName" android:layout_marginTop="8dp"
@@ -273,7 +282,7 @@
             tools:targetApi="o"
             android:hint="@string/type"
             android:text="Mother's Name"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTOB" android:layout_marginTop="8dp"
@@ -288,7 +297,7 @@
             tools:targetApi="o"
             android:hint="@string/type"
             android:text="Medical Conditions"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editContact" android:layout_marginTop="8dp"
@@ -297,7 +306,7 @@
             android:text="Save"
             android:layout_width="73dp"
             android:layout_height="40dp" android:id="@+id/saveFatherName"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@+id/editFatherName" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/saveMotherName" android:layout_marginTop="16dp"
             app:layout_constraintHorizontal_bias="0.0"/>
@@ -305,7 +314,7 @@
             android:text="Save"
             android:layout_width="73dp"
             android:layout_height="40dp" android:id="@+id/saveWeight"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@+id/editWeight" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/saveDOB" android:layout_marginTop="60dp"
             app:layout_constraintHorizontal_bias="0.0"/>
@@ -313,7 +322,7 @@
             android:text="Save"
             android:layout_width="73dp"
             android:layout_height="40dp" android:id="@+id/saveContact"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@+id/editContact" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/saveFatherName" android:layout_marginTop="16dp"
             app:layout_constraintHorizontal_bias="0.0"/>
@@ -321,21 +330,21 @@
             android:text="Save"
             android:layout_width="73dp"
             android:layout_height="40dp" android:id="@+id/saveMotherName"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@+id/editMotherName" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/saveTOB" android:layout_marginTop="12dp"
             app:layout_constraintHorizontal_bias="0.0"/>
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:ems="10"
             android:id="@+id/editWeight"
             android:importantForAutofill="no"
             tools:targetApi="o"
             android:hint="@string/type"
             android:text="Weight"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.455"
             app:layout_constraintTop_toBottomOf="@+id/tabLayout" android:layout_marginTop="108dp"/>
@@ -349,7 +358,7 @@
             tools:targetApi="o"
             android:hint="@string/type"
             android:text="Time of Birth"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editWeight" android:layout_marginTop="8dp"
@@ -358,7 +367,7 @@
             android:text="Save"
             android:layout_width="73dp"
             android:layout_height="40dp" android:id="@+id/saveTOB"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@+id/editTOB" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/saveWeight" android:layout_marginTop="4dp"
             app:layout_constraintHorizontal_bias="0.0"/>
@@ -366,7 +375,7 @@
             android:text="Save"
             android:layout_width="73dp"
             android:layout_height="40dp" android:id="@+id/saveCondition"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@+id/editConditions" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/saveContact" android:layout_marginTop="16dp"
             app:layout_constraintHorizontal_bias="0.0"/>
@@ -380,7 +389,7 @@
             tools:targetApi="o"
             android:hint="@string/type"
             android:text="Contact Number"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editFatherName" android:layout_marginTop="8dp"
