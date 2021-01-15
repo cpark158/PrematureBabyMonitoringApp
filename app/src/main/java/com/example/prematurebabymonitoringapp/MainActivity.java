@@ -342,6 +342,7 @@ public class MainActivity extends AppCompatActivity {
                     // Reference: https://stackoverflow.com/questions/36867756/unparsable-date-exception-string-to-java-sql-date
                     final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
                     java.util.Date d = dateFormat.parse(patientDOBStr);
+                    dateFormat.setLenient(false);   // checks if an actual date is entered
 
                     // If all patient details are valid, check for duplicate hospID
                     if(!prematureBabies.patientExists(hospID)){
@@ -411,7 +412,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 catch (ParseException e) {  // catch invalid date
                     createAlertDialog();    // error warning (pop-up)
-                    System.out.println("Invalid date format! Date must be in the form yyyy-mm-dd");
+                    System.out.println("Invalid date entered! Date must be in the form yyyy-mm-dd. Month must be between 1 and 12. Day must be between 1 and 31.");
                 }
 
             }
@@ -837,7 +838,7 @@ public class MainActivity extends AppCompatActivity {
     public void createAlertDialog() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Invalid Data Input\n"); // alert title
-        alertDialog.setMessage("\nHospID must be a number. \nGender must be Male or Female. \nDate must be in the form yyyy-mm-dd.");    // alert message
+        alertDialog.setMessage("\nHospID must be a number. \nGender must be Male or Female. \nInvalid date entered! Date must be in the form yyyy-mm-dd. Month must be between 1 and 12. Day must be between 1 and 31.\"");    // alert message
         // text on alert button, which will close the alert when clicked
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
                 new DialogInterface.OnClickListener() {
