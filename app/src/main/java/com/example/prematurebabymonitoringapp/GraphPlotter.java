@@ -7,7 +7,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
 
-/** The GraphPlotter class is used to plot concentrations of glucose and lactose against time */
+/* The GraphPlotter class is used to plot concentrations of glucose and lactose against time */
 public class GraphPlotter {
     LineDataSet lineDataSet;
     ArrayList<Integer> xDataValues = new ArrayList<Integer>();
@@ -17,19 +17,21 @@ public class GraphPlotter {
     LineData data;
 
 
-
-    public GraphPlotter(ArrayList<Integer> xValues, ArrayList<Integer> yValues){
+    public void setXData(ArrayList<Integer> xValues){
         xDataValues = xValues;
+    }
+
+    public void setYData(ArrayList<Integer> yValues){
         yDataValues = yValues;
+    }
+
+    public void createNewDataEntry(){
         for (int i=0; i<xDataValues.size();i++){
             dataValues.add(new Entry(xDataValues.get(i),yDataValues.get(i)));
         }
-
         lineDataSet = new LineDataSet(dataValues,"Test Data Set");
         dataSets.add(lineDataSet);
         data = new LineData(dataSets);
-
-
     }
 
     public LineData getData(){

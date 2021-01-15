@@ -42,16 +42,17 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Initialise graph plotting parameters
+    // Initialise graph plotting and data extraction objects
     LineChart mpLineChart;
     LineChart lactate_mpLineChart;
     GraphPlotter graphPlot;
     TextFileProcessor txtFileProcessor;
 
-    //Initialising reference to file in firebase storage for download
+
+    //Initialise reference to data location in firebase cloud storage
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
-    //StorageReference fileRef = storageRef.child("Monitoring_20190731_135114.txt");
+
 
     // Initialise UI components from activity_main.xml
     TabLayout tabLayout;
@@ -69,11 +70,8 @@ public class MainActivity extends AppCompatActivity {
     Button saveCommentButton;
     Spinner spinnerPatientList;
     ImageView patientIcon;
-
-
     EditText enterFilename;
     Button downloadData;
-
     EditText patientWeight;
     EditText patientTOB;
     EditText patientMotherName;
@@ -121,6 +119,8 @@ public class MainActivity extends AppCompatActivity {
 
     //To populate spinner (dropdown patient list)
     List<String> spinnerArray = new ArrayList<String>();
+
+    //Test data for demonstrating graph plotting - need to adjust axis to plot in time of day rather than integer array
     ArrayList<Integer> testXData = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8,9,10));
     ArrayList<Integer> testYData = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8,9,10));
 
@@ -133,10 +133,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Parse .txt file and plot graph, to be displayed later
-
-        graphPlot = new GraphPlotter(testXData, testYData);
-
         // Retrieve XML components
         retrieveXMLComponents();
 
@@ -147,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPatientList.setAdapter(adapter);
 
-        mpLineChart = findViewById(R.id.line_chart);
         saveButton = findViewById(R.id.saveButton);
         addPatientButton = findViewById(R.id.button);
 
@@ -211,12 +206,13 @@ public class MainActivity extends AppCompatActivity {
         mpLineChart = findViewById(R.id.line_chart); // View individual pages - health tab
         saveButton = findViewById(R.id.saveButton); // View individual pages - health tab
 
+        //health page
+        mpLineChart = findViewById(R.id.line_chart);
         lactate_mpLineChart = findViewById(R.id.lactate_line_chart);
         currentLactateLevel = findViewById(R.id.lactateText);
         commentSpace = findViewById(R.id.commentSpace);
         commentsMade = findViewById(R.id.commentsMade);
         saveCommentButton = findViewById(R.id.saveCommentButton);
-
         downloadData = findViewById(R.id.downloadData);
         enterFilename = findViewById(R.id.enterFilename);
 
@@ -610,17 +606,28 @@ public class MainActivity extends AppCompatActivity {
 
         commentsMade.setVisibility(View.VISIBLE);
 
+        //This code will be moved to display only upon clicking of 'show glucose' and 'show lactate' buttons
+
+        graphPlot = new GraphPlotter();
+
+        //Currently plotted with test data as we are still working on converting axis from integer input to time of day
+        graphPlot.setXData(testXData);
+        graphPlot.setYData(testYData);
+        graphPlot.createNewDataEntry();
+
+        //display lactate and glucose graphs on health tab
         mpLineChart.setData(graphPlot.getData());
         mpLineChart.invalidate();
         lactate_mpLineChart.setData(graphPlot.getData());
         lactate_mpLineChart.invalidate();
 
+
         downloadData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*The files currently in storage linked to this app are:
+                /*Files currently in storage linked to this app are:
                 Monitoring_20190731_135114.txt, Monitoring_20190731_155851.txt and Monitoring_20190731_182058.txt
-                Text files are uploaded to firebase cloud storage from another app used by our clients and downloaded for processing in this app
+                Text files are stored in firebase cloud storage and downloaded for processing
                 */
                 String filename = enterFilename.getText().toString();
                 try {
@@ -784,7 +791,7 @@ public class MainActivity extends AppCompatActivity {
         saveCondition.setVisibility(View.GONE);
     }
 
-    //Downloading data text files from firebase storage for parsing
+    //Download text files in cloud storage for processing
     public void downloadFile(String fileName) throws IOException {
         String fileToDownload = fileName;
         StorageReference fileRef = storageRef.child(fileToDownload);
@@ -792,39 +799,26 @@ public class MainActivity extends AppCompatActivity {
         fileRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                //downloaded file is stored in default android storage and can be opened with localFile variable
-                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                alertDialog.setTitle("Download Success!\n"); // alert title
-                alertDialog.setMessage("\nFile has been successfully downloaded.");    // alert message
-                // text on alert button, which will close the alert when clicked
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                alertDialog.show();
-                //downloaded file is passed to text file processor for data extraction
+                createDownloadSuccessAlert();
+
+                //pass downloaded file to text file processor for data extraction
                 txtFileProcessor = new TextFileProcessor(localFile);
                 txtFileProcessor.parseFile();
+
+                //Set calibration parameters - will speak to users about where they want this code to be
+                txtFileProcessor.setGradient(2);
+                txtFileProcessor.setOffset(3);
+                txtFileProcessor.calibrateGlucose();
+                txtFileProcessor.calibrateLactate();
+
                 //checks data has been successfully read in
-                Toast.makeText(MainActivity.this,txtFileProcessor.testValString(),Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this,txtFileProcessor.testValString(),Toast.LENGTH_LONG).show();
 
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                alertDialog.setTitle("Download Failed!\n"); // alert title
-                alertDialog.setMessage("\nFile has not been downloaded. Check filename is correct and exists in storage location and try again.");    // alert message
-                // text on alert button, which will close the alert when clicked
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                alertDialog.show();
+                createDownloadFailedAlert();
 
             }
         });
@@ -955,4 +949,36 @@ public class MainActivity extends AppCompatActivity {
                 });
         alertDialog.show();
     }
+
+    //create an alert if file download successful
+    public void createDownloadSuccessAlert(){
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle("Download Success!\n");
+        alertDialog.setMessage("\nFile has been successfully downloaded.");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+
+
+    }
+
+    //create an alert if file download failed
+    public void createDownloadFailedAlert(){
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle("Download Failed!\n");
+        alertDialog.setMessage("\nFile has not been downloaded. Check filename is correct and exists in storage location and try again.");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
 }
+
+
