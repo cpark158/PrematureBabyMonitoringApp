@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.example.prematurebabymonitoringapp.exceptions.DateValidatorDateTimeFormatter;
+import com.example.prematurebabymonitoringapp.exceptions.DateValidator;
 import com.example.prematurebabymonitoringapp.exceptions.invalidGenderException;
 import com.example.prematurebabymonitoringapp.network.ClientInstance;
 import com.example.prematurebabymonitoringapp.network.DeleteDataService;
@@ -319,29 +319,30 @@ public class MainActivity extends AppCompatActivity {
                 */
                 boolean validData = false;
                 try {
-                    int hospID = Integer.parseInt(patientHospIDStr); // convert hospID from String input to integer, which throws exception
-
-                    // throws exception if gender is not male or female
-                    // Reference: https://stackoverflow.com/questions/11027190/custom-made-exception
-                    if (!"male".equals(patientGenderStr) && !"female".equals(patientGenderStr)) {
-                        throw new invalidGenderException("Invalid gender. Gender can only be Male or Female");
-                    }
-
-                    // Check if patientDOBstr is in the right format and convert to Date
-                    // Reference: https://stackoverflow.com/questions/36867756/unparsable-date-exception-string-to-java-sql-date
-                    DateValidatorDateTimeFormatter checkDate = new DateValidatorDateTimeFormatter("yyyy-mm-dd");
-                    if(checkDate.isValid(patientDOBStr)) {validData = true;}
-                    else {
-                        createInvalidDateAlert();
-                    }
-
-                    // If all patient details are valid, check for duplicate hospID
+                    int hospID = Integer.parseInt(patientHospIDStr); // check if patientHospIDStr can be converted to an int
+                    // If hospID is correctly entered as a number, check for duplicate hospID
                     if(!prematureBabies.patientExists(hospID)) {
                         validData = true;
                     }
                     else {
                         validData = false;
                         createDuplicateHospIDAlert();
+                    }
+
+                    // throw exception if gender is not male or female
+                    // Reference: https://stackoverflow.com/questions/11027190/custom-made-exception
+                    if (!"male".equals(patientGenderStr) && !"female".equals(patientGenderStr)) {
+                        throw new invalidGenderException("Invalid gender. Gender can only be Male or Female");
+                    }
+
+                    // Check if patientDOBstr is in the right format and convert to Date
+                    // Also checks if date entered is valid (i.e. month cannot be more than 12)
+                    // Reference: https://mkyong.com/java/how-to-check-if-date-is-valid-in-java/
+                    DateValidator checkDate = new DateValidator();
+                    if(checkDate.isValid(patientDOBStr)) {validData = true;}
+                    else {
+                        validData = false;
+                        createInvalidDateAlert();
                     }
 
                     if(validData) {
@@ -838,7 +839,7 @@ public class MainActivity extends AppCompatActivity {
     public void createAlertDialog() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Invalid HospID Input\n"); // alert title
-        alertDialog.setMessage("\nHospID must be a number. \nGender must be Male or Female. \nInvalid date entered! Date must be in the form yyyy-mm-dd. Month must be between 1 and 12. Day must be between 1 and 31.\"");    // alert message
+        alertDialog.setMessage("\nHospID must be a number.");    // alert message
         // text on alert button, which will close the alert when clicked
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
                 new DialogInterface.OnClickListener() {
