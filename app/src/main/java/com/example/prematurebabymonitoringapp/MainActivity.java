@@ -110,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
     Button saveFatherName;
     Button saveContact;
     Button saveCondition;
+    Button showGlucoseData;
+    Button showLactateData;
 
     //To populate spinner (dropdown patient list)
     List<String> spinnerArray = new ArrayList<String>();
@@ -224,6 +226,8 @@ public class MainActivity extends AppCompatActivity {
         saveCommentButton = findViewById(R.id.saveCommentButton);
         downloadData = findViewById(R.id.downloadData);
         enterFilename = findViewById(R.id.enterFilename);
+        showGlucoseData = findViewById(R.id.downloadGlucose);
+        showLactateData = findViewById(R.id.downloadLactate);
 
         // Components in 'Add Details' Tab
         patientWeight = findViewById(R.id.editWeight);
@@ -539,6 +543,8 @@ public class MainActivity extends AppCompatActivity {
         saveCommentButton.setVisibility(View.INVISIBLE);
         downloadData.setVisibility(View.INVISIBLE);
         enterFilename.setVisibility(View.INVISIBLE);
+        showGlucoseData.setVisibility(View.INVISIBLE);
+        showLactateData.setVisibility(View.INVISIBLE);
         callWelcomePage("Refer to dropdown list above for other patients or add patient below.");
     }
 
@@ -557,6 +563,8 @@ public class MainActivity extends AppCompatActivity {
         commentsMade.setVisibility(View.GONE);
         saveCommentButton.setVisibility(View.GONE);
         downloadData.setVisibility(View.INVISIBLE);
+        showGlucoseData.setVisibility(View.INVISIBLE);
+        showLactateData.setVisibility(View.INVISIBLE);
         enterFilename.setVisibility(View.INVISIBLE);
         msg.setVisibility(View.VISIBLE);
         msg.setTextSize(14);
@@ -577,6 +585,8 @@ public class MainActivity extends AppCompatActivity {
         lactate_mpLineChart.setVisibility(View.VISIBLE);
         downloadData.setVisibility(View.VISIBLE);
         enterFilename.setVisibility(View.VISIBLE);
+        showLactateData.setVisibility(View.VISIBLE);
+        showGlucoseData.setVisibility(View.VISIBLE);
         msg.setVisibility(View.VISIBLE);
 
         msg.setText(String.format("Current glucose level: "));
@@ -620,7 +630,6 @@ public class MainActivity extends AppCompatActivity {
         commentsMade.setVisibility(View.VISIBLE);
 
         //This code will be moved to display only upon clicking of 'show glucose' and 'show lactate' buttons
-
         graphPlot = new GraphPlotter();
 
         //Currently plotted with test data as we are still working on converting axis from integer input to time of day
@@ -633,7 +642,6 @@ public class MainActivity extends AppCompatActivity {
         mpLineChart.invalidate();
         lactate_mpLineChart.setData(graphPlot.getData());
         lactate_mpLineChart.invalidate();
-
 
         downloadData.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -651,6 +659,17 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        showGlucoseData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+        showLactateData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+
     }
     /** Method 4.3: This method allows user to add more details about a patient. */
     public void callEditDetailsPage(final Patient inputPatient){
@@ -774,6 +793,8 @@ public class MainActivity extends AppCompatActivity {
         saveFatherName.setVisibility(View.GONE);
         saveContact.setVisibility(View.GONE);
         saveCondition.setVisibility(View.GONE);
+        showLactateData.setVisibility(View.GONE);
+        showGlucoseData.setVisibility(View.GONE);
     }
     /** Method 5.2: This method clears all the input boxes on the page. */
     public void clearEditDetailsPage(){
@@ -797,6 +818,8 @@ public class MainActivity extends AppCompatActivity {
         saveFatherName.setVisibility(View.GONE);
         saveContact.setVisibility(View.GONE);
         saveCondition.setVisibility(View.GONE);
+        showGlucoseData.setVisibility(View.GONE);
+        showLactateData.setVisibility(View.GONE);
     }
 
     /** Section 6: Methods for data processing. */
