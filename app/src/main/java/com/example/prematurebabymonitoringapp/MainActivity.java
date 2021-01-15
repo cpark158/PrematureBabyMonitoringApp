@@ -369,12 +369,8 @@ public class MainActivity extends AppCompatActivity {
                         patientWeightStr = "";
 
                         //Create Patient and add it to remote Database
-                        Patient newPat=new Patient(hospID);
-                        newPat.setName(patientNameStr);
-                        newPat.setDOB(java.sql.Date.valueOf(patientDOBStr));    //patientDOBStr is converted to a Date object because setDOB method does not take in a string
-                        newPat.setGender(patientGenderStr);
                         PostDataService service = ClientInstance.getRetrofitInstance().create(PostDataService.class);
-                        Call<JsonObject> postCall = service.sendPatient(newPat);
+                        Call<JsonObject> postCall = service.sendPatient(prematureBabies.lastPatient());
                         postCall.enqueue(new Callback<JsonObject>() {
                             @Override
                             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -871,7 +867,7 @@ public class MainActivity extends AppCompatActivity {
     public void createInvalidDateAlert() {
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle("Invalid Date Input\n"); // alert title
-        alertDialog.setMessage("\nDate must be in the form yyyy-mm-dd. Month must be between 1 and 12. Day must be between 1 and 31.\"");    // alert message
+        alertDialog.setMessage("\nDate must be in the form yyyy-mm-dd. Month must be between 1 and 12. Day must be between 1 and 31.");    // alert message
         // text on alert button, which will close the alert when clicked
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
                 new DialogInterface.OnClickListener() {
